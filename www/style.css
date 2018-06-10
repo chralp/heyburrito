@@ -14,9 +14,9 @@ img {
 
 html, body {
     height: 100%;
-    background: #000;
-    color: #fff;
-    font-size: 10vw;
+    background: #F9FFFF;
+    font-size: 15px;
+    border-top: 2px solid #161616;
 }
 
 a {
@@ -24,3 +24,39 @@ a {
     text-decoration: none;
 }
 
+#app {
+    width: 70%;
+    height: 100%;
+    margin: auto;
+
+}
+
+.row {
+    width: auto;
+    height: 48px;
+    border-bottom: 1px solid #E0E5E5;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    float: left;
+
+}
+.name {
+    width: 70%;
+    height: 48px;
+    float: left;
+}
+.name p {
+    margin-left: 25px;
+}
+
+.score{
+    width: 26%;
+    height: 48px;
+    float: left;
+}
+.score p {
+    margin-left: 25px;
+}

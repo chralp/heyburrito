@@ -8,16 +8,25 @@
     <body>
 
         <div id="app">
-            <div id="menu">
+                <div class="row">
+                    <div class="avatar">
+                    </div>
+                    <div class="name">
+                            <p>Name</p>
+                    </div>
+                    <div class="score">
+                        <p>Score</p>
+                    </div>
+                </div>
 
+            <div id=content>
             </div>
-            <div id="content">
 
-            </div>
         </div>
 
 
         <script src="socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
         <script>
           window.socket = io('/', {path:'/heyburrito/socket.io'});
