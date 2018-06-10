@@ -1,7 +1,7 @@
 {
-  "name": "elburrito",
+  "name": "heyburrito",
   "version": "0.0.1",
-  "repository": "github.com/chralp/elburrito",
+  "repository": "github.com/chralp/heyburrito",
   "scripts": {
     "start": "node ./lib/server.js"
   },
