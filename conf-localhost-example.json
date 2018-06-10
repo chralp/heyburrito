@@ -1,0 +1,19 @@
+{
+    "redis": {
+        "host": "redis",
+        "port": 6379
+    },
+    "slack":{
+        "apiToken": "CheckReadmeHowToObtainApiToken!",
+        "emojis":[
+            {
+                "emoji":":burrito:",
+                "type":"inc"
+            },
+            {
+                "emoji":":rottenburrito:",
+                "type":"dec"
+            }
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+body, figure {
+    margin: 0;
+}
+h1, h2, h3, h4, h5, h6, th, td, caption { font-weight:normal; }
+img {
+    border: 0;
+}
+
+html, body {
+    height: 100%;
+    background: #000;
+    color: #fff;
+    font-size: 10vw;
+}
+
+a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+}
+
