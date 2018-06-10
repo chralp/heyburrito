@@ -62,8 +62,8 @@ With types you can define which emojis should increment or decrement the score w
 
 ### Missing / issues
 
-1. mini front-end
-2. getRedisUsers promise
-3. Merge slackUsersData with RedisUsers to serve front-end
+1. mini front-end ( done )
+2. getRedisUsers promise ( done )
+3. Merge slackUsersData with RedisUsers to serve front-end ( done )
 4. Daily send burritoCap (?)
 5. Tests
