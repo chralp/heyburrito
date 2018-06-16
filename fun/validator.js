@@ -18,7 +18,9 @@ module.exports = ((msg,emojis) => {
 
     // Message is changed, not valid!
     if((!!msg.subtype) && (msg.subtype === 'message_changed')){
-        log.warn("Message is an update post")
+        return false
+    }
+    if((!!msg.subtype) && (msg.subtype === 'message_deleted')){
         return false
     }
 
@@ -76,5 +78,9 @@ module.exports = ((msg,emojis) => {
             updates.push(obj)
         }
     }
-    return updates
+
+    return {
+        giver: msg.user,
+        updates
+    };
 })

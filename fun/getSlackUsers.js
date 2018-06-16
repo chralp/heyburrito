@@ -1,11 +1,12 @@
 
+
 const log   =   require('bog')
 
 module.exports = ((wbc) => {
 
-    let users = []
-    async function slackUsers (){
 
+    async function slackUsers (){
+        let users = []
         log.info('Getting all slack users')
         await wbc.users.list().then((res) => {
             res.members.map( x => {

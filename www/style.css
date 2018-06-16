@@ -23,10 +23,22 @@ a {
     color: rgba(255,255,255,0.7);
     text-decoration: none;
 }
+table {
+    border-collapse: collapse;
+  }
 
+table tr th {
+    text-align: left;
+    margin-left: 25px;
+}
+header p {
+    font-size: 22px;
+    margin-left: 250px;
+    font-family: 'Roboto', sans-serif;
+}
 #app {
-    width: 70%;
-    height: 100%;
+    width: 800px;
+    height: auto;
     margin: auto;
 
 }
@@ -34,29 +46,28 @@ a {
 .row {
     width: auto;
     height: 48px;
-    border-bottom: 1px solid #E0E5E5;
+    border-bottom: 2px solid #E0E5E5;
 }
 
 .avatar {
     width: 48px;
     height: 48px;
-    float: left;
-
+}
+.avatar img {
+    border-radius: 50px;
 }
 .name {
-    width: 70%;
     height: 48px;
-    float: left;
 }
 .name p {
     margin-left: 25px;
+    font-family: 'Roboto', sans-serif;
 }
 
 .score{
-    width: 26%;
     height: 48px;
-    float: left;
 }
 .score p {
+    font-family: 'Roboto', sans-serif;
     margin-left: 25px;
 }

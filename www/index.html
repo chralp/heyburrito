@@ -4,27 +4,24 @@
         <meta charset="utf-8">
         <title>heyburrito dashboard</title>
         <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
     </head>
     <body>
 
         <div id="app">
-                <div class="row">
-                    <div class="avatar">
-                    </div>
-                    <div class="name">
-                            <p>Name</p>
-                    </div>
-                    <div class="score">
-                        <p>Score</p>
-                    </div>
-                </div>
-
-            <div id=content>
-            </div>
+            <header>
+                <p>Heyburrito scoreboard<img src="burrito.png" width="65px"></p>
+            </header>
+            <table style="width:100%" id="content">
+                <tr>
+                    <th class="avatar"></th>
+                    <th class="name" ></th>
+                    <th class="score"></th>
+                </tr>
+              </table>
 
         </div>
-
-
         <script src="socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
