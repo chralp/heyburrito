@@ -7,7 +7,7 @@ module.exports = ((wbc) => {
         const users = [];
         log.info('Getting all slack users');
         await wbc.users.list().then((res) => {
-            res.members.map((x) => {
+            res.members.forEach((x) => {
                 if (!x.is_bot) {
                     const obj = {
                         id: x.id,
