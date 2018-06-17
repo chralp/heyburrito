@@ -1,7 +1,6 @@
 const log = require('bog');
 
 module.exports = ((msg, emojis) => {
-    const hitsCount = 0;
     const hits = [];
     const users = [];
     const updates = [];

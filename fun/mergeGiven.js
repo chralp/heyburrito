@@ -6,7 +6,7 @@ module.exports = ((slackUsers, given) => {
         counts[given[i]] = 1 + (counts[given[i]] || 0);
     }
 
-    res = [];
+    const res = [];
     slackUsers.map((x) => {
         if (counts[x.id]) {
             const obj = {

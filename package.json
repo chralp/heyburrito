@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./lib/server.js",
     "test": "mocha",
-    "lint": "eslint **/*.js"
+    "lint": "eslint **/*.js --fix"
   },
   "dependencies": {
     "@slack/client": "^4.3.1",
