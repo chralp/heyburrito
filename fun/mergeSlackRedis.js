@@ -4,7 +4,7 @@ module.exports = ((slack, redis) => {
     if (slack.length === 0) {
         return false;
     }
-    redis.foreach((x) => {
+    redis.forEach((x) => {
         for (const u of slack) {
             if ((u.id) && (u.id.match(x.user))) {
                 const obj = {
