@@ -1,5 +1,9 @@
 
-![1](https://user-images.githubusercontent.com/13852280/41594451-c511cb82-73c3-11e8-87fa-aab8ccf2c816.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/13852280/41594451-c511cb82-73c3-11e8-87fa-aab8ccf2c816.png" width="75%" height="75%">
+</p>    
+
+
 # Slack application heyburrito! :burrito:
 
 Give away :burrito: to your colleagues!  
