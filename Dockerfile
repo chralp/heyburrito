@@ -1,5 +1,5 @@
 
-FROM
+FROM node:carbon
 
 RUN apt-get update && apt-get install -y
 
