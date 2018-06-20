@@ -1,11 +1,12 @@
-
 module.exports = ((slack, redis) => {
     const res = [];
+
     if (slack.length === 0) {
         return false;
     }
+
     redis.forEach((x) => {
-        for (const u of slack) {
+        slack.forEach((u) => {
             if ((u.id) && (u.id.match(x.user))) {
                 const obj = {
                     username: x.user,
@@ -15,7 +16,7 @@ module.exports = ((slack, redis) => {
                 };
                 res.push(obj);
             }
-        }
+        });
     });
 
     return res;
