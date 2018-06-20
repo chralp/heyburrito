@@ -6,6 +6,7 @@
     },
     "slack":{
         "apiToken": "CheckReadmeHowToObtainApiToken!",
+        "dailyCap": 5,
         "emojis":[
             {
                 "emoji":":burrito:",
