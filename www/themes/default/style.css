@@ -71,3 +71,41 @@ header p {
     font-family: 'Roboto', sans-serif;
     margin-left: 25px;
 }
+#hiddenBox {
+    width: 25%;
+    float: left;
+    height: 100%;
+    padding: 50px 0;
+    text-align: center;
+    background-color: lightblue;
+}
+#hiddenBox > #head > p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 21px
+
+}
+
+#hiddenBox > #stats {
+    width: 98%;
+    margin: 0% 1%;
+    min-height: 100px;
+    background-color:#F9FFFF;
+    border-radius: 5px;
+
+}
+.progress {
+    margin-bottom: -1px;
+}
+
+.progress p {
+    text-align: left;
+    margin-bottom: -1px;
+    font-family: 'Roboto', sans-serif;
+}
+.bar {
+    background-color:#FFFFCC;
+}
+.bar-progress {
+    background-color: #CCE8CC;
+
+}
