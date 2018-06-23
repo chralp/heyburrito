@@ -1,8 +1,9 @@
 const log = require('bog');
-const validate = require('./lib/validator');
-const botMention = require('./lib/botMention');
+const parseMessage = require('./lib/parseMessage');
+const { validBotMention, validMessage } = require('./lib/validator')(true);
 
-module.exports = ((rtm, emojis, storeminator, botUserID,handleStats) => {
+
+module.exports = ((rtm, emojis, storeminator, botUserID, handleStats, allBots) => {
     function listener() {
         log.info('Listening on slack messages');
         rtm.on('message', (event) => {
@@ -11,26 +12,15 @@ module.exports = ((rtm, emojis, storeminator, botUserID,handleStats) => {
             }
 
             if (event.type === 'message') {
-                // Message is changed, not valid!
-                if ((!!event.subtype) && (event.subtype === 'message_changed')) {
-                    return false;
-                }
-                // Message is changed, not valid!
-                if ((!!event.subtype) && (event.subtype === 'message_deleted')) {
-                    return false;
-                }
-
-
-                if (botMention(event, botUserID)) {
-
-                    log.info('Bot is mention');
-                    // Geather data and send back to user
-                    handleStats(event)
-
-                } else {
-                    const result = validate(event, emojis);
-                    if (result) {
-                        storeminator(result);
+                if (validMessage(event, emojis, allBots)) {
+                    if (validBotMention(event, botUserID)) {
+                        // Geather data and send back to user
+                        handleStats(event);
+                    } else {
+                        const result = parseMessage(event, emojis);
+                        if (result) {
+                            storeminator(result);
+                        }
                     }
                 }
             }

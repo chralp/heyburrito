@@ -17,7 +17,6 @@ module.exports = ((redis, client, dailyCap) => {
 
 
     function handleStats (msg){
-        console.log("OHSS", msg)
 
         getGivenCap(msg.user)
         .then((result) => {

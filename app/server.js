@@ -24,8 +24,9 @@ const client = redis.createClient(conf.redis);
 
 
 // Local UserStore
+let storedSlackBots;
 let storedSlackUsers;
-let bot_id;
+let botId;
 
 // Set and start RTM
 const rtm = new RTMClient(conf.slack.apiToken);
@@ -52,33 +53,39 @@ function getBotUsername() {
         return;
     }
 
-    storedSlackUsers.forEach((x) => {
+    storedSlackBots.forEach((x) => {
         if (x.name === conf.bot_name) {
-            bot_id = x.id;
+            botId = x.id;
         }
     });
 
-    if (!bot_id) {
+    if (!botId) {
         log.warn('Botname set in config, but could not match user on slack');
     }
 }
 
 
 function botUserID() {
-    return bot_id;
+    return botId;
+}
+
+function getAllBots() {
+    return storedSlackBots;
 }
 
 function localStore() {
     slackUsers().then((res) => {
         storedSlackUsers = null;
-        storedSlackUsers = res;
+        storedSlackBots = null;
+        storedSlackUsers = res.users;
+        storedSlackBots = res.bots;
         getBotUsername();
     });
 }
 
 // Run on boot
 localStore();
-const { listener } = require('./bot')(rtm, conf.slack.emojis, storeminator, botUserID,handleStats);
+const { listener } = require('./bot')(rtm, conf.slack.emojis, storeminator, botUserID, handleStats, getAllBots);
 
 listener();
 // Run every hour
