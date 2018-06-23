@@ -1,5 +1,5 @@
 const moment = require('moment');
-const Maestro = require('./maestro');
+const Maestro = require('../lib/maestro');
 
 function makeid() {
     let text = '';
@@ -46,7 +46,7 @@ module.exports = ((redis, client) => {
         });
     });
 
-    const getUserScores = (user) => new Promise((rs) => {
+    const getUserScores = user => new Promise((rs) => {
         client.keys(user, (err, keys) => {
             if (err) {
                 console.log(err);
@@ -79,20 +79,15 @@ module.exports = ((redis, client) => {
         });
     }
 
-    const increaser = (username) => {
-        return new Promise((resolve, reject) => {
-            client.incr(username, redis.print)
-            resolve(true)
-        })
-    };
+    const increaser = username => new Promise((resolve, reject) => {
+        client.incr(username, redis.print);
+        resolve(true);
+    });
 
-    const decreaser = (username) => {
-        return new Promise((resolve, reject) => {
-            client.decr(username, redis.print);
-            resolve(true)
-        })
-
-    };
+    const decreaser = username => new Promise((resolve, reject) => {
+        client.decr(username, redis.print);
+        resolve(true);
+    });
 
     const getGiven = user => getter(givenKey(user));
     const incrGiven = user => increaser(givenKey(user));
@@ -102,22 +97,17 @@ module.exports = ((redis, client) => {
     const getGivenCap = user => getUserCap(givenCapKey(user));
 
     // Daily cap
-    const getFullScore = (user = "*") => getUserScores(receivedKey(user));
+    const getFullScore = (user = '*') => getUserScores(receivedKey(user));
     const getUserScore = user => getUserScores(receivedKey(user));
 
 
+    const giveBurrito = user => increaser(receivedKey(user)).then(() => {
+        Maestro.emit('GIVE', { user });
+    });
 
-    const giveBurrito = (user) => {
-        return increaser(receivedKey(user)).then(()=>{
-            Maestro.emit('GIVE', { user });
-        })
-    };
-
-    const takeAwayBurrito = (user) => {
-        return decreaser(receivedKey(user)).then(()=>{
-            Maestro.emit('TAKE_AWAY', { user })
-        })
-    };
+    const takeAwayBurrito = user => decreaser(receivedKey(user)).then(() => {
+        Maestro.emit('TAKE_AWAY', { user });
+    });
 
     return {
         getGiven,
@@ -131,6 +121,6 @@ module.exports = ((redis, client) => {
         getGivenCap,
         setKeyToExpire,
         getFullScore,
-        getUserScore
+        getUserScore,
     };
 });

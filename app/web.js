@@ -5,7 +5,7 @@ const express = require('express');
 
 const app = express();
 
-const Maestro = require('./maestro');
+const Maestro = require('./lib/maestro');
 
 const server = http.createServer(app);
 const io = require('socket.io').listen(server, {
@@ -37,39 +37,35 @@ module.exports = ((
         getUserScore(user).then((res) => {
             const result = mergeData(serverStoredSlackUsers(), res);
             io.emit('GIVE', result);
-        })
+        });
     });
 
     Maestro.on('TAKE_AWAY', ({ user }) => {
         getUserScore(user).then((res) => {
             const result = mergeData(serverStoredSlackUsers(), res);
             io.emit('TAKE_AWAY', result);
-        })
+        });
     });
 
     /*
         Socket.io
     */
     io.on('connection', (socket) => {
-
         getFullScore().then((res) => {
             const result = mergeData(serverStoredSlackUsers(), res);
             socket.emit('getUsers', result);
         });
         socket.on('getUserStats', (user) => {
-
-            getGivers(user).then((res) => {
-                return mergeGiven(serverStoredSlackUsers(), res)
-            }).then((givers)=>{
-                getGiven(user).then((gived)=>{
+            getGivers(user).then(res => mergeGiven(serverStoredSlackUsers(), res)).then((givers) => {
+                getGiven(user).then((gived) => {
                     getUserScore(user).then((res) => {
                         const result = mergeData(serverStoredSlackUsers(), res);
                         const obj = {
                             user: result[0],
-                            gived: gived,
-                            givers: givers
-                        }
-                        socket.emit('userStats',obj)
+                            gived,
+                            givers,
+                        };
+                        socket.emit('userStats', obj);
                     });
                 });
             });

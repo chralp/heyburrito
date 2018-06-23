@@ -14,13 +14,6 @@ module.exports = ((msg, emojis) => {
         5. Create object for each emojihit to each user ( done )
     */
 
-    // Message is changed, not valid!
-    if ((!!msg.subtype) && (msg.subtype === 'message_changed')) {
-        return false;
-    }
-    if ((!!msg.subtype) && (msg.subtype === 'message_deleted')) {
-        return false;
-    }
 
     if (msg.text.match(`<@${msg.user}>`)) {
         log.warn('User that sent message is also mentions in message, not valid');
