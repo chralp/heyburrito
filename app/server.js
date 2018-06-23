@@ -24,8 +24,9 @@ const client = redis.createClient(conf.redis);
 
 
 // Local UserStore
+let storedSlackBots;
 let storedSlackUsers;
-let bot_id;
+let botId;
 
 // Set and start RTM
 const rtm = new RTMClient(conf.slack.apiToken);
@@ -36,8 +37,11 @@ rtm.start();
 const {
     storeminator, getGivers, getFullScore, getUserScore, getGiven,
 } = require('./lib/storeminator')(redis, client, conf.slack.dailyCap);
+function serverStoredSlackUsers() {
+    return storedSlackUsers;
+}
 // Fun
-const { handleStats } = require('./lib/handleStats')(redis, client);
+const { getUserStats, getRecivedBoard,getGivenBoard } = require('./lib/handleStats')(redis, client,serverStoredSlackUsers);
 
 const wbc = new WebClient(conf.slack.apiToken);
 const { slackUsers } = require('./lib/getSlackUsers')(wbc);
@@ -46,47 +50,52 @@ const mergeData = require('./lib/mergeSlackRedis');
 const mergeGiven = require('./lib/mergeGiven');
 
 
+
 function getBotUsername() {
     if (!conf.bot_name) {
         log.warn('No botname set in config, some features may not work');
         return;
     }
 
-    storedSlackUsers.forEach((x) => {
+    storedSlackBots.forEach((x) => {
         if (x.name === conf.bot_name) {
-            bot_id = x.id;
+            botId = x.id;
         }
     });
 
-    if (!bot_id) {
+    if (!botId) {
         log.warn('Botname set in config, but could not match user on slack');
     }
 }
 
 
 function botUserID() {
-    return bot_id;
+    return botId;
+}
+
+function getAllBots() {
+    return storedSlackBots;
 }
 
 function localStore() {
     slackUsers().then((res) => {
         storedSlackUsers = null;
-        storedSlackUsers = res;
+        storedSlackBots = null;
+        storedSlackUsers = res.users;
+        storedSlackBots = res.bots;
         getBotUsername();
     });
 }
 
 // Run on boot
 localStore();
-const { listener } = require('./bot')(rtm, conf.slack.emojis, storeminator, botUserID,handleStats);
+const { listener } = require('./bot')(rtm, conf.slack.emojis, storeminator, botUserID, getUserStats, getAllBots);
 
 listener();
 // Run every hour
 setInterval(localStore, 60 * 60 * 1000);
 
-function serverStoredSlackUsers() {
-    return storedSlackUsers;
-}
+
 
 // Start webserver
 webserver(

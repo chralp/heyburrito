@@ -50,31 +50,31 @@ module.exports = ((
     /*
         Socket.io
     */
-   io.on('connection', (socket) => {
-    getFullScore().then((res) => {
-        const result = mergeData(serverStoredSlackUsers(), res);
-        socket.emit('getUsers', result);
-    });
-    socket.on('getUserStats', (user) => {
-        getGivers(user)
-            .then(res => mergeGiven(serverStoredSlackUsers(), res))
-            .then((givers) => {
-                getGiven(user).then((gived) => {
-                    getUserScore(user).then((res) => {
-                        const result = mergeData(serverStoredSlackUsers(), res);
-                        const obj = {
-                            user: result[0],
-                            gived,
-                            givers,
-                        };
-                        socket.emit('userStats', obj);
+    io.on('connection', (socket) => {
+        getFullScore().then((res) => {
+            const result = mergeData(serverStoredSlackUsers(), res);
+            socket.emit('getUsers', result);
+        });
+        socket.on('getUserStats', (user) => {
+            getGivers(user)
+                .then(res => mergeGiven(serverStoredSlackUsers(), res))
+                .then((givers) => {
+                    getGiven(user).then((gived) => {
+                        getUserScore(user).then((res) => {
+                            const result = mergeData(serverStoredSlackUsers(), res);
+                            const obj = {
+                                user: result[0],
+                                gived,
+                                givers,
+                            };
+                            socket.emit('userStats', obj);
+                        });
                     });
                 });
-            });
+        });
     });
-});
 
-const port = process.env.PORT || 3333;
-log.info(`Webserver listening to: ${port}`);
-server.listen(port);
+    const port = process.env.PORT || 3333;
+    log.info(`Webserver listening to: ${port}`);
+    server.listen(port);
 });

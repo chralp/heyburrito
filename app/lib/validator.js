@@ -1,75 +1,54 @@
 const log = require('bog');
 
-module.exports = ((msg, emojis) => {
-    const hits = [];
-    const users = [];
-    const updates = [];
-    const regex = /(\<\@[A-Z0-9]{2,}\>)/g;
+module.exports = (() => {
 
-    /*
-        1. Check so message is not an updated post ( done )
-        2. Check so sender isnt mention in text ( done )
-        3. Get users from text ( done )
-        4. Count emoji hits ( done )
-        5. Create object for each emojihit to each user ( done )
-    */
+    function validMessage (message,emojis, allBots) {
+        // Message is changed, not valid!
+        if ((!!message.subtype) && (message.subtype === 'message_changed')) {
+            return false;
+        }
+        // Message is changed, not valid!
+        if ((!!message.subtype) && (message.subtype === 'message_deleted')) {
+            return false;
+        }
+        if ((!!message.subtype) && (message.subtype === 'bot_message')) {
+            return false;
+        }
+        if (message.text.match(`<@${message.user}>`)) {
+            return false;
+        }
 
+        const bots = allBots()
 
-    if (msg.text.match(`<@${msg.user}>`)) {
-        log.warn('User that sent message is also mentions in message, not valid');
-        return false;
-    }
+        for (const x of bots) {
 
-    // Regex to get all users from message
-    const usersRaw = msg.text.match(new RegExp(regex));
+            // Message is sent from bot
+            if(message.user.match(`${x.id}`)){
+                return false;
+            }
 
-    // remove <@ and >
-    if (usersRaw) {
-        for (const u of usersRaw) {
-            const username = u.replace('<@', '').replace('>', '');
-
-            // Check if username already exists in array
-
-            if (!users.includes(username)) {
-                users.push(username);
+            // Message contains bot and emoji
+            if (message.text.match(`${x.id}`)) {
+                for (const e of emojis){
+                    if (message.text.match(`${e.emoji}`)) {
+                        return false;
+                    }
+                }
             }
         }
-    } else {
-        return false;
+
+
+        return true
     }
 
-    // Count hits
-    emojis.map((x) => {
-        const hit = msg.text.match(x.emoji);
-        if (hit) {
-            emojihit = msg.text.match(new RegExp(x.emoji, 'g'));
-            for (const e of emojihit) {
-                const obj = {
-                    emoji: x.emoji,
-                    type: x.type,
-                };
-                hits.push(obj);
-            }
+    function validBotMention (message, botUserID) {
+
+        botid = botUserID();
+        if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {
+            return true
         }
-    });
-    if (hits.length === 0) {
-        return false;
+        return false
     }
 
-    // Create object for each user for each emoji hit
-
-    for (const i of hits) {
-        for (const u of users) {
-            const obj = {
-                username: u,
-                type: i.type,
-            };
-            updates.push(obj);
-        }
-    }
-
-    return {
-        giver: msg.user,
-        updates,
-    };
+    return {validBotMention,validMessage}
 });

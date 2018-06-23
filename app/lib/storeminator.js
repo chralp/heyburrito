@@ -44,6 +44,8 @@ module.exports = ((redis, client, dailyCap) => {
         const { giver, updates } = msg;
         if (updates.length) {
             handleMsg(giver, updates);
+        }else{
+            return false
         }
     }
     return {
