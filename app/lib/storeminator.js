@@ -1,5 +1,5 @@
 
-const store = require('./burritoStore');
+const store = require('../store/burrito');
 
 module.exports = ((redis, client, dailyCap) => {
     const {
@@ -46,5 +46,7 @@ module.exports = ((redis, client, dailyCap) => {
             handleMsg(giver, updates);
         }
     }
-    return { storeminator, getGivers, getFullScore, getUserScore,getGiven};
+    return {
+        storeminator, getGivers, getFullScore, getUserScore, getGiven,
+    };
 });

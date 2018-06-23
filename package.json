@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "repository": "github.com/chralp/heyburrito",
   "scripts": {
-    "start": "node ./lib/server.js",
+    "start": "node ./app/server.js",
     "test": "mocha",
     "lint": "eslint **/*.js --fix"
   },

@@ -1,4 +1,5 @@
 {
+    "bot_name": "heyburrito",
     "theme": "default",
     "redis": {
         "host": "redis",
