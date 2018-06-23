@@ -1,7 +1,8 @@
 
 const store = require('../store/burrito');
+const mergeGiven = require('./mergeGiven');
 
-module.exports = ((redis, client, dailyCap) => {
+module.exports = ((redis, client, serverStoredSlackUsers) => {
     const {
         giveBurrito,
         takeAwayBurrito,
@@ -13,41 +14,47 @@ module.exports = ((redis, client, dailyCap) => {
         getFullScore,
         getUserScore,
         getGiven,
+        getUserReceived,
     } = store(redis, client);
 
 
-    function handleStats (msg){
 
-        getGivenCap(msg.user)
-        .then((result) => {
-            return result
-        })
-        .then((givenToday) => {
-            getGivers(user)
-        })
-        .then((res) => {
-            mergeGiven(serverStoredSlackUsers(), res)
-        })
-        .then((givers) => {
-            getGiven(user)
-        })
+    function getUserStats(username) {
 
-        .then((gived) => {
-            getUserScore(user)
-        })
+        return new Promise(resolve => {
 
-        .then((res) => {
-            console.log("res",res)
-        })
+            getGivers(username)
+            .then(res => mergeGiven(serverStoredSlackUsers(), res))
+            .then((givers) => {
+                getGiven(username).then((gived) => {
+                    getUserReceived(username).then((received) => {
+                        getGivenCap(username).then((givenToday) => {
+                            const obj = {
+                                gived,
+                                received,
+                                givenToday: givenToday.length,
+                                givers,
+                            }
+                            resolve(obj)
+                        });
+                    });
+                });
+            });
+        });
     }
 
-        // Get top 10 Recived
-        // Get top 10 Givers
-        // Get userStats
-        //  - top 10 givers ( ? )
-        //  - Given Count,
+
+    function getRecivedBoard() {
+        // Get all users recived
+        // Arange array desc
+    }
+
+    function getGivenBoard() {
+        // Get all users Given
+        // Arange array desc
+    }
 
 
-    return {handleStats}
+    return {getUserStats, getRecivedBoard,getGivenBoard}
 
 });

@@ -37,14 +37,18 @@ rtm.start();
 const {
     storeminator, getGivers, getFullScore, getUserScore, getGiven,
 } = require('./lib/storeminator')(redis, client, conf.slack.dailyCap);
+function serverStoredSlackUsers() {
+    return storedSlackUsers;
+}
 // Fun
-const { handleStats } = require('./lib/handleStats')(redis, client);
+const { getUserStats, getRecivedBoard,getGivenBoard } = require('./lib/handleStats')(redis, client,serverStoredSlackUsers);
 
 const wbc = new WebClient(conf.slack.apiToken);
 const { slackUsers } = require('./lib/getSlackUsers')(wbc);
 
 const mergeData = require('./lib/mergeSlackRedis');
 const mergeGiven = require('./lib/mergeGiven');
+
 
 
 function getBotUsername() {
@@ -85,15 +89,13 @@ function localStore() {
 
 // Run on boot
 localStore();
-const { listener } = require('./bot')(rtm, conf.slack.emojis, storeminator, botUserID, handleStats, getAllBots);
+const { listener } = require('./bot')(rtm, conf.slack.emojis, storeminator, botUserID, getUserStats, getAllBots);
 
 listener();
 // Run every hour
 setInterval(localStore, 60 * 60 * 1000);
 
-function serverStoredSlackUsers() {
-    return storedSlackUsers;
-}
+
 
 // Start webserver
 webserver(

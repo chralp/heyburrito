@@ -101,6 +101,10 @@ module.exports = ((redis, client) => {
     const getUserScore = user => getUserScores(receivedKey(user));
 
 
+    const getUserReceived = user => getter(receivedKey(user));
+
+
+
     const giveBurrito = user => increaser(receivedKey(user)).then(() => {
         Maestro.emit('GIVE', { user });
     });
@@ -122,5 +126,6 @@ module.exports = ((redis, client) => {
         setKeyToExpire,
         getFullScore,
         getUserScore,
+        getUserReceived,
     };
 });

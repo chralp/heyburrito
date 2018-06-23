@@ -3,7 +3,14 @@ const parseMessage = require('./lib/parseMessage');
 const { validBotMention, validMessage } = require('./lib/validator')(true);
 
 
-module.exports = ((rtm, emojis, storeminator, botUserID, handleStats, allBots) => {
+module.exports = ((rtm, emojis, storeminator, botUserID, getUserStats, allBots) => {
+
+    function sendToUser(username, data){
+        console.log("Will send to user", username)
+        console.log("With data", data)
+
+    }
+
     function listener() {
         log.info('Listening on slack messages');
         rtm.on('message', (event) => {
@@ -15,7 +22,10 @@ module.exports = ((rtm, emojis, storeminator, botUserID, handleStats, allBots) =
                 if (validMessage(event, emojis, allBots)) {
                     if (validBotMention(event, botUserID)) {
                         // Geather data and send back to user
-                        handleStats(event);
+                        getUserStats(event.user).then(res => {
+                            sendToUser(event.user,res)
+                        })
+
                     } else {
                         const result = parseMessage(event, emojis);
                         if (result) {
