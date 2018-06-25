@@ -1,3 +1,13 @@
+/*
+* Merge data from recivedLog and SlackUsers,
+* create object foreach user
+* Input: [USERONE,USERONE,USERTWO,USERONE]
+* OUTPUT: [
+*   { id: 'USERONE', name: 'userone name', score: 3 },
+*   { id: 'USERTWO', name: 'usertwo name', score: 1 }
+* ]
+*
+*/
 module.exports = ((slackUsers, given) => {
     const counts = {};
 
@@ -6,7 +16,6 @@ module.exports = ((slackUsers, given) => {
     }
 
     const res = [];
-
     slackUsers.forEach((x) => {
         if (counts[x.id]) {
             const obj = {
