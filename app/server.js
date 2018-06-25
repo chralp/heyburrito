@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const log = require('bog');
 const path = require('path');
 const redis = require('redis');
@@ -5,22 +7,19 @@ const webserver = require('./web');
 
 const { RTMClient, WebClient } = require('@slack/client');
 
-let confFile;
-
 // Configuration file to use
 const root = path.normalize(`${__dirname}/../`);
-const conf = require(root + (confFile = process.env.CONF || 'conf-localhost.json'));
-const theme = ('theme' in conf) ? conf.theme : 'default';
+const theme = ('THEME' in process.env) ? process.env.THEME : 'default';
 const publicPath = `${root}www/themes/${theme}`;
 
 
 // Log level
-const isLocal = confFile.indexOf('-localhost') > 0;
+const isLocal = !process.env.ENV || process.env.ENV === 'development';
 
 if (isLocal) log.level('debug');
 
 // Redis config
-const client = redis.createClient(conf.redis);
+const client = redis.createClient({ host: process.env.REDIS_HOST, port: process.env.REDIS_PORT });
 
 
 // Local UserStore
@@ -29,21 +28,22 @@ let storedSlackUsers;
 let botId;
 
 // Set and start RTM
-const rtm = new RTMClient(conf.slack.apiToken);
+const rtm = new RTMClient(process.env.SLACK_API_TOKEN);
 rtm.start();
 
 
 // Fun
 const {
     storeminator, getGivers, getFullScore, getUserScore, getGiven,
-} = require('./lib/storeminator')(redis, client, conf.slack.dailyCap);
+} = require('./lib/storeminator')(redis, client, process.env.SLACK_DAILY_CAP);
+
 function serverStoredSlackUsers() {
     return storedSlackUsers;
 }
 // Fun
 const { getUserStats, getRecivedBoard,getGivenBoard } = require('./lib/handleStats')(redis, client,serverStoredSlackUsers);
 
-const wbc = new WebClient(conf.slack.apiToken);
+const wbc = new WebClient(process.env.SLACK_API_TOKEN);
 const { slackUsers } = require('./lib/getSlackUsers')(wbc);
 
 const mergeData = require('./lib/mergeSlackRedis');
@@ -52,13 +52,13 @@ const mergeGiven = require('./lib/mergeGiven');
 
 
 function getBotUsername() {
-    if (!conf.bot_name) {
+    if (!process.env.BOT_NAME) {
         log.warn('No botname set in config, some features may not work');
         return;
     }
 
     storedSlackBots.forEach((x) => {
-        if (x.name === conf.bot_name) {
+        if (x.name === process.env.BOT_NAME) {
             botId = x.id;
         }
     });
@@ -89,7 +89,7 @@ function localStore() {
 
 // Run on boot
 localStore();
-const { listener } = require('./bot')(rtm, conf.slack.emojis, storeminator, botUserID, getUserStats, getAllBots);
+const { listener } = require('./bot')(rtm, storeminator, botUserID, getUserStats, getAllBots);
 
 listener();
 // Run every hour
