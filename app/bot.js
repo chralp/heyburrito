@@ -3,12 +3,24 @@ const parseMessage = require('./lib/parseMessage');
 const { validBotMention, validMessage } = require('./lib/validator')(true);
 
 
-module.exports = ((rtm, emojis, storeminator, botUserID, getUserStats, allBots) => {
+module.exports = ((rtm, storeminator, botUserID, getUserStats, allBots) => {
+    const emojis = [];
+
+    if (process.env.SLACK_EMOJI_INC) {
+        const incEmojis = process.env.SLACK_EMOJI_INC.split(',');
+
+        incEmojis.forEach(emoji => emojis.push({ type: 'inc', emoji }));
+    }
+
+    if (process.env.SLACK_EMOJI_DEC) {
+        const incEmojis = process.env.SLACK_EMOJI_DEC.split(',');
+
+        incEmojis.forEach(emoji => emojis.push({ type: 'dec', emoji }));
+    }
 
     function sendToUser(username, data){
         console.log("Will send to user", username)
         console.log("With data", data)
-
     }
 
     function listener() {
