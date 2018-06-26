@@ -59,13 +59,7 @@ class BurritoStore extends EventEmitter {
     }
 
     getGivers(user) {
-        return this.database.sum('burritos', 'value', { to: user }, 'from').then(users => users.map((giver) => {
-            const mappedUser = Object.assign({}, giver);
-
-            mappedUser._id = giver.from;
-
-            return mappedUser;
-        }));
+        return this.database.sum('burritos', 'value', { to: user }, 'from');
     }
 }
 
