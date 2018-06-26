@@ -5,7 +5,8 @@ const express = require('express');
 
 const app = express();
 
-const Maestro = require('./lib/maestro');
+const BurritoStore = require('./store/Burrito');
+const mergeData = require('./lib/mergeSlackRedis');
 
 const server = http.createServer(app);
 const io = require('socket.io').listen(server, {
@@ -14,13 +15,7 @@ const io = require('socket.io').listen(server, {
 
 module.exports = ((
     publicPath,
-    mergeData,
-    mergeGiven,
     serverStoredSlackUsers,
-    getGivers,
-    getFullScore,
-    getUserScore,
-    getGiven,
 ) => {
     app.enable('strict routing');
     app.use((request, response, next) => {
@@ -33,17 +28,19 @@ module.exports = ((
     app.get(/^\/heyburrito$/, (req, res) => res.redirect('/heyburrito/'));
     app.get('/heyburrito/', (req, res) => res.sendfile(`${publicPath}/index.html`));
 
-    Maestro.on('GIVE', ({ user }) => {
-        getUserScore(user).then((res) => {
-            const result = mergeData(serverStoredSlackUsers(), res);
-            io.emit('GIVE', result);
+    BurritoStore.on('GIVE', ({ user }) => {
+        BurritoStore.getUserScore(user).then((result) => {
+            const users = mergeData(serverStoredSlackUsers(), result);
+
+            io.emit('GIVE', users);
         });
     });
 
-    Maestro.on('TAKE_AWAY', ({ user }) => {
-        getUserScore(user).then((res) => {
-            const result = mergeData(serverStoredSlackUsers(), res);
-            io.emit('TAKE_AWAY', result);
+    BurritoStore.on('TAKE_AWAY', ({ user }) => {
+        BurritoStore.getUserScore(user).then((result) => {
+            const users = mergeData(serverStoredSlackUsers(), result);
+
+            io.emit('TAKE_AWAY', users);
         });
     });
 
@@ -51,22 +48,25 @@ module.exports = ((
         Socket.io
     */
     io.on('connection', (socket) => {
-        getFullScore().then((res) => {
-            const result = mergeData(serverStoredSlackUsers(), res);
+        BurritoStore.getUserScore().then((users) => {
+            const result = mergeData(serverStoredSlackUsers(), users);
+
             socket.emit('getUsers', result);
         });
+
         socket.on('getUserStats', (user) => {
-            getGivers(user)
-                .then(res => mergeGiven(serverStoredSlackUsers(), res))
+            BurritoStore.getGivers(user)
+                .then(users => mergeData(serverStoredSlackUsers(), users))
                 .then((givers) => {
-                    getGiven(user).then((gived) => {
-                        getUserScore(user).then((res) => {
-                            const result = mergeData(serverStoredSlackUsers(), res);
+                    BurritoStore.getGiven(user).then((gived) => {
+                        BurritoStore.getUserScore(user).then((userScoreData) => {
+                            const result = mergeData(serverStoredSlackUsers(), userScoreData);
                             const obj = {
                                 user: result[0],
                                 gived,
                                 givers,
                             };
+
                             socket.emit('userStats', obj);
                         });
                     });

@@ -1,9 +1,9 @@
 const log = require('bog');
 const parseMessage = require('./lib/parseMessage');
 const { validBotMention, validMessage } = require('./lib/validator')(true);
+const { storeminator } = require('./lib/storeminator')();
 
-
-module.exports = ((rtm, storeminator, botUserID, getUserStats, allBots) => {
+module.exports = ((rtm, botUserID, getUserStats, allBots) => {
     const emojis = [];
 
     if (process.env.SLACK_EMOJI_INC) {
@@ -18,9 +18,9 @@ module.exports = ((rtm, storeminator, botUserID, getUserStats, allBots) => {
         incEmojis.forEach(emoji => emojis.push({ type: 'dec', emoji }));
     }
 
-    function sendToUser(username, data){
-        console.log("Will send to user", username)
-        console.log("With data", data)
+    function sendToUser(username, data) {
+        console.log('Will send to user', username);
+        console.log('With data', data);
     }
 
     function listener() {
@@ -34,10 +34,9 @@ module.exports = ((rtm, storeminator, botUserID, getUserStats, allBots) => {
                 if (validMessage(event, emojis, allBots)) {
                     if (validBotMention(event, botUserID)) {
                         // Geather data and send back to user
-                        getUserStats(event.user).then(res => {
-                            sendToUser(event.user,res)
-                        })
-
+                        getUserStats(event.user).then((res) => {
+                            sendToUser(event.user, res);
+                        });
                     } else {
                         const result = parseMessage(event, emojis);
                         if (result) {
