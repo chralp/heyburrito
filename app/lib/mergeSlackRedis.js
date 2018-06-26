@@ -1,6 +1,5 @@
 module.exports = ((slack, data) => {
     const res = [];
-
     if (slack.length === 0) {
         return false;
     }

@@ -48,10 +48,24 @@ module.exports = ((
         Socket.io
     */
     io.on('connection', (socket) => {
-        BurritoStore.getUserScore().then((users) => {
-            const result = mergeData(serverStoredSlackUsers(), users);
+        socket.on('getReceivedList', () => {
+            BurritoStore.getUserScore().then((users) => {
+                const result = mergeData(serverStoredSlackUsers(), users);
 
-            socket.emit('getUsers', result);
+                socket.emit('receivedList', result);
+            });
+        });
+
+        socket.on('getGivenList', () => {
+            BurritoStore.getUserScore().then((users) => {
+                const result = mergeData(serverStoredSlackUsers(), users.map((user) => {
+                    user._id = user.from;
+
+                    return user;
+                }));
+
+                socket.emit('givenList', result);
+            });
         });
 
         socket.on('getUserStats', (user) => {
