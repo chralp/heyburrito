@@ -1,6 +1,6 @@
 const store = []
 
-socket.emit('getRecivedList')
+socket.emit('getReceivedList')
 
 // Store First userList
 function fullList(data) {
@@ -27,7 +27,7 @@ function renderList(data){
         }
     }
 }
-socket.on('recivedList', (data) => {
+socket.on('receivedList', (data) => {
     renderList(data)
 });
 
@@ -69,12 +69,12 @@ socket.on('userStats',(data) => {
     var x = document.getElementById("hiddenBox");
     x.style.display = "block";
     $("#head").empty();
-    $("#head").append(`<p><img src="${data.avatar}"></p>`)
-    $("#head").append(`<p>${data.name}</p>`)
+    $("#head").append(`<p><img src="${data.user.avatar}"></p>`)
+    $("#head").append(`<p>${data.user.name}</p>`)
 
     $("#stats").empty();
     $("#stats").append(`<p>Total given: ${data.gived}</p>`)
-    $("#stats").append(`<p>Total received: ${data.received}</p>`)
+    $("#stats").append(`<p>Total received: ${data.user.score}</p>`)
     $("#stats").append(`<br><br>`)
 
     if(data.givers.length){

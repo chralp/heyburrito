@@ -1,54 +1,37 @@
+const config = require('./config');
+const BurritoStore = require('../store/burrito');
 
-const store = require('../store/burrito');
-
-module.exports = ((redis, client, dailyCap) => {
-    const {
-        giveBurrito,
-        takeAwayBurrito,
-        incrGiven,
-        addGiver,
-        getGivers,
-        incrGivenCap,
-        getGivenCap,
-        getFullScore,
-        getUserScore,
-        getGiven,
-    } = store(redis, client);
+module.exports = (() => {
+    const dailyCap = config('SLACK_DAILY_CAP');
 
     function handleMsg(giver, updates) {
-        getGivenCap(giver).then((res) => {
-            if (res.length >= dailyCap) {
-                return false;
+        BurritoStore.givenBurritosToday(giver).then((burritos) => {
+            console.log('%s has given %d burritos today', giver, burritos.length);
+
+            if (burritos.length >= dailyCap) {
+                console.log('Daily cap of %d reached', dailyCap);
+                return;
             }
+
             const a = updates.shift();
+
             if (a.type === 'inc') {
-                giveBurrito(a.username);
+                BurritoStore.giveBurrito(a.username, giver);
             } else if (a.type === 'dec') {
-                takeAwayBurrito(a.username);
+                BurritoStore.takeAwayBurrito(a.username, giver);
             }
-
-            incrGiven(giver);
-            addGiver(a.username, giver);
-
-            incrGivenCap(giver).then(() => {
-                if (updates.length) {
-                    handleMsg(giver, updates);
-                }
-            });
-        }).catch(() => {
-            console.log('Daily cap for %s', giver);
         });
     }
 
     function storeminator(msg) {
         const { giver, updates } = msg;
+
         if (updates.length) {
             handleMsg(giver, updates);
-        }else{
-            return false
         }
     }
+
     return {
-        storeminator, getGivers, getFullScore, getUserScore, getGiven,
+        storeminator,
     };
 });

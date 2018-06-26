@@ -1,91 +1,38 @@
-
-const store = require('../store/burrito');
-const mergeGiven = require('./mergeGiven');
+const BurritoStore = require('../store/burrito');
 const mergeData = require('./mergeSlackRedis');
 
-module.exports = ((redis, client, serverStoredSlackUsers) => {
-    const {
-        getGiven,
-        giveBurrito,
-        takeAwayBurrito,
-        incrGiven,
-        getUserScores,
-        addGiver,
-        getGivers,
-        incrGivenCap,
-        getGivenCap,
-        setKeyToExpire,
-        getAllReceived,
-        getUserScore,
-        getUserReceived,
-        getAllGiven,
-    } = store(redis, client);
-
+module.exports = ((serverStoredSlackUsers) => {
     function getUserStats(username) {
+        return new Promise(async (resolve) => {
+            const users = mergeData(serverStoredSlackUsers(), [{ _id: username }]);
+            let returnUser = null;
 
-        return new Promise(resolve => {
+            if (users.length) {
+                returnUser = users[0];
+            }
 
-            getGivers(username)
-            .then(res => mergeGiven(serverStoredSlackUsers(), res))
-            .then((givers) => {
-                getGiven(username).then((gived) => {
-                    getUserReceived(username).then((received) => {
-                        getGivenCap(username).then((givenToday) => {
-                            profile = mergeData(serverStoredSlackUsers(),[{user:username}])
-                            const obj = {
-                                id: profile[0].username,
-                                name: profile[0].name,
-                                avatar: profile[0].avatar,
-                                received,
-                                gived,
-                                givenToday: givenToday.length,
-                                givers,
-                            }
-                            resolve(obj)
-                        });
-                    });
-                });
-            });
+            if (!returnUser) {
+                resolve(null);
+
+                return;
+            }
+
+            const userScoreData = await BurritoStore.getUserScore(username);
+            const givers = await BurritoStore.getGivers(username);
+            const given = await BurritoStore.getGiven(username);
+
+            if (userScoreData.length) {
+                returnUser.score = userScoreData[0].score;
+            } else {
+                returnUser.score = 0;
+            }
+
+            returnUser.givers = mergeData(serverStoredSlackUsers(), givers);
+            returnUser.given = mergeData(serverStoredSlackUsers(), given);
+
+            resolve(returnUser);
         });
     }
 
-    function getRecivedList() {
-        // Get all users recived
-        // Arange array desc
-        return new Promise(resolve => {
-            getAllReceived()
-            .then(res => mergeData(serverStoredSlackUsers(), res))
-            .then((receivedList) => {
-                receivedList.sort((a, b) => Math.sign(b.score - a.score));
-                resolve(receivedList)
-            })
-        })
-    }
-
-    function getGivenList() {
-        // Get all users Given
-        // Arange array desc
-        return new Promise(resolve => {
-            getAllGiven()
-            .then(res =>mergeData(serverStoredSlackUsers(), res))
-            .then((givenList) => {
-                givenList.sort((a, b) => Math.sign(b.score - a.score));
-                resolve(givenList)
-            })
-        })
-    }
-
-    function getRottenGivenList() {
-        // Arange array desc
-    }
-
-    function getRottenRecivedList() {
-        // Arange array desc
-    }
-
-
-
-
-    return {getUserStats, getRecivedList,getGivenList}
-
+    return { getUserStats };
 });

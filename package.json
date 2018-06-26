@@ -14,7 +14,7 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "moment": "^2.22.2",
-    "redis": "^2.8.0",
+    "mongodb": "^3.0.10",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
