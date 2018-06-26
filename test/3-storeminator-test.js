@@ -23,6 +23,15 @@ describe('Storeminator', () => {
             ]
         }
 
+        messageGiveTrue2 = {
+            giver: 'USERTWO',
+            updates: [
+                { username: 'USERONE', type: 'inc' },
+                { username: 'USERONE', type: 'inc' },
+                { username: 'USERONE', type: 'inc' },
+            ]
+        }
+
 
         messageTryCap = {
             giver: 'USERONE',
@@ -46,6 +55,7 @@ describe('Storeminator', () => {
 
 
         fullScoreList = [
+            { user: 'USERONE', score: '3' },            
             { user: 'USERTWO', score: '3' },
             { user: 'USERTHREE', score: '1' }
         ]
@@ -71,18 +81,20 @@ describe('Storeminator', () => {
     it('Storeminator should return false', () => {
         expect(storeminator(messageGiveFalse)).to.be.false
     });
-
     it('Give burritos', () => {
+        storeminator(messageGiveTrue2);
         storeminator(messageGiveTrue);
+        
     });
 
+    /*
     it('should return received amount', () => {
         getFullScore().then((res) => {
             expect(res).deep.equal(fullScoreList);
 
         });
     });
-
+    */
     it('should return given amount for user', () => {
         getGiven('USERONE').then((res) => {
             expect(res).to.equal('4');

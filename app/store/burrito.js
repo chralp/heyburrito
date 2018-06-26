@@ -12,11 +12,36 @@ function makeid() {
 }
 
 module.exports = ((redis, client) => {
-    // Username prefix-fix
+
+
+    // Refact, used
     const receivedKey = username => `${username}:received`;
     const receivedLogKey = username => `${username}:receivedLog`;
     const givenKey = username => `${username}:given`;
     const givenCapKey = username => `${username}:dailyCap`;
+
+
+
+    const getGiven = user => getter(givenKey(user));
+    const incrGiven = user => increaser(givenKey(user));
+
+    // Daily cap
+    const incrGivenCap = user => setKeyToExpire(givenCapKey(user));
+    const getGivenCap = user => getUserCap(givenCapKey(user));
+    const getAllReceived = (user = '*') => getUserScores(receivedKey(user));
+    const getAllGiven = (user = '*') => getUserScores(givenKey(user));
+    const getUserScore = user => getUserScores(receivedKey(user));
+    const getUserReceived = user => getter(receivedKey(user));
+
+
+
+    const giveBurrito = user => increaser(receivedKey(user)).then(() => {
+        Maestro.emit('GIVE', { user });
+    });
+
+    const takeAwayBurrito = user => decreaser(receivedKey(user)).then(() => {
+        Maestro.emit('TAKE_AWAY', { user });
+    });
 
     function getter(key) {
         return new Promise((resolve, reject) => {
@@ -89,29 +114,6 @@ module.exports = ((redis, client) => {
         resolve(true);
     });
 
-    const getGiven = user => getter(givenKey(user));
-    const incrGiven = user => increaser(givenKey(user));
-
-    // Daily cap
-    const incrGivenCap = user => setKeyToExpire(givenCapKey(user));
-    const getGivenCap = user => getUserCap(givenCapKey(user));
-
-    // Daily cap
-    const getFullScore = (user = '*') => getUserScores(receivedKey(user));
-    const getUserScore = user => getUserScores(receivedKey(user));
-
-
-    const getUserReceived = user => getter(receivedKey(user));
-
-
-
-    const giveBurrito = user => increaser(receivedKey(user)).then(() => {
-        Maestro.emit('GIVE', { user });
-    });
-
-    const takeAwayBurrito = user => decreaser(receivedKey(user)).then(() => {
-        Maestro.emit('TAKE_AWAY', { user });
-    });
 
     return {
         getGiven,
@@ -124,8 +126,9 @@ module.exports = ((redis, client) => {
         incrGivenCap,
         getGivenCap,
         setKeyToExpire,
-        getFullScore,
+        getAllReceived,
         getUserScore,
         getUserReceived,
+        getAllGiven,
     };
 });

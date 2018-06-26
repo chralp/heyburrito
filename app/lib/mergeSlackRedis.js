@@ -1,6 +1,5 @@
 module.exports = ((slack, redis) => {
     const res = [];
-
     if (slack.length === 0) {
         return false;
     }

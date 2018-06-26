@@ -1,5 +1,7 @@
 const store = []
 
+socket.emit('getRecivedList')
+
 // Store First userList
 function fullList(data) {
     data.forEach(element => {
@@ -17,7 +19,7 @@ function LocalStore(data) {
 }
 
 function renderList(data){
-    data.sort((a, b) => Math.sign(b.score - a.score));
+    //data.sort((a, b) => Math.sign(b.score - a.score));
     $("#content").empty();
     for (const a of data) {
         if (!$('.row').hasClass(a.username)) {
@@ -25,8 +27,7 @@ function renderList(data){
         }
     }
 }
-
-socket.on('getUsers', (data) => {
+socket.on('recivedList', (data) => {
     renderList(data)
 });
 
@@ -68,18 +69,18 @@ socket.on('userStats',(data) => {
     var x = document.getElementById("hiddenBox");
     x.style.display = "block";
     $("#head").empty();
-    $("#head").append(`<p><img src="${data.user.avatar}"></p>`)
-    $("#head").append(`<p>${data.user.name}</p>`)
+    $("#head").append(`<p><img src="${data.avatar}"></p>`)
+    $("#head").append(`<p>${data.name}</p>`)
 
     $("#stats").empty();
     $("#stats").append(`<p>Total given: ${data.gived}</p>`)
-    $("#stats").append(`<p>Total recived: ${data.user.score}</p>`)
+    $("#stats").append(`<p>Total received: ${data.received}</p>`)
     $("#stats").append(`<br><br>`)
 
     if(data.givers.length){
 
         for (const a of data.givers) {
-            tjeeena = returnProcent(data.user.score,a.score)
+            tjeeena = returnProcent(data.score,a.score)
             $('#stats').append(`<div class="progress"><p>${a.name}</p><div class="bar"><div class="bar-progress" style="height:24px;width:${tjeeena}%"></div></div>`);
         }
     }
