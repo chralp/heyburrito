@@ -1,22 +1,38 @@
 const BurritoStore = require('../store/burrito');
-const mergeGiven = require('./mergeGiven');
+const mergeData = require('./mergeSlackRedis');
 
 module.exports = ((serverStoredSlackUsers) => {
     function getUserStats(username) {
-        // TODO
-        return Promise.resolve(false)
-    }
+        return new Promise(async (resolve) => {
+            const users = mergeData(serverStoredSlackUsers(), [{ _id: username }]);
+            let returnUser = null;
 
-    function getRecivedBoard() {
-        // Get all users recived
-        // Arange array desc
-    }
+            if (users.length) {
+                returnUser = users[0];
+            }
 
-    function getGivenBoard() {
-        // Get all users Given
-        // Arange array desc
+            if (!returnUser) {
+                resolve(null);
+
+                return;
+            }
+
+            const userScoreData = await BurritoStore.getUserScore(username);
+            const givers = await BurritoStore.getGivers(username);
+            const given = await BurritoStore.getGiven(username);
+
+            if (userScoreData.length) {
+                returnUser.score = userScoreData[0].score;
+            } else {
+                returnUser.score = 0;
+            }
+
+            returnUser.givers = mergeData(serverStoredSlackUsers(), givers);
+            returnUser.given = mergeData(serverStoredSlackUsers(), given);
+
+            resolve(returnUser);
+        });
     }
 
     return { getUserStats };
-
 });
