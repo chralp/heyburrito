@@ -3,6 +3,11 @@ require('dotenv').config();
 const log = require('bog');
 const path = require('path');
 const webserver = require('./web');
+const database = require('./database');
+const BurritoStore = require('./store/burrito');
+
+// Configure BurritoStore
+BurritoStore.setDatabase(database);
 
 const { RTMClient, WebClient } = require('@slack/client');
 

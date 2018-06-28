@@ -1,11 +1,14 @@
 const log = require('bog');
 const { EventEmitter } = require('events');
-const database = require('../database');
 
 class BurritoStore extends EventEmitter {
     constructor() {
         super();
 
+        this.database = null;
+    }
+
+    setDatabase(database) {
         this.database = database;
     }
 
@@ -63,4 +66,5 @@ class BurritoStore extends EventEmitter {
     }
 }
 
+// Export as singleton
 module.exports = new BurritoStore();
