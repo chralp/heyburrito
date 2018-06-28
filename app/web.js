@@ -5,7 +5,7 @@ const express = require('express');
 
 const app = express();
 
-const BurritoStore = require('./store/Burrito');
+const BurritoStore = require('./store/burrito');
 const mergeData = require('./lib/mergeSlackRedis');
 
 const server = http.createServer(app);
