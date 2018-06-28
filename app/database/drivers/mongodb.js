@@ -12,7 +12,7 @@ class MongoDBDriver {
             return Promise.resolve(this.client);
         }
 
-        return this.MongoClient.connect(this.url).then((client) => {
+        return this.MongoClient.connect(`${this.url}/${this.databaseName}`).then((client) => {
             this.client = client;
             this.db = client.db(this.databaseName);
         });
