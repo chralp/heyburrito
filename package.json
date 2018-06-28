@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./app/server.js",
     "test": "mocha",
-    "lint": "eslint **/*.js --fix"
+    "lint": "eslint app/**/*.js --fix"
   },
   "dependencies": {
     "@slack/client": "^4.3.1",
@@ -14,7 +14,10 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "moment": "^2.22.2",
+    "mongo-mock": "^3.1.0",
     "mongodb": "^3.0.10",
+    "mongoskin": "^2.1.0",
+    "naive-mongo": "^3.0.7",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
