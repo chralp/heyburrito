@@ -1,8 +1,8 @@
-const MongoClient = require('mongodb').MongoClient;
 const config = require('../../lib/config');
 
 class MongoDBDriver {
-    constructor() {
+    constructor(MongoClient) {
+        this.MongoClient = MongoClient;
         this.url = config('MONGODB_URL');
         this.databaseName = config('MONGODB_DATABASE');
         this.db = null;
@@ -14,7 +14,7 @@ class MongoDBDriver {
             return Promise.resolve(this.client);
         }
 
-        return MongoClient.connect(this.url).then((client) => {
+        return this.MongoClient.connect(this.url).then((client) => {
             this.client = client;
             this.db = client.db(this.databaseName);
         });

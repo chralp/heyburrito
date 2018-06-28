@@ -1,5 +1,8 @@
 const mongodb = require('./drivers/mongodb');
 
 module.exports = {
-    mongodb,
+    mongodb: {
+        Driver: mongodb,
+        client: () => require('mongodb').MongoClient,
+    },
 };
