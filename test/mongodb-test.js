@@ -1,3 +1,3 @@
-const Driver = require('../app/database/driver/mongodb');
+const Driver = require('../app/database/drivers/mongodb');
 // Load client
 // const DriverInstance = new Driver(client);
