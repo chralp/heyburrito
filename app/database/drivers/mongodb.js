@@ -1,10 +1,8 @@
-const config = require('../../lib/config');
-
 class MongoDBDriver {
-    constructor(MongoClient) {
+    constructor(MongoClient, config = {}) {
         this.MongoClient = MongoClient;
-        this.url = config('MONGODB_URL');
-        this.databaseName = config('MONGODB_DATABASE');
+        this.url = config.url;
+        this.databaseName = config.database;
         this.db = null;
         this.client = null;
     }

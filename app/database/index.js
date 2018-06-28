@@ -3,6 +3,6 @@ const drivers = require('./manifest');
 
 const driverName = config('DATABASE_DRIVER');
 
-const { Driver, client } = drivers[driverName];
+const { Driver, client, settings } = drivers[driverName];
 
-module.exports = new Driver(client());
+module.exports = new Driver(client(), settings);
