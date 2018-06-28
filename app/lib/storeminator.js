@@ -1,15 +1,16 @@
 const config = require('./config');
 const BurritoStore = require('../store/burrito');
+const log = require('bog');
 
 module.exports = (() => {
     const dailyCap = config('SLACK_DAILY_CAP');
 
     function handleMsg(giver, updates) {
         BurritoStore.givenBurritosToday(giver).then((burritos) => {
-            console.log('%s has given %d burritos today', giver, burritos.length);
+            log.info('%s has given %d burritos today', giver, burritos.length);
 
             if (burritos.length >= dailyCap) {
-                console.log('Daily cap of %d reached', dailyCap);
+                log.info('Daily cap of %d reached', dailyCap);
                 return;
             }
 

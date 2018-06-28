@@ -1,5 +1,3 @@
-const log = require('bog');
-
 module.exports = ((msg, emojis) => {
     const hits = [];
     const users = [];
@@ -24,19 +22,23 @@ module.exports = ((msg, emojis) => {
     }
 
     // Count hits
-    emojis.map((x) => {
+    emojis.forEach((x) => {
         const hit = msg.text.match(x.emoji);
+
         if (hit) {
-            emojihit = msg.text.match(new RegExp(x.emoji, 'g'));
+            const emojihit = msg.text.match(new RegExp(x.emoji, 'g'));
+
             for (const e of emojihit) {
                 const obj = {
                     emoji: x.emoji,
                     type: x.type,
                 };
+
                 hits.push(obj);
             }
         }
     });
+
     if (hits.length === 0) {
         return false;
     }
@@ -49,6 +51,7 @@ module.exports = ((msg, emojis) => {
                 username: u,
                 type: i.type,
             };
+
             updates.push(obj);
         }
     }

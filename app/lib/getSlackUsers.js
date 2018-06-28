@@ -9,15 +9,15 @@ module.exports = ((wbc) => {
         log.info('Getting all slack users');
         await wbc.users.list().then((res) => {
             res.members.forEach((x) => {
-                if(x.is_bot){
-                    let obj = {
+                if (x.is_bot) {
+                    const obj = {
                         id: x.id,
                         name: x.real_name,
                         avatar: x.profile.image_48,
                     };
                     bots.push(obj);
-                }else{
-                    let obj = {
+                } else {
+                    const obj = {
                         id: x.id,
                         name: x.real_name,
                         avatar: x.profile.image_48,
@@ -28,7 +28,7 @@ module.exports = ((wbc) => {
         }).catch((err) => {
             log.warn(err);
         });
-        return {users, bots}
+        return { users, bots };
     }
 
     return { slackUsers };

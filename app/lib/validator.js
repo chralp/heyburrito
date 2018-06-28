@@ -1,8 +1,5 @@
-const log = require('bog');
-
 module.exports = (() => {
-
-    function validMessage (message,emojis, allBots) {
+    function validMessage(message, emojis, allBots) {
         // Message is changed, not valid!
         if ((!!message.subtype) && (message.subtype === 'message_changed')) {
             return false;
@@ -18,18 +15,17 @@ module.exports = (() => {
             return false;
         }
 
-        const bots = allBots()
+        const bots = allBots();
 
         for (const x of bots) {
-
             // Message is sent from bot
-            if(message.user.match(`${x.id}`)){
+            if (message.user.match(`${x.id}`)) {
                 return false;
             }
 
             // Message contains bot and emoji
             if (message.text.match(`${x.id}`)) {
-                for (const e of emojis){
+                for (const e of emojis) {
                     if (message.text.match(`${e.emoji}`)) {
                         return false;
                     }
@@ -38,17 +34,17 @@ module.exports = (() => {
         }
 
 
-        return true
+        return true;
     }
 
-    function validBotMention (message, botUserID) {
+    function validBotMention(message, botUserID) {
+        const botid = botUserID();
 
-        botid = botUserID();
         if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {
-            return true
+            return true;
         }
-        return false
+        return false;
     }
 
-    return {validBotMention,validMessage}
+    return { validBotMention, validMessage };
 });

@@ -1,5 +1,3 @@
-const config = (key, fallback = null) => {
-    return (key in process.env) ? process.env[key] : fallback;
-};
+const config = (key, fallback = null) => ((key in process.env) ? process.env[key] : fallback);
 
 module.exports = config;
