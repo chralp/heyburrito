@@ -50,6 +50,55 @@ class MongoDBDriver {
 
         return this.db.collection(collection).aggregate(aggregations).toArray();
     }
+
+    findFrom(user) {
+        return this.find('burritos', { from: user });
+    }
+
+    findFromToday(user) {
+        const start = new Date();
+        const end = new Date();
+
+        start.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
+
+        return this.find('burritos', { from: user, given_at: { $gte: start, $lt: end } });
+    }
+
+    give(to, from) {
+        return this.store('burritos', {
+            to,
+            from,
+            value: 1,
+            given_at: new Date(),
+        });
+    }
+
+    takeAway(to, from) {
+        return this.store('burritos', {
+            to,
+            from,
+            value: -1,
+            given_at:
+            new Date(),
+        });
+    }
+
+    getScore(user = null) {
+        const match = (user) ? { to: user } : null;
+
+        return this.sum('burritos', 'value', match);
+    }
+
+    getGiven(user = null) {
+        const match = (user) ? { from: user } : null;
+
+        return this.sum('burritos', 'value', match);
+    }
+
+    getGivers(user) {
+        return this.sum('burritos', 'value', { to: user }, 'from');
+    }
 }
 
 module.exports = MongoDBDriver;
