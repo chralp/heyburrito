@@ -8,7 +8,7 @@ class MongoDBDriver {
     }
 
     connect() {
-        if (this.client && this.client.isConnected()) {
+        if (this.client && typeof this.client.isConnected === 'function' && this.client.isConnected()) {
             return Promise.resolve(this.client);
         }
 
