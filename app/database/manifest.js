@@ -1,13 +1,18 @@
-const mongodb = require('./drivers/mongodb');
 const config = require('../lib/config');
 
 module.exports = {
-    mongodb: {
-        Driver: mongodb,
-        client: () => require('mongodb').MongoClient,
-        settings: {
+    mongodb: () => {
+        const client = require('mongodb').MongoClient;
+        const MongoDBDriver = require('./drivers/mongodb');
+
+        return new MongoDBDriver(client, {
             url: config('MONGODB_URL'),
             database: config('MONGODB_DATABASE'),
-        },
+        });
+    },
+    array: () => {
+        const ArrayDriver = require('./drivers/array');
+
+        return new ArrayDriver();
     },
 };
