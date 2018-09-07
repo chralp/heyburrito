@@ -1,9 +1,33 @@
+/*
+* On start
+*/
+
+// Store where all users ?!
 const store = []
 
+// Get full list of received Burritos
 socket.emit('getReceivedList')
+
+
+/*
+* Special help functions
+*/
+
+function returnProcent(totalScore,user){
+
+    a = totalScore
+    b = user
+    res = b / a
+    return res *100
+}
+
+function openStats(user) {
+    socket.emit('getUserStats', user)
+}
 
 // Store First userList
 function fullList(data) {
+    console.log("FullList", data)
     data.forEach(element => {
         store.push(element)
     });
@@ -52,19 +76,10 @@ socket.on('TAKE_AWAY', (data) => {
     }
 });
 
-function openStats(user) {
-    socket.emit('getUserStats', user)
-}
-
-function returnProcent(totalScore,user){
-
-    a = totalScore
-    b = user
-    res = b / a
-    return res *100
-}
 
 
+
+// Box, showUser stats
 socket.on('userStats',(data) => {
     var x = document.getElementById("hiddenBox");
     x.style.display = "block";
@@ -86,6 +101,9 @@ socket.on('userStats',(data) => {
     }
 
 })
+
+
+// Hax to fix box on startup
 function close(){
     var x = document.getElementById("hiddenBox");
     if(x.style.display === "none"){
