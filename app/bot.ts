@@ -1,7 +1,8 @@
-const log = require('bog');
-const parseMessage = require('./lib/parseMessage');
-const { validBotMention, validMessage } = require('./lib/validator')(true);
-const { storeminator } = require('./lib/storeminator')();
+import * as log from 'bog'
+const parseMessage = require('./lib/parseMessage')(true)
+
+const { validBotMention, validMessage } = require('./lib/validator')(true)
+const { storeminator } = require('./lib/storeminator')(true)
 
 const emojis = [];
 

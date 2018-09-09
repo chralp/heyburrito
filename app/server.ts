@@ -6,12 +6,16 @@ import * as webserver from './web'
 dotenv.config()
 
 import * as database from './database'
-const BurritoStore = require('./store/burrito');
+
+import * as BurritoStore from './store/burrito'
+
+//const BurritoStore = require('./store/burrito')
+
 
 // Configure BurritoStore
 BurritoStore.setDatabase(database);
 
-const { RTMClient, WebClient } = require('@slack/client');
+import { RTMClient, WebClient } from '@slack/client'
 
 // Configuration file to use
 const root = path.normalize(`${__dirname}/../`);
