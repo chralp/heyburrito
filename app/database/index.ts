@@ -1,8 +1,8 @@
-import * as config from '../lib/config'
-const drivers = require('./manifest');
+import config from '../lib/config'
+import drivers from './manifest'
 
 const driverName = config('DATABASE_DRIVER');
 
 const Driver = drivers[driverName];
 
-module.exports = Driver();
+export default Driver

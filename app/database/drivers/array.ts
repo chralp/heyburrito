@@ -1,5 +1,5 @@
 class ArrayDriver {
-    data:any;
+    data:Array<any>;
     constructor() {
         this.data = [];
     }
@@ -61,7 +61,7 @@ class ArrayDriver {
             userScores[item.to].score += item.value;
         });
 
-        return await(Object.values(userScores));
+        return await((<any>Object).values(userScores));
     }
 
     async getGiven(user = null) {
@@ -81,7 +81,7 @@ class ArrayDriver {
             userScores[item.from].score += item.value;
         });
 
-        return await(Object.values(userScores));
+        return await((<any>Object).values(userScores));
     }
 
     async getGivers(user) {
@@ -101,8 +101,8 @@ class ArrayDriver {
             userScores[item.from].score += item.value;
         });
 
-        return await(Object.values(userScores));
+        return await((<any>Object).values(userScores));
     }
 }
 
-module.exports = ArrayDriver;
+export default ArrayDriver

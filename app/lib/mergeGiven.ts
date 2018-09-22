@@ -8,7 +8,7 @@
 * ]
 *
 */
-module.exports = ((slackUsers, given) => {
+export default ((slackUsers, given) => {
     const counts = {};
 
     for (let i = 0; i < given.length; i += 1) {

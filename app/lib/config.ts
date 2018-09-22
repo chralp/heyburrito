@@ -1,3 +1,3 @@
 const config = (key, fallback = null) => ((key in process.env) ? process.env[key] : fallback);
 
-export = config;
+export default config;

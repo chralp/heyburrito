@@ -1,6 +1,6 @@
-import * as log from 'bog'
+import log from 'bog'
 
-import { EventEmitter } from 'events'
+import EventEmitter from 'events'
 
 class BurritoStore extends EventEmitter {
 
@@ -50,4 +50,4 @@ class BurritoStore extends EventEmitter {
 }
 
 // Export as singleton
-module.exports = new BurritoStore();
+export default new BurritoStore();

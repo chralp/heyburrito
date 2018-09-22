@@ -1,9 +1,8 @@
-const BurritoStore = require('../store/burrito');
+import BurritoStore from '../store/burrito'
 const mergeData = require('./mergeSlackRedis');
 
-module.exports = ((serverStoredSlackUsers) => {
-    function getUserStats(username) {
-        return new Promise(async (resolve) => {
+export default ((serverStoredSlackUsers) => {
+    async function getUserStats(username) {
             const users = mergeData(serverStoredSlackUsers(), [{ _id: username }]);
             let returnUser = null;
 
@@ -12,9 +11,7 @@ module.exports = ((serverStoredSlackUsers) => {
             }
 
             if (!returnUser) {
-                resolve(null);
-
-                return;
+                return(null);
             }
 
             const userScoreData = await BurritoStore.getUserScore(username);
@@ -30,8 +27,7 @@ module.exports = ((serverStoredSlackUsers) => {
             returnUser.givers = mergeData(serverStoredSlackUsers(), givers);
             returnUser.given = mergeData(serverStoredSlackUsers(), given);
 
-            resolve(returnUser);
-        });
+            await(returnUser);
     }
 
     return { getUserStats };

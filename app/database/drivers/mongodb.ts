@@ -1,5 +1,10 @@
 class MongoDBDriver {
-    constructor(MongoClient, config = {}) {
+    MongoClient:any
+    url:any
+    databaseName:any
+    db:any
+    client:any
+    constructor(MongoClient, config:any = {}) {
         this.MongoClient = MongoClient;
         this.url = config.url;
         this.databaseName = config.database;
@@ -9,7 +14,7 @@ class MongoDBDriver {
 
     connect() {
         if (this.client && typeof this.client.isConnected === 'function' && this.client.isConnected()) {
-            return Promise.resolve(this.client);
+            return this.client;
         }
 
         return this.MongoClient.connect(`${this.url}/${this.databaseName}`).then((client) => {
@@ -37,7 +42,7 @@ class MongoDBDriver {
     async sum(collection, key = 'value', match = null, groupBy = 'to') {
         await this.connect();
 
-        const aggregations = [{ $match: { to: { $exists: true } } }];
+        const aggregations:Array<Object> = [{ $match: { to: { $exists: true } } }];
 
         if (match) {
             aggregations.push({ $match: match });
@@ -99,4 +104,4 @@ class MongoDBDriver {
     }
 }
 
-module.exports = MongoDBDriver;
+export default MongoDBDriver;

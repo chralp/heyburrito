@@ -1,6 +1,6 @@
-import * as config from '../lib/config'
+import config from '../lib/config'
 
-module.exports = {
+export default {
     mongodb: () => {
         const client = require('mongodb').MongoClient;
         const MongoDBDriver = require('./drivers/mongodb');

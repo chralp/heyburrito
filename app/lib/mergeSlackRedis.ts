@@ -1,5 +1,5 @@
-module.exports = ((slack, data) => {
-    const res = [];
+export default ((slack, data) => {
+    const res:Array<Object> = [];
     if (slack.length === 0) {
         return false;
     }

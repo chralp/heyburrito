@@ -1,13 +1,12 @@
-import * as dotenv from 'dotenv'
-
-import * as log from 'bog'
-import * as path from 'path'
-import * as webserver from './web'
+import dotenv from 'dotenv'
+import log from 'bog'
+import path from 'path'
+import webserver from './web'
 dotenv.config()
 
-import * as database from './database'
+import database from './database'
 
-import * as BurritoStore from './store/burrito'
+import BurritoStore from './store/burrito'
 
 //const BurritoStore = require('./store/burrito')
 
@@ -42,11 +41,12 @@ function serverStoredSlackUsers() {
     return storedSlackUsers;
 }
 // Fun
-const { getUserStats } = require('./lib/handleStats')(serverStoredSlackUsers);
+import getUserStats from './lib/handleStats'
+getUserStats(serverStoredSlackUsers)
 
 const wbc = new WebClient(process.env.SLACK_API_TOKEN);
-const { slackUsers } = require('./lib/getSlackUsers')(wbc);
-
+import slackUsers from './lib/getSlackUsers'
+slackUsers(wbc)
 
 function getBotUsername() {
     if (!process.env.BOT_NAME) {
@@ -74,14 +74,14 @@ function getAllBots() {
     return storedSlackBots;
 }
 
-function localStore() {
-    slackUsers().then((res) => {
-        storedSlackUsers = null;
-        storedSlackBots = null;
-        storedSlackUsers = res.users;
-        storedSlackBots = res.bots;
-        getBotUsername();
-    });
+async function localStore() {
+    const res = await slackUsers(wbc)
+    console.log("res", res)
+    storedSlackUsers = null;
+    storedSlackBots = null;
+    storedSlackUsers = res.users;
+    storedSlackBots = res.bots;
+    return getBotUsername();
 }
 
 // Run on boot

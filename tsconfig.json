@@ -1,6 +1,8 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
+        "esModuleInterop": true,
+        "lib": [ "es2017", "dom" ],
         "paths": {
             "*": ["./typings/*"]
          }

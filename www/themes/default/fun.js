@@ -4,7 +4,7 @@
 
 // Store where all users ?!
 const store = []
-
+console.log("gg")
 // Get full list of received Burritos
 socket.emit('getReceivedList')
 
