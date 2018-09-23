@@ -1,11 +1,9 @@
-
-import log from 'bog'
-import http from "http"
-import BurritoStore from './store/burrito'
-import path from 'path'
-import mergeData from './lib/mergeSlackRedis'
-
-import fs from 'fs'
+import log from 'bog';
+import http from 'http';
+import BurritoStore from './store/burrito';
+import path from 'path';
+import mergeData from './lib/mergeSlackRedis';
+import fs from 'fs';
 
 // Webserver port
 const port = process.env.PORT || 3333;
@@ -14,17 +12,17 @@ export default ((
     publicPath,
     serverStoredSlackUsers,
 ) => {
-
     const requestHandler = (request, response) => {
         console.log('request ', request.url);
 
-        var filePath = publicPath + request.url;
+        let filePath = publicPath + request.url;
+
         if (filePath == './') {
             filePath = './index.html';
         }
 
-        var extname = String(path.extname(filePath)).toLowerCase();
-        var mimeTypes = {
+        const extname = String(path.extname(filePath)).toLowerCase();
+        const mimeTypes = {
             '.html': 'text/html',
             '.js': 'text/javascript',
             '.css': 'text/css',
@@ -33,7 +31,7 @@ export default ((
             '.jpg': 'image/jpg'
         };
 
-        var contentType = mimeTypes[extname] || 'application/octet-stream';
+        const contentType = mimeTypes[extname] || 'application/octet-stream';
 
         fs.readFile(filePath, function(error, content) {
             if (error) {
@@ -58,13 +56,12 @@ export default ((
 
     const server = http.createServer(requestHandler)
 
-
     server.listen(port, (err) => {
-    if (err) {
-        return console.log('something bad happened', err)
-    }
+        if (err) {
+            return console.log('something bad happened', err)
+        }
 
-    console.log(`server is listening on ${port}`)
+        console.log(`server is listening on ${port}`)
     })
 
     const WebSocket = require('ws');

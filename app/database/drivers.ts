@@ -1,5 +1,5 @@
-import config from '../lib/config'
-import {MongoDBDriver} from './drivers/mongodb'
+import config from '../lib/config';
+import { MongoDBDriver } from './drivers/mongodb';
 
 export default {
     mongodb: () => {
@@ -10,8 +10,8 @@ export default {
         });
     },
     array: () => {
-        const ArrayDriver = require('./drivers/array');
+        const arrayDriver = require('./drivers/array');
 
-        return new ArrayDriver();
+        return new arrayDriver();
     },
 };

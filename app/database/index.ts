@@ -1,8 +1,8 @@
-import config from '../lib/config'
-import drivers from './manifest'
+import config from '../lib/config';
+import drivers from './drivers';
 
 const driverName = config('DATABASE_DRIVER');
 
-const Driver = drivers[driverName];
+const driver = drivers[driverName];
 
-export default Driver()
+export default driver();
