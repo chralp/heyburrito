@@ -35,7 +35,6 @@ class BurritoStore extends EventEmitter {
     }
 
     getUserScore(user = null) {
-        console.log("SAATANS")
         return this.database.getScore(user);
     }
 

@@ -10,19 +10,23 @@ const socket = new WebSocket('ws://localhost:8080');
 // Get full list of received Burritos
 
 socket.addEventListener('open', function () {
-    socket.send('getReceivedList');
+    socket.send(JSON.stringify({event:"getReceivedList"}));
 });
 
 socket.onmessage = (e) => {
-    console.log("e", e)
-    const obj = JSON.parse(e.event)
-    console.log("obj", obj)
+    const obj = JSON.parse(e.data)
     switch(obj.event) {
         case "receivedList":
             renderList(obj.data)
             break;
-}
-        };
+        case "givenList":
+            givenList(obj.data)
+            break;
+        case "userStats":
+            userStats(obj.data)
+            break;
+    }
+};
 /*
 * Special help functions
 */
@@ -36,7 +40,7 @@ function returnProcent(totalScore,user){
 }
 
 function openStats(user) {
-    socket.send('getUserStats', user)
+    socket.send(JSON.stringify({event:'getUserStats', data:user}))
 }
 
 // Store First userList
@@ -91,7 +95,8 @@ socket.onmessage('TAKE_AWAY', (data) => {
 
 
 // Box, showUser stats
-socket.onmessage('userStats',(data) => {
+function userStats (data){
+    console.log("data",data)
     var x = document.getElementById("hiddenBox");
     x.style.display = "block";
     $("#head").empty();
@@ -110,8 +115,9 @@ socket.onmessage('userStats',(data) => {
             $('#stats').append(`<div class="progress"><p>${a.name}</p><div class="bar"><div class="bar-progress" style="height:24px;width:${tjeeena}%"></div></div>`);
         }
     }
+}
 
-})
+
 
 
 // Hax to fix box on startup

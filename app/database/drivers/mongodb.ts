@@ -43,7 +43,6 @@ export class MongoDBDriver {
     }
 
     async sum(collection, key = 'value', match = null, groupBy = 'to') {
-        console.log("sum")
         await this.connect();
 
         const aggregations:Array<Object> = [{ $match: { to: { $exists: true } } }];
