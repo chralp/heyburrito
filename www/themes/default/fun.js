@@ -4,11 +4,25 @@
 
 // Store where all users ?!
 const store = []
-console.log("gg")
+// Create WebSocket connection.
+const socket = new WebSocket('ws://localhost:8080');
+
 // Get full list of received Burritos
-socket.emit('getReceivedList')
 
+socket.addEventListener('open', function () {
+    socket.send('getReceivedList');
+});
 
+socket.onmessage = (e) => {
+    console.log("e", e)
+    const obj = JSON.parse(e.event)
+    console.log("obj", obj)
+    switch(obj.event) {
+        case "receivedList":
+            renderList(obj.data)
+            break;
+}
+        };
 /*
 * Special help functions
 */
@@ -22,7 +36,7 @@ function returnProcent(totalScore,user){
 }
 
 function openStats(user) {
-    socket.emit('getUserStats', user)
+    socket.send('getUserStats', user)
 }
 
 // Store First userList
@@ -51,9 +65,6 @@ function renderList(data){
         }
     }
 }
-socket.on('receivedList', (data) => {
-    renderList(data)
-});
 
 
 //socket.on('GIVE', (data) => {
@@ -67,7 +78,7 @@ function give(data) {
     }
 }
 
-socket.on('TAKE_AWAY', (data) => {
+socket.onmessage('TAKE_AWAY', (data) => {
     const $item = $('#content').find(`[data-uuid="${data[0].username}"]`);
     if ($item.length) {
         var burritos = parseInt($item.find('td.score').html(), 10);
@@ -80,7 +91,7 @@ socket.on('TAKE_AWAY', (data) => {
 
 
 // Box, showUser stats
-socket.on('userStats',(data) => {
+socket.onmessage('userStats',(data) => {
     var x = document.getElementById("hiddenBox");
     x.style.display = "block";
     $("#head").empty();

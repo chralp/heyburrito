@@ -5,4 +5,4 @@ const driverName = config('DATABASE_DRIVER');
 
 const Driver = drivers[driverName];
 
-export default Driver
+export default Driver()

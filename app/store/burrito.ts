@@ -4,11 +4,9 @@ import EventEmitter from 'events'
 
 class BurritoStore extends EventEmitter {
 
-    database:any;
-
+    database:any
     constructor() {
         super();
-
         this.database = null;
     }
 
@@ -37,6 +35,7 @@ class BurritoStore extends EventEmitter {
     }
 
     getUserScore(user = null) {
+        console.log("SAATANS")
         return this.database.getScore(user);
     }
 

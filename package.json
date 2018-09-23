@@ -21,7 +21,9 @@
     "naive-mongo": "^3.0.7",
     "socket.io": "^2.1.1",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.3"
+    "typescript": "^3.0.3",
+    "websocket": "^1.0.28",
+    "ws": "^6.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",

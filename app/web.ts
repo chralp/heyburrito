@@ -58,8 +58,7 @@ export default ((
         });
       }
 
-      const server = http.createServer(requestHandler)
-      const io = require('socket.io')(server);
+    const server = http.createServer(requestHandler)
 
 
     server.listen(port, (err) => {
@@ -70,6 +69,72 @@ export default ((
     console.log(`server is listening on ${port}`)
     })
 
+    const WebSocket = require('ws');
+    const wss = new WebSocket.Server({ port: 8080 });
+
+    wss.on('connection', function connection(ws) {
+        ws.on('message', function incoming(message) {
+            console.log('received: %s', message);
+        });
+
+
+
+        ws.on('getReceivedList', function incoming() {
+            console.log("getReceivedList")
+            BurritoStore.getUserScore().then((users) => {
+                console.log("users", users)
+                const result = mergeData(serverStoredSlackUsers(), users);
+                const gg = Buffer.from(JSON.stringify({event:'receivedList', data:result}))
+                console.log(gg)
+                ws.send(gg);
+            });
+        });
+
+        ws.on('getGivenList', function incoming() {
+            BurritoStore.getUserScore().then((users) => {
+            const result = mergeData(serverStoredSlackUsers(), users.map((user) => {
+                user._id = user.from;
+                return user;
+            }));
+
+            ws.send('givenList', result);
+            });
+        });
+
+        ws.on('getUserStats', function incoming(user) {
+            BurritoStore.getGivers(user)
+                .then(users => mergeData(serverStoredSlackUsers(), users))
+                .then((givers) => {
+                    BurritoStore.getGiven(user).then((gived) => {
+                        BurritoStore.getUserScore(user).then((userScoreData) => {
+                            const result = mergeData(serverStoredSlackUsers(), userScoreData);
+                            const obj = {
+                                user: result[0],
+                                gived,
+                                givers,
+                            };
+
+                            ws.send('userStats', obj);
+                        });
+                    });
+                });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+
+/*
     BurritoStore.on('GIVE', ({ user }) => {
         BurritoStore.getUserScore(user).then((result) => {
             const users = mergeData(serverStoredSlackUsers(), result);
@@ -86,49 +151,9 @@ export default ((
         });
     });
 
-    /*
+
         Socket.io
     */
-    io.on('connection', (socket) => {
-        socket.on('getReceivedList', () => {
-            BurritoStore.getUserScore().then((users) => {
-                const result = mergeData(serverStoredSlackUsers(), users);
-
-                socket.emit('receivedList', result);
-            });
-        });
-
-        socket.on('getGivenList', () => {
-            BurritoStore.getUserScore().then((users) => {
-                const result = mergeData(serverStoredSlackUsers(), users.map((user) => {
-                    user._id = user.from;
-
-                    return user;
-                }));
-
-                socket.emit('givenList', result);
-            });
-        });
-
-        socket.on('getUserStats', (user) => {
-            BurritoStore.getGivers(user)
-                .then(users => mergeData(serverStoredSlackUsers(), users))
-                .then((givers) => {
-                    BurritoStore.getGiven(user).then((gived) => {
-                        BurritoStore.getUserScore(user).then((userScoreData) => {
-                            const result = mergeData(serverStoredSlackUsers(), userScoreData);
-                            const obj = {
-                                user: result[0],
-                                gived,
-                                givers,
-                            };
-
-                            socket.emit('userStats', obj);
-                        });
-                    });
-                });
-        });
-    });
 
     log.info(`Webserver listening to: ${port}`);
     server.listen(port);
