@@ -14,7 +14,8 @@ socket.addEventListener('open', function () {
 });
 
 socket.onmessage = (e) => {
-    const obj = JSON.parse(e.data)
+
+    const obj = JSON.parse(e.data);
     switch(obj.event) {
         case "receivedList":
             renderList(obj.data)
@@ -82,14 +83,14 @@ function give(data) {
     }
 }
 
-socket.onmessage('TAKE_AWAY', (data) => {
-    const $item = $('#content').find(`[data-uuid="${data[0].username}"]`);
-    if ($item.length) {
-        var burritos = parseInt($item.find('td.score').html(), 10);
+//socket.onmessage('TAKE_AWAY', (data) => {
+//    const $item = $('#content').find(`[data-uuid="${data[0].username}"]`);
+//    if ($item.length) {
+ //       var burritos = parseInt($item.find('td.score').html(), 10);/
 
-        $item.find('td.score').html(data[0].score);
-    }
-});
+//        $item.find('td.score').html(data[0].score);
+ //   }
+//});
 
 
 

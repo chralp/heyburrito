@@ -132,25 +132,6 @@ export default ((
                 ws.send(JSON.stringify({event:'givenList', data:result}));
             });
         }
-        ws.on('getGivenList', function incoming() {
-
-        });
-
-        ws.on('getUserStats', function incoming(user) {
-
-        });
-
-
-
-
-
-
-
-
-
-
-
-
 
     });
 
