@@ -2,8 +2,10 @@ class Hey {
     constructor() {
         this.socket = new WebSocket('ws://localhost:8080');
         this.events = {};
+        this.open = false;
 
         this.socket.addEventListener('open', () => {
+            this.open = true;
             this.emit('open');
         });
 
@@ -40,6 +42,10 @@ class Hey {
         }
 
         this.events[event].push(listener);
+
+        if (event === 'open' && this.open) {
+            this.emit('open');
+        }
     }
 
     off(event, listener) {
