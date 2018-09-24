@@ -4,30 +4,17 @@
 
 // Store where all users ?!
 const store = []
-// Create WebSocket connection.
-const socket = new WebSocket('ws://localhost:8080');
 
 // Get full list of received Burritos
 
-socket.addEventListener('open', function () {
-    socket.send(JSON.stringify({event:"getReceivedList"}));
+hey.on('open', function () {
+    hey.send('getReceivedList');
 });
 
-socket.onmessage = (e) => {
+hey.on('receivedList', renderList);
+//hey.on('givenList', givenList);
+hey.on('userStats', userStats);
 
-    const obj = JSON.parse(e.data);
-    switch(obj.event) {
-        case "receivedList":
-            renderList(obj.data)
-            break;
-        case "givenList":
-            givenList(obj.data)
-            break;
-        case "userStats":
-            userStats(obj.data)
-            break;
-    }
-};
 /*
 * Special help functions
 */
@@ -61,7 +48,7 @@ function LocalStore(data) {
     renderList(store)
 }
 
-function renderList(data){
+function renderList(data) {
     //data.sort((a, b) => Math.sign(b.score - a.score));
     $("#content").empty();
     for (const a of data) {
@@ -70,7 +57,6 @@ function renderList(data){
         }
     }
 }
-
 
 //socket.on('GIVE', (data) => {
 function give(data) {
@@ -82,18 +68,6 @@ function give(data) {
         renderList(data)
     }
 }
-
-//socket.onmessage('TAKE_AWAY', (data) => {
-//    const $item = $('#content').find(`[data-uuid="${data[0].username}"]`);
-//    if ($item.length) {
- //       var burritos = parseInt($item.find('td.score').html(), 10);/
-
-//        $item.find('td.score').html(data[0].score);
- //   }
-//});
-
-
-
 
 // Box, showUser stats
 function userStats (data){
