@@ -48,7 +48,7 @@ function getBotUsername() {
         return;
     }
 
-    storedSlackBots.forEach((x) => {
+    storedSlackBots.forEach((x:any) => {
         if (x.name === process.env.BOT_NAME) {
             botId = x.id;
         }

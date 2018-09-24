@@ -47,8 +47,8 @@ export default ((
                 }
             } else {
                 if (contentType === 'text/html') {
-                    const www = path.normalize(`${publicPath}/../../lib/`);
-                    const js = fs.readFileSync(`${www}Hey.js`, 'utf-8');
+                    const www:string = path.normalize(`${publicPath}/../../lib/`);
+                    const js:string = fs.readFileSync(`${www}Hey.js`, 'utf-8');
 
                     content = content.replace('</head>', `<script>${js}</script></head>`);
                 }

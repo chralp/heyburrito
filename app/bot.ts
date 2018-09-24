@@ -1,10 +1,16 @@
-import log from 'bog'
-import parseMessage from './lib/parseMessage'
+import log from 'bog';
+import parseMessage from './lib/parseMessage';
+import { validBotMention, validMessage } from './lib/validator';
+import  storeminator from './lib/storeminator';
 
-import { validBotMention, validMessage } from './lib/validator'
-import  storeminator from './lib/storeminator'
+const emojis:Array<object> = [];
 
-const emojis = [];
+interface eventInterface {
+    subtype: string,
+    channel: string,
+    user: string,
+    type: string
+}
 
 if (process.env.SLACK_EMOJI_INC) {
     const incEmojis = process.env.SLACK_EMOJI_INC.split(',');
@@ -16,7 +22,7 @@ if (process.env.SLACK_EMOJI_DEC) {
     incEmojis.forEach(emoji => emojis.push({ type: 'dec', emoji }));
 }
 
-module.exports = ((rtm, botUserID, getUserStats, allBots) => {
+module.exports = ((rtm, botUserID:Function, getUserStats:Function, allBots:Function) => {
     function sendToUser(username, data) {
         log.info('Will send to user', username);
         log.info('With data', data);
@@ -24,7 +30,7 @@ module.exports = ((rtm, botUserID, getUserStats, allBots) => {
 
     function listener() {
         log.info('Listening on slack messages');
-        rtm.on('message', (event) => {
+        rtm.on('message', (event:eventInterface) => {
             console.log("rtm.on", event)
             if ((!!event.subtype) && (event.subtype === 'channel_join')) {
                 log.info('Joined channel', event.channel);

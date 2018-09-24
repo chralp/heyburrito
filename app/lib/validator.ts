@@ -1,4 +1,9 @@
-function validMessage(message, emojis, allBots) {
+interface messageInterface {
+    subtype: string,
+    text:string,
+    user:string
+}
+function validMessage(message:messageInterface, emojis:Array<object>, allBots:Function) {
 
     // Message is changed, not valid!
     if ((!!message.subtype) && (message.subtype === 'message_changed')) {
@@ -37,7 +42,7 @@ function validMessage(message, emojis, allBots) {
     return true;
 }
 
-function validBotMention(message, botUserID) {
+function validBotMention(message:messageInterface, botUserID:Function) {
     const botid = botUserID();
 
     if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {

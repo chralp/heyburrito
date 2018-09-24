@@ -1,9 +1,9 @@
-import config from './config'
-import BurritoStore from '../store/burrito'
-import log from 'bog'
+import config from './config';
+import BurritoStore from '../store/burrito';
+import log from 'bog';
 
 
-const dailyCap = config('SLACK_DAILY_CAP');
+const dailyCap:string = config('SLACK_DAILY_CAP');
 
 function handleMsg(giver, updates) {
     BurritoStore.givenBurritosToday(giver).then((burritos) => {
