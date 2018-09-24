@@ -8,7 +8,7 @@ const store = []
 // Get full list of received Burritos
 
 hey.on('open', function () {
-    hey.send('getReceivedList');
+    hey.get('getReceivedList');
 });
 
 hey.on('receivedList', renderList);

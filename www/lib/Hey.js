@@ -30,7 +30,7 @@ class Hey {
         }
     }
 
-    send(event, data) {
+    get(event, data) {
         this.socket.send(JSON.stringify({ event, data }));
     }
 
