@@ -17,8 +17,8 @@ export default ((
 
         let filePath = publicPath + request.url;
 
-        if (filePath == './') {
-            filePath = './index.html';
+        if (request.url == '/') {
+            filePath += '/index.html';
         }
 
         const extname = String(path.extname(filePath)).toLowerCase();
