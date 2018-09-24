@@ -2,36 +2,30 @@ import dotenv from 'dotenv'
 import log from 'bog'
 import path from 'path'
 import webserver from './web'
-dotenv.config()
-
 import database from './database'
-
 import BurritoStore from './store/burrito'
-
-//const BurritoStore = require('./store/burrito')
-
+import { RTMClient, WebClient } from '@slack/client'
+dotenv.config()
 
 // Configure BurritoStore
 BurritoStore.setDatabase(database);
 
-import { RTMClient, WebClient } from '@slack/client'
-
 // Configuration file to use
-const root = path.normalize(`${__dirname}/../`);
-const theme = ('THEME' in process.env) ? process.env.THEME : 'default';
-const publicPath = `${root}www/themes/${theme}`;
+const root:string = path.normalize(`${__dirname}/../`);
+const theme:string = ('THEME' in process.env) ? process.env.THEME : 'default';
+const publicPath:string = `${root}www/themes/${theme}`;
 
 
 // Log level
-const isLocal = !process.env.ENV || process.env.ENV === 'development';
+const isLocal:boolean = !process.env.ENV || process.env.ENV === 'development';
 
 if (isLocal) log.level('debug');
 
 
 // Local UserStore
-let storedSlackBots;
-let storedSlackUsers;
-let botId;
+let storedSlackBots:Array<object>;
+let storedSlackUsers:Array<object>;
+let botId:string;
 
 // Set and start RTM
 const rtm = new RTMClient(process.env.SLACK_API_TOKEN);

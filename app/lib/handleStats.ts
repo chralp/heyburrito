@@ -1,9 +1,9 @@
 import BurritoStore from '../store/burrito'
 const mergeData = require('./mergeSlackRedis');
 
-export default ((serverStoredSlackUsers) => {
-    async function getUserStats(username) {
-            const users = mergeData(serverStoredSlackUsers(), [{ _id: username }]);
+export default ((serverStoredSlackUsers:Function) => {
+    async function getUserStats(username:string) {
+            const users:Array<object> = mergeData(serverStoredSlackUsers(), [{ _id: username }]);
             let returnUser = null;
 
             if (users.length) {
@@ -14,9 +14,9 @@ export default ((serverStoredSlackUsers) => {
                 return(null);
             }
 
-            const userScoreData = await BurritoStore.getUserScore(username);
-            const givers = await BurritoStore.getGivers(username);
-            const given = await BurritoStore.getGiven(username);
+            const userScoreData:Array<object> = await BurritoStore.getUserScore(username);
+            const givers:Array<object> = await BurritoStore.getGivers(username);
+            const given:Array<object> = await BurritoStore.getGiven(username);
 
             if (userScoreData.length) {
                 returnUser.score = userScoreData[0].score;

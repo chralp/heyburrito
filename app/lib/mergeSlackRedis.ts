@@ -1,13 +1,13 @@
 export default ((slack, data) => {
-    const res:Array<Object> = [];
+    const res:Array<object> = [];
     if (slack.length === 0) {
-        return false;
+        return [];
     }
 
     data.forEach((x) => {
         slack.forEach((u) => {
             if ((u.id) && (u.id.match(x._id))) {
-                const obj = {
+                const obj:object = {
                     username: x._id,
                     name: u.name,
                     score: x.score,

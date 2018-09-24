@@ -8,17 +8,17 @@
 * ]
 *
 */
-export default ((slackUsers, given) => {
-    const counts = {};
+export default ((slackUsers:Array<object>, given) => {
+    const counts:object = {};
 
     for (let i = 0; i < given.length; i += 1) {
         counts[given[i]] = 1 + (counts[given[i]] || 0);
     }
 
-    const res = [];
-    slackUsers.forEach((x) => {
+    const res:Array<object> = [];
+    slackUsers.forEach((x:any) => {
         if (counts[x.id]) {
-            const obj = {
+            const obj:object = {
                 id: x.id,
                 name: x.name,
                 score: counts[x.id],

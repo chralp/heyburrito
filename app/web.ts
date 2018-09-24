@@ -6,7 +6,7 @@ import mergeData from './lib/mergeSlackRedis';
 import fs from 'fs';
 
 // Webserver port
-const port = process.env.PORT || 3333;
+const port:string = process.env.PORT || '3333';
 
 export default ((
     publicPath,
@@ -15,14 +15,14 @@ export default ((
     const requestHandler = (request, response) => {
         console.log('request ', request.url);
 
-        let filePath = publicPath + request.url;
+        let filePath:string = publicPath + request.url;
 
         if (request.url == '/') {
             filePath += '/index.html';
         }
 
         const extname = String(path.extname(filePath)).toLowerCase();
-        const mimeTypes = {
+        const mimeTypes:object = {
             '.html': 'text/html',
             '.js': 'text/javascript',
             '.css': 'text/css',
@@ -31,7 +31,7 @@ export default ((
             '.jpg': 'image/jpg'
         };
 
-        const contentType = mimeTypes[extname] || 'application/octet-stream';
+        const contentType:string = mimeTypes[extname] || 'application/octet-stream';
 
         fs.readFile(filePath, 'utf-8', function(error, content) {
             if (error) {
@@ -40,8 +40,7 @@ export default ((
                         response.writeHead(200, { 'Content-Type': contentType });
                         response.end(content, 'utf-8');
                     });
-                }
-                else {
+                } else {
                     response.writeHead(500);
                     response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
                     response.end();
@@ -66,7 +65,6 @@ export default ((
         if (err) {
             return console.log('something bad happened', err)
         }
-
         console.log(`server is listening on ${port}`)
     })
 
@@ -87,20 +85,14 @@ export default ((
                 case "getGivenList":
                     getGivenList()
                     break;
-
             }
-
-
-
-
-
         });
 
         function getReceivedList (){
             console.log("getReceivedList")
             BurritoStore.getUserScore().then((users) => {
                 console.log("users", users)
-                const result = mergeData(serverStoredSlackUsers(), users);
+                const result:Array<object> = mergeData(serverStoredSlackUsers(), users);
                 ws.send(JSON.stringify({event:'receivedList', data:result}));
             });
         }
@@ -112,9 +104,9 @@ export default ((
                 .then((givers) => {
                     BurritoStore.getGiven(user).then((gived) => {
                         BurritoStore.getUserScore(user).then((userScoreData) => {
-                            const result = mergeData(serverStoredSlackUsers(), userScoreData);
+                            const result:Array<object> = mergeData(serverStoredSlackUsers(), userScoreData);
                             console.log("result",result)
-                            const obj = {
+                            const obj:object = {
                                 user: result[0],
                                 gived,
                                 givers,
@@ -128,7 +120,7 @@ export default ((
 
         function getGivenList () {
             BurritoStore.getUserScore().then((users) => {
-                const result = mergeData(serverStoredSlackUsers(), users.map((user) => {
+                const result:Array<object> = mergeData(serverStoredSlackUsers(), users.map((user) => {
                     user._id = user.from;
                     return user;
                 }));
