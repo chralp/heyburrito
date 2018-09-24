@@ -1,8 +1,8 @@
-module.exports = ((msg, emojis) => {
-    const hits = [];
-    const users = [];
-    const updates = [];
-    const regex = /(\<\@[A-Z0-9]{2,}\>)/g;
+export default ((msg, emojis) => {
+    const hits:Array<any> = [];
+    const users:Array<object> = [];
+    const updates:Array<object> = [];
+    const regex:RegExp = /(\<\@[A-Z0-9]{2,}\>)/g;
 
     // Regex to get all users from message
     const usersRaw = msg.text.match(new RegExp(regex));
@@ -47,7 +47,7 @@ module.exports = ((msg, emojis) => {
 
     for (const i of hits) {
         for (const u of users) {
-            const obj = {
+            const obj:object = {
                 username: u,
                 type: i.type,
             };

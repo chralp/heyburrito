@@ -1,14 +1,15 @@
 class ArrayDriver {
+    data:Array<any>;
     constructor() {
         this.data = [];
     }
 
-    findFrom(user) {
+    async findFrom(user) {
         const filteredData = this.data.filter(item => item.from == user);
-        return Promise.resolve(filteredData);
+        return await(filteredData);
     }
 
-    findFromToday(user) {
+    async findFromToday(user) {
         const start = new Date();
         const end = new Date();
 
@@ -17,10 +18,10 @@ class ArrayDriver {
 
         const filteredData = this.data.filter(item => item.from == user && item.given_at.getTime() < end.getTime() && item.given_at.getTime() > start.getTime());
 
-        return Promise.resolve(filteredData);
+        return await(filteredData);
     }
 
-    give(to, from) {
+    async give(to, from) {
         this.data.push({
             to,
             from,
@@ -28,10 +29,10 @@ class ArrayDriver {
             given_at: new Date(),
         });
 
-        return Promise.resolve(true);
+        return await(true);
     }
 
-    takeAway(to, from) {
+    async takeAway(to, from) {
         this.data.push({
             to,
             from,
@@ -40,10 +41,10 @@ class ArrayDriver {
             new Date(),
         });
 
-        return Promise.resolve(true);
+        return await(true);
     }
 
-    getScore(user = null) {
+    async getScore(user = null) {
         let { data } = this;
 
         if (user) {
@@ -60,10 +61,10 @@ class ArrayDriver {
             userScores[item.to].score += item.value;
         });
 
-        return Promise.resolve(Object.values(userScores));
+        return await((<any>Object).values(userScores));
     }
 
-    getGiven(user = null) {
+    async getGiven(user = null) {
         let { data } = this;
 
         if (user) {
@@ -80,10 +81,10 @@ class ArrayDriver {
             userScores[item.from].score += item.value;
         });
 
-        return Promise.resolve(Object.values(userScores));
+        return await((<any>Object).values(userScores));
     }
 
-    getGivers(user) {
+    async getGivers(user) {
         let { data } = this;
 
         if (user) {
@@ -100,8 +101,8 @@ class ArrayDriver {
             userScores[item.from].score += item.value;
         });
 
-        return Promise.resolve(Object.values(userScores));
+        return await((<any>Object).values(userScores));
     }
 }
 
-module.exports = ArrayDriver;
+export default ArrayDriver

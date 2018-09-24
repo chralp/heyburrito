@@ -1,10 +1,12 @@
-const log = require('bog');
-const { EventEmitter } = require('events');
+import log from 'bog'
+
+import EventEmitter from 'events'
 
 class BurritoStore extends EventEmitter {
+
+    database:any
     constructor() {
         super();
-
         this.database = null;
     }
 
@@ -46,4 +48,4 @@ class BurritoStore extends EventEmitter {
 }
 
 // Export as singleton
-module.exports = new BurritoStore();
+export default new BurritoStore();

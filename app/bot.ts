@@ -1,7 +1,8 @@
-const log = require('bog');
-const parseMessage = require('./lib/parseMessage');
-const { validBotMention, validMessage } = require('./lib/validator')(true);
-const { storeminator } = require('./lib/storeminator')();
+import log from 'bog'
+import parseMessage from './lib/parseMessage'
+
+import { validBotMention, validMessage } from './lib/validator'
+import  storeminator from './lib/storeminator'
 
 const emojis = [];
 
@@ -24,6 +25,7 @@ module.exports = ((rtm, botUserID, getUserStats, allBots) => {
     function listener() {
         log.info('Listening on slack messages');
         rtm.on('message', (event) => {
+            console.log("rtm.on", event)
             if ((!!event.subtype) && (event.subtype === 'channel_join')) {
                 log.info('Joined channel', event.channel);
             }

@@ -3,30 +3,34 @@
   "version": "0.0.1",
   "repository": "github.com/chralp/heyburrito",
   "scripts": {
-    "start": "node ./app/server.js",
+    "start": "ts-node ./app/server.ts",
     "test": "mocha",
-    "lint": "eslint app/**/*.js --fix"
+    "lint": "tslint -t stylish -c tslint.json app/*.ts app/**/*.ts"
   },
   "dependencies": {
     "@slack/client": "^4.3.1",
+    "@types/dotenv": "^4.0.3",
+    "@types/node": "^10.10.3",
     "bog": "^1.0.2",
     "coffee-script": "^1.12.7",
     "dotenv": "^6.0.0",
-    "express": "^4.16.3",
     "moment": "^2.22.2",
     "mongo-mock": "^3.1.0",
     "mongodb": "^3.0.10",
     "mongoskin": "^2.1.0",
     "naive-mongo": "^3.0.7",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.3",
+    "websocket": "^1.0.28",
+    "ws": "^6.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "chai": "^4.1.2",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.12.0",
     "mocha": "^5.2.0",
-    "redis-mock": "^0.26.0"
+    "redis-mock": "^0.26.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0"
   }
 }
