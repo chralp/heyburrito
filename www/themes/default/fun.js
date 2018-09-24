@@ -28,7 +28,7 @@ function returnProcent(totalScore,user){
 }
 
 function openStats(user) {
-    socket.send(JSON.stringify({event:'getUserStats', data:user}))
+    hey.get('getUserStats', user);
 }
 
 // Store First userList
