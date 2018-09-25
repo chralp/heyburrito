@@ -150,7 +150,4 @@ export default ((
 
         Socket.io
     */
-
-    log.info(`Webserver listening to: ${port}`);
-    server.listen(port);
 });
