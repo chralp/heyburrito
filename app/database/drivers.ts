@@ -10,7 +10,7 @@ export default {
         });
     },
     array: () => {
-        const arrayDriver = require('./drivers/array');
+        const arrayDriver = require('./drivers/array').default;
 
         return new arrayDriver();
     },
