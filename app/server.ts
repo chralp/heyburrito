@@ -1,11 +1,13 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 import log from 'bog'
 import path from 'path'
 import webserver from './web'
 import database from './database'
 import BurritoStore from './store/burrito'
 import { RTMClient, WebClient } from '@slack/client'
-dotenv.config()
 
 // Configure BurritoStore
 BurritoStore.setDatabase(database);
