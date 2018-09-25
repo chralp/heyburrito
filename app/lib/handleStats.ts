@@ -1,4 +1,5 @@
 import BurritoStore from '../store/burrito'
+import UserScore from '../types/UserScore.interface';
 const mergeData = require('./mergeSlackRedis');
 
 export default ((serverStoredSlackUsers:Function) => {
@@ -14,9 +15,9 @@ export default ((serverStoredSlackUsers:Function) => {
                 return(null);
             }
 
-            const userScoreData:Array<object> = await BurritoStore.getUserScore(username);
-            const givers:Array<object> = await BurritoStore.getGivers(username);
-            const given:Array<object> = await BurritoStore.getGiven(username);
+            const userScoreData:Array<UserScore> = await BurritoStore.getUserScore(username);
+            const givers:Array<UserScore> = await BurritoStore.getGivers(username);
+            const given:Array<UserScore> = await BurritoStore.getGiven(username);
 
             if (userScoreData.length) {
                 returnUser.score = userScoreData[0].score;
