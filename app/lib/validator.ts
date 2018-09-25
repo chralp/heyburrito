@@ -1,9 +1,6 @@
-interface messageInterface {
-    subtype: string,
-    text:string,
-    user:string
-}
-function validMessage(message:messageInterface, emojis:Array<object>, allBots:Function) {
+import SlackMessage from '../types/SlackMessage.interface';
+
+function validMessage(message:SlackMessage, emojis, allBots:Function) {
 
     // Message is changed, not valid!
     if ((!!message.subtype) && (message.subtype === 'message_changed')) {
@@ -42,7 +39,7 @@ function validMessage(message:messageInterface, emojis:Array<object>, allBots:Fu
     return true;
 }
 
-function validBotMention(message:messageInterface, botUserID:Function) {
+function validBotMention(message:SlackMessage, botUserID:Function) {
     const botid = botUserID();
 
     if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {

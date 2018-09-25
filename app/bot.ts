@@ -2,15 +2,10 @@ import log from 'bog';
 import parseMessage from './lib/parseMessage';
 import { validBotMention, validMessage } from './lib/validator';
 import  storeminator from './lib/storeminator';
+import Emoji from './types/Emoji.interface';
+import SlackMessage from './types/SlackMessage.interface';
 
-const emojis:Array<object> = [];
-
-interface eventInterface {
-    subtype: string,
-    channel: string,
-    user: string,
-    type: string
-}
+const emojis:Array<Emoji> = [];
 
 if (process.env.SLACK_EMOJI_INC) {
     const incEmojis = process.env.SLACK_EMOJI_INC.split(',');
@@ -30,7 +25,7 @@ module.exports = ((rtm, botUserID:Function, getUserStats:Function, allBots:Funct
 
     function listener() {
         log.info('Listening on slack messages');
-        rtm.on('message', (event:eventInterface) => {
+        rtm.on('message', (event:SlackMessage) => {
             console.log("rtm.on", event)
             if ((!!event.subtype) && (event.subtype === 'channel_join')) {
                 log.info('Joined channel', event.channel);
