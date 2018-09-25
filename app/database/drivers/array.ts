@@ -1,6 +1,11 @@
-class ArrayDriver {
-    data:Array<any>;
+import Driver from './Driver';
+import Score from '../../types/Score.interface';
+
+class ArrayDriver extends Driver {
+    data:Array<Score>;
     constructor() {
+        super();
+
         this.data = [];
     }
 
