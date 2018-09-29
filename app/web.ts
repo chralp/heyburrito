@@ -97,7 +97,7 @@ export default ((
         });
     });
 
-    wss.on('connection', function connection(ws) {
+    wss.on('connection', function connection(ws:any) {
         console.log("NY CONNECTION ?")
         ws.on('message', function incoming(message) {
             console.log('message', JSON.parse(message));
@@ -153,6 +153,5 @@ export default ((
             });
         }
     });
-
 
 });

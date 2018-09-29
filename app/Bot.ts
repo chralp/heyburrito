@@ -60,7 +60,7 @@ class Bot {
                         });
                     } else {
                         const result = parseMessage(event, emojis);
-                        console.log("result", result)
+                        console.log('result', result);
                         if (result) {
                             storeminator(result);
                         }

@@ -2,13 +2,13 @@ import Driver from './Driver';
 import Score from '../../types/Score.interface';
 
 function id() {
+    // Cred => https://gist.github.com/gordonbrander/2230317
     return '_' + Math.random().toString(36).substr(2, 9);
 }
 class ArrayDriver extends Driver {
     data:Array<Score>;
     constructor() {
         super();
-
         this.data = [];
     }
 
