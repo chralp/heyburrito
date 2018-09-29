@@ -15,6 +15,10 @@ hey.on('receivedList', renderList);
 //hey.on('givenList', givenList);
 hey.on('userStats', userStats);
 
+hey.on('GIVE',GIVE)
+function GIVE(data){
+    console.log("data",data)
+}
 /*
 * Special help functions
 */

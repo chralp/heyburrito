@@ -73,6 +73,7 @@ export default ((
     const wss = new WebSocket.Server({ port: 8080 });
 
     wss.on('connection', function connection(ws) {
+        console.log("NY CONNECTION ?")
         ws.on('message', function incoming(message) {
             console.log('message', JSON.parse(message));
             message = JSON.parse(message);
@@ -121,32 +122,29 @@ export default ((
         function getGivenList() {
             BurritoStore.getUserScore().then((users) => {
                 const result = mergeUserData(serverStoredSlackUsers(), users.map((user) => {
-                    user._id = user.from;
                     return user;
                 }));
                 ws.send(JSON.stringify({ event:'givenList', data:result }));
             });
         }
 
-    });
+        BurritoStore.on('GIVE', (user) => {
+            console.log("BURRE FÖRSTA", user)
+            BurritoStore.getUserScore(user).then((result) => {
+                const user = mergeUserData(serverStoredSlackUsers(), result);
+                console.log("BURRE GG ANDRA", user)
+                ws.send(JSON.stringify({ event:'GIVE', data:user }));
+            });
+        });
 
-/*
-    BurritoStore.on('GIVE', ({ user }) => {
-        BurritoStore.getUserScore(user).then((result) => {
-            const users = mergeData(serverStoredSlackUsers(), result);
-
-            io.emit('GIVE', users);
+        BurritoStore.on('TAKE_AWAY', (user) => {
+            BurritoStore.getUserScore(user).then((result) => {
+                const user = mergeUserData(serverStoredSlackUsers(), result);
+                console.log("BURRE ON user", user)
+                ws.send(JSON.stringify({ event:'TAKE_AWAY', data:user }));
+            });
         });
     });
 
-    BurritoStore.on('TAKE_AWAY', ({ user }) => {
-        BurritoStore.getUserScore(user).then((result) => {
-            const users = mergeData(serverStoredSlackUsers(), result);
 
-            io.emit('TAKE_AWAY', users);
-        });
-    });
-
-        Socket.io
-    */
 });

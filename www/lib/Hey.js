@@ -18,18 +18,7 @@ class Hey {
         }
 
         const obj = JSON.parse(e.data);
-
-        switch(obj.event) {
-            case 'receivedList':
-                this.emit('receivedList', obj.data);
-                break;
-            case 'givenList':
-                this.emit('givenList', obj.data);
-                break;
-            case 'userStats':
-                this.emit('userStats', obj.data);
-                break;
-        }
+        this.emit(obj.event, obj.data);
     }
 
     get(event, data) {

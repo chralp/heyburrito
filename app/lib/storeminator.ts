@@ -16,10 +16,22 @@ function handleMsg(giver, updates) {
         const a = updates.shift();
 
         if (a.type === 'inc') {
-            BurritoStore.giveBurrito(a.username, giver);
+            BurritoStore.giveBurrito(a.username, giver)
+            .then(()=>{
+                if(updates.length){
+                    handleMsg(giver, updates)
+                }
+            });
         } else if (a.type === 'dec') {
-            BurritoStore.takeAwayBurrito(a.username, giver);
+            BurritoStore.takeAwayBurrito(a.username, giver)
+            .then(()=>{
+                if(updates.length){
+                    handleMsg(giver, updates)
+                }
+            });
         }
+
+
     });
 }
 
