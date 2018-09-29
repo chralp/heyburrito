@@ -72,6 +72,31 @@ export default ((
     const WebSocket = require('ws');
     const wss = new WebSocket.Server({ port: 8080 });
 
+    wss.broadcast = (data) => {
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(data);
+            }
+        });
+    };
+
+    BurritoStore.on('GIVE', (user) => {
+        console.log("BURRE FÖRSTA", user)
+        BurritoStore.getUserScore(user).then((result) => {
+            const user = mergeUserData(serverStoredSlackUsers(), result);
+            console.log("BURRE GG ANDRA", user)
+            wss.broadcast(JSON.stringify({ event:'GIVE', data:user }));
+        });
+    });
+
+    BurritoStore.on('TAKE_AWAY', (user) => {
+        BurritoStore.getUserScore(user).then((result) => {
+            const user = mergeUserData(serverStoredSlackUsers(), result);
+            console.log("BURRE ON user", user)
+            wss.broadcast(JSON.stringify({ event:'TAKE_AWAY', data:user }));
+        });
+    });
+
     wss.on('connection', function connection(ws) {
         console.log("NY CONNECTION ?")
         ws.on('message', function incoming(message) {
@@ -127,23 +152,6 @@ export default ((
                 ws.send(JSON.stringify({ event:'givenList', data:result }));
             });
         }
-
-        BurritoStore.on('GIVE', (user) => {
-            console.log("BURRE FÖRSTA", user)
-            BurritoStore.getUserScore(user).then((result) => {
-                const user = mergeUserData(serverStoredSlackUsers(), result);
-                console.log("BURRE GG ANDRA", user)
-                ws.send(JSON.stringify({ event:'GIVE', data:user }));
-            });
-        });
-
-        BurritoStore.on('TAKE_AWAY', (user) => {
-            BurritoStore.getUserScore(user).then((result) => {
-                const user = mergeUserData(serverStoredSlackUsers(), result);
-                console.log("BURRE ON user", user)
-                ws.send(JSON.stringify({ event:'TAKE_AWAY', data:user }));
-            });
-        });
     });
 
 
