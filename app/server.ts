@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+dotenv.config();
 import { default as log } from 'bog';
 import { default as webserver } from './web';
 import path from 'path';
@@ -6,8 +7,6 @@ import database from './database';
 import BurritoStore from './store/BurritoStore';
 import { RTMClient, WebClient } from '@slack/client';
 import Bot from './Bot';
-
-dotenv.config();
 
 // Configure BurritoStore
 BurritoStore.setDatabase(database);

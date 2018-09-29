@@ -1,6 +1,9 @@
 import Driver from './Driver';
 import Score from '../../types/Score.interface';
 
+function id() {
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
 class ArrayDriver extends Driver {
     data:Array<Score>;
     constructor() {
@@ -26,19 +29,22 @@ class ArrayDriver extends Driver {
         return await(filteredData);
     }
 
-    async give(to, from) {
-        this.data.push({
+    async give(to:string, from:string) {
+        const score: Score = {
+            _id: id(),
             to,
             from,
             value: 1,
             given_at: new Date(),
-        });
+        }
+        this.data.push(score)
 
         return await(true);
     }
 
-    async takeAway(to, from) {
+    async takeAway(to:string, from:string) {
         this.data.push({
+            _id: id(),
             to,
             from,
             value: -1,
