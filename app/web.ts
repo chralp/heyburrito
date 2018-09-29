@@ -5,6 +5,7 @@ import path from 'path';
 import mergeUserData from './lib/mergeUserData';
 import fs from 'fs';
 import ScoreInterface from './types/Score.interface';
+import { default as WebSocket } from 'ws';
 
 // Webserver port
 const port:string = process.env.PORT || '3333';
@@ -69,11 +70,12 @@ export default ((
         console.log(`server is listening on ${port}`);
     });
 
-    const WebSocket = require('ws');
+    // const WebSocket = require('ws');
+
     const wss = new WebSocket.Server({ port: 8080 });
 
-    wss.on('connection', function connection(ws) {
-        console.log("NY CONNECTION ?")
+    wss.on('connection', function connection(ws:any) {
+        console.log('NY CONNECTION ?');
         ws.on('message', function incoming(message) {
             console.log('message', JSON.parse(message));
             message = JSON.parse(message);
@@ -129,10 +131,10 @@ export default ((
         }
 
         BurritoStore.on('GIVE', (user) => {
-            console.log("BURRE FÖRSTA", user)
+            console.log('BURRE FÖRSTA', user);
             BurritoStore.getUserScore(user).then((result) => {
                 const user = mergeUserData(serverStoredSlackUsers(), result);
-                console.log("BURRE GG ANDRA", user)
+                console.log('BURRE GG ANDRA', user);
                 ws.send(JSON.stringify({ event:'GIVE', data:user }));
             });
         });
@@ -140,11 +142,10 @@ export default ((
         BurritoStore.on('TAKE_AWAY', (user) => {
             BurritoStore.getUserScore(user).then((result) => {
                 const user = mergeUserData(serverStoredSlackUsers(), result);
-                console.log("BURRE ON user", user)
+                console.log('BURRE ON user', user);
                 ws.send(JSON.stringify({ event:'TAKE_AWAY', data:user }));
             });
         });
     });
-
 
 });

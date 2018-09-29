@@ -20,16 +20,11 @@ class BurritoStore extends EventEmitter {
 
     giveBurrito(to:string, from:string) {
         log.info('Burrito given to %s from %s', to, from);
-
-        return this.database.give(to, from).then(() =>{
-            console.log("TJEENA BERIT")
-            this.emit('GIVE', to)
-        } );
+        return this.database.give(to, from).then(() => this.emit('GIVE', to));
     }
 
     takeAwayBurrito(to:string, from:string) {
         log.info('Burrito taken away from %s by %s', to, from);
-
         return this.database.takeAway(to, from).then(() => this.emit('TAKE_AWAY', to));
     }
 

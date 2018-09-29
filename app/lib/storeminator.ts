@@ -17,20 +17,19 @@ function handleMsg(giver, updates) {
 
         if (a.type === 'inc') {
             BurritoStore.giveBurrito(a.username, giver)
-            .then(()=>{
-                if(updates.length){
-                    handleMsg(giver, updates)
+            .then(() => {
+                if (updates.length) {
+                    handleMsg(giver, updates);
                 }
             });
         } else if (a.type === 'dec') {
             BurritoStore.takeAwayBurrito(a.username, giver)
-            .then(()=>{
-                if(updates.length){
-                    handleMsg(giver, updates)
+            .then(() => {
+                if (updates.length) {
+                    handleMsg(giver, updates);
                 }
             });
         }
-
 
     });
 }
