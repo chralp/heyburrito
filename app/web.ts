@@ -2,8 +2,9 @@ import log from 'bog';
 import http from 'http';
 import BurritoStore from './store/burrito';
 import path from 'path';
-import mergeData from './lib/mergeSlackRedis';
+import mergeData from './lib/mergeUserData';
 import fs from 'fs';
+import ScoreInterface from './types/Score.interface';
 
 // Webserver port
 const port:string = process.env.PORT || '3333';
@@ -120,7 +121,7 @@ export default ((
 
         function getGivenList () {
             BurritoStore.getUserScore().then((users) => {
-                const result:Array<object> = mergeData(serverStoredSlackUsers(), users.map((user) => {
+                const result = mergeData(serverStoredSlackUsers(), users.map((user) => {
                     user._id = user.from;
                     return user;
                 }));

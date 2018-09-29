@@ -1,31 +1,39 @@
-
 import log from 'bog'
+import SlackUsersInterface from '../types/SlackUser.interface'
 
 async function slackUsers(wbc) {
-    const users:Array<object> = [];
-    const bots:Array<object> = [];
+
+    const users:Array<SlackUsersInterface> = [];
+    const bots:Array<SlackUsersInterface> = [];
+
     log.info('Getting all slack users');
+
     await wbc.users.list().then((res) => {
+
         res.members.forEach((x:any) => {
+
             if (x.is_bot) {
-                const obj:object = {
+                bots.push({
                     id: x.id,
                     name: x.real_name,
-                    avatar: x.profile.image_48,
-                };
-                bots.push(obj);
+                    avatar: x.profile.image_48
+                });
             } else {
-                const obj:object = {
+                users.push({
                     id: x.id,
                     name: x.real_name,
                     avatar: x.profile.image_48,
-                };
-                users.push(obj);
-            }
+                });
+            };
         });
-    }).catch((err) => {
+    })
+
+    .catch((err) => {
+
         log.warn(err);
+
     });
+
     return { users, bots };
 }
 
