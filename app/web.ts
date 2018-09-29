@@ -99,57 +99,51 @@ export default ((
     wss.on('connection', function connection(ws:any) {
         console.log("NY CONNECTION ?")
         ws.on('message', function incoming(message) {
-            console.log('message', JSON.parse(message));
+
             message = JSON.parse(message);
-            switch (message.event){
-            case 'getReceivedList':
-                getReceivedList();
-                break;
-            case 'getUserStats':
-                getUserStats(message.data);
-                break;
-            case 'getGivenList':
-                getGivenList();
-                break;
+            if (message.event in messageHandlers){
+                messageHandlers[message.event](message.data);
+            }else{
+                log.warn("Function", message.event, "not found")
             }
         });
 
-        function getReceivedList() {
-            console.log('getReceivedList');
-            BurritoStore.getUserScore().then((users) => {
-                console.log('users', users);
-                const result:Array<object> = mergeUserData(serverStoredSlackUsers(), users);
-                ws.send(JSON.stringify({ event:'receivedList', data:result }));
-            });
-        }
+        const messageHandlers = {
+            getReceivedList() {
+                console.log('getReceivedList');
+                BurritoStore.getUserScore().then((users) => {
+                    console.log('users', users);
+                    const result:Array<object> = mergeUserData(serverStoredSlackUsers(), users);
+                    ws.send(JSON.stringify({ event:'receivedList', data:result }));
+                });
+            },
 
-        function getUserStats(user) {
-            BurritoStore.getGivers(user)
-                .then(users => mergeUserData(serverStoredSlackUsers(), users))
-                .then((givers) => {
+            getUserStats(user) {
+                BurritoStore.getGivers(user).then(users => mergeUserData(serverStoredSlackUsers(), users)).then((givers) => {
                     BurritoStore.getGiven(user).then((gived) => {
                         BurritoStore.getUserScore(user).then((userScoreData) => {
                             const result:Array<object> = mergeUserData(serverStoredSlackUsers(), userScoreData);
-                            console.log('result', result);
-                            const obj:object = {
-                                user: result[0],
-                                gived,
-                                givers,
-                            };
-                            console.log(obj);
-                            ws.send(JSON.stringify({ event:'userStats', data:obj }));
+                            ws.send(JSON.stringify({
+                                event:'userStats',
+                                data: {
+                                    user: result[0],
+                                    gived,
+                                    givers,
+                                }
+                            }));
                         });
                     });
                 });
-        }
+            },
 
-        function getGivenList() {
-            BurritoStore.getUserScore().then((users) => {
-                const result = mergeUserData(serverStoredSlackUsers(), users.map((user) => {
-                    return user;
-                }));
-                ws.send(JSON.stringify({ event:'givenList', data:result }));
-            });
+            getGivenList() {
+                BurritoStore.getUserScore().then((users) => {
+                    const result = mergeUserData(serverStoredSlackUsers(), users.map((user) => {
+                        return user;
+                    }));
+                    ws.send(JSON.stringify({ event:'givenList', data:result }));
+                });
+            }
         }
     });
 
