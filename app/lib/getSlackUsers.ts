@@ -1,12 +1,12 @@
-import log from 'bog'
-import SlackUsersInterface from '../types/SlackUser.interface'
+import { default as log } from 'bog';
+import SlackUserInterface from '../types/SlackUser.interface';
 
 async function slackUsers(wbc) {
 
-    const users:Array<SlackUsersInterface> = [];
-    const bots:Array<SlackUsersInterface> = [];
+    const users:Array<SlackUserInterface> = [];
+    const bots:Array<SlackUserInterface> = [];
 
-    log.info('Getting all slack users');
+    log.info('Getting slack users');
 
     await wbc.users.list().then((res) => {
 
@@ -16,7 +16,7 @@ async function slackUsers(wbc) {
                 bots.push({
                     id: x.id,
                     name: x.real_name,
-                    avatar: x.profile.image_48
+                    avatar: x.profile.image_48,
                 });
             } else {
                 users.push({
@@ -24,7 +24,7 @@ async function slackUsers(wbc) {
                     name: x.real_name,
                     avatar: x.profile.image_48,
                 });
-            };
+            }
         });
     })
 
@@ -37,4 +37,4 @@ async function slackUsers(wbc) {
     return { users, bots };
 }
 
-export default slackUsers
+export default slackUsers;

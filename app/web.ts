@@ -1,8 +1,8 @@
-import log from 'bog';
+import { default as log } from 'bog';
 import http from 'http';
-import BurritoStore from './store/burrito';
+import BurritoStore from './store/BurritoStore';
 import path from 'path';
-import mergeData from './lib/mergeUserData';
+import mergeUserData from './lib/mergeUserData';
 import fs from 'fs';
 import ScoreInterface from './types/Score.interface';
 
@@ -14,7 +14,7 @@ export default ((
     serverStoredSlackUsers,
 ) => {
     const requestHandler = (request, response) => {
-        console.log('request ', request.url);
+        log.info('request ', request.url);
 
         let filePath:string = publicPath + request.url;
 
@@ -29,21 +29,21 @@ export default ((
             '.css': 'text/css',
             '.json': 'application/json',
             '.png': 'image/png',
-            '.jpg': 'image/jpg'
+            '.jpg': 'image/jpg',
         };
 
         const contentType:string = mimeTypes[extname] || 'application/octet-stream';
 
-        fs.readFile(filePath, 'utf-8', function(error, content) {
+        fs.readFile(filePath, 'utf-8', function (error, content) {
             if (error) {
-                if(error.code == 'ENOENT') {
-                    fs.readFile('./404.html', function(error, content) {
+                if (error.code == 'ENOENT') {
+                    fs.readFile('./404.html', function (error, content) {
                         response.writeHead(200, { 'Content-Type': contentType });
                         response.end(content, 'utf-8');
                     });
                 } else {
                     response.writeHead(500);
-                    response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
+                    response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
                     response.end();
                 }
             } else {
@@ -58,74 +58,73 @@ export default ((
                 response.end(content, 'utf-8');
             }
         });
-      }
+    };
 
-    const server = http.createServer(requestHandler)
+    const server = http.createServer(requestHandler);
 
     server.listen(port, (err) => {
         if (err) {
-            return console.log('something bad happened', err)
+            return console.log('something bad happened', err);
         }
-        console.log(`server is listening on ${port}`)
-    })
+        console.log(`server is listening on ${port}`);
+    });
 
     const WebSocket = require('ws');
     const wss = new WebSocket.Server({ port: 8080 });
 
     wss.on('connection', function connection(ws) {
         ws.on('message', function incoming(message) {
-            console.log("message",JSON.parse(message))
-            message = JSON.parse(message)
-            switch(message.event){
-                case "getReceivedList":
-                    getReceivedList()
-                    break;
-                case "getUserStats":
-                    getUserStats(message.data)
-                    break;
-                case "getGivenList":
-                    getGivenList()
-                    break;
+            console.log('message', JSON.parse(message));
+            message = JSON.parse(message);
+            switch (message.event){
+            case 'getReceivedList':
+                getReceivedList();
+                break;
+            case 'getUserStats':
+                getUserStats(message.data);
+                break;
+            case 'getGivenList':
+                getGivenList();
+                break;
             }
         });
 
-        function getReceivedList (){
-            console.log("getReceivedList")
+        function getReceivedList() {
+            console.log('getReceivedList');
             BurritoStore.getUserScore().then((users) => {
-                console.log("users", users)
-                const result:Array<object> = mergeData(serverStoredSlackUsers(), users);
-                ws.send(JSON.stringify({event:'receivedList', data:result}));
+                console.log('users', users);
+                const result:Array<object> = mergeUserData(serverStoredSlackUsers(), users);
+                ws.send(JSON.stringify({ event:'receivedList', data:result }));
             });
         }
 
-
-        function getUserStats (user){
+        function getUserStats(user) {
             BurritoStore.getGivers(user)
-                .then(users => mergeData(serverStoredSlackUsers(), users))
+                .then(users => mergeUserData(serverStoredSlackUsers(), users))
                 .then((givers) => {
                     BurritoStore.getGiven(user).then((gived) => {
                         BurritoStore.getUserScore(user).then((userScoreData) => {
-                            const result:Array<object> = mergeData(serverStoredSlackUsers(), userScoreData);
-                            console.log("result",result)
+                            const result:Array<object> = mergeUserData(serverStoredSlackUsers(), userScoreData);
+                            console.log('result', result);
                             const obj:object = {
                                 user: result[0],
                                 gived,
                                 givers,
                             };
-                            console.log(obj)
-                            ws.send(JSON.stringify({event:'userStats', data:obj}));
+                            console.log(obj);
+                            ws.send(JSON.stringify({ event:'userStats', data:obj }));
                         });
                     });
                 });
         }
 
-        function getGivenList () {
+        function getGivenList() {
             BurritoStore.getUserScore().then((users) => {
-                const result = mergeData(serverStoredSlackUsers(), users.map((user) => {
+                const result = mergeUserData(serverStoredSlackUsers(), users.map((user) => {
                     user._id = user.from;
                     return user;
                 }));
-                ws.send(JSON.stringify({event:'givenList', data:result}));
+                ws.send(JSON.stringify({ event:'givenList', data:result }));
             });
         }
 
@@ -147,7 +146,6 @@ export default ((
             io.emit('TAKE_AWAY', users);
         });
     });
-
 
         Socket.io
     */

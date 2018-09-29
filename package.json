@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ts-node ./app/server.ts",
     "test": "mocha",
-    "lint": "tslint -t stylish -c tslint.json app/*.ts app/**/*.ts"
+    "lint": "tslint -t stylish -c tslint.json app/*.ts app/**/*.ts",
+    "chralp": "tslint -t stylish -c tslint.json app/*.ts app/**/*.ts --fix"
   },
   "dependencies": {
     "@slack/client": "^4.3.1",

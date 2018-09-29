@@ -1,7 +1,6 @@
 import config from './config';
-import BurritoStore from '../store/burrito';
-import log from 'bog';
-
+import BurritoStore from '../store/BurritoStore';
+import { default as log } from 'bog';
 
 const dailyCap:string = config('SLACK_DAILY_CAP');
 
@@ -32,4 +31,4 @@ function storeminator(msg) {
     }
 }
 
-export default storeminator
+export default storeminator;

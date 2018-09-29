@@ -1,15 +1,14 @@
-import BurritoStore from '../store/burrito'
-import mergeData from './mergeUserData'
+import BurritoStore from '../store/BurritoStore';
+import mergeUserData from './mergeUserData';
 
 // Interfaces
 import UserScoreInterface from '../types/UserScore.interface';
 import UserInterface from '../types/User.interface';
 
-
 export default ((serverStoredSlackUsers:Function) => {
 
     async function getUserStats(username:string) {
-        const users:Array<UserInterface> = mergeData(serverStoredSlackUsers(), [{ _id: username }]);
+        const users:Array<UserInterface> = mergeUserData(serverStoredSlackUsers(), [{ _id: username }]);
         let returnUser = null;
 
         if (users.length) {
@@ -30,8 +29,8 @@ export default ((serverStoredSlackUsers:Function) => {
             returnUser.score = 0;
         }
 
-        returnUser.givers = mergeData(serverStoredSlackUsers(), givers);
-        returnUser.given = mergeData(serverStoredSlackUsers(), given);
+        returnUser.givers = mergeUserData(serverStoredSlackUsers(), givers);
+        returnUser.given = mergeUserData(serverStoredSlackUsers(), given);
 
         await(returnUser);
     }

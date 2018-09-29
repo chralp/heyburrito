@@ -1,4 +1,4 @@
 export default interface Emoji {
-    type:string,
-    emoji:string
+    type:string;
+    emoji:string;
 }

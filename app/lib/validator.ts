@@ -1,6 +1,6 @@
-import SlackMessage from '../types/SlackMessage.interface';
+import SlackMessageInterface from '../types/SlackMessage.interface';
 
-function validMessage(message:SlackMessage, emojis, allBots:Function) {
+function validMessage(message:SlackMessageInterface, emojis, allBots:Function) {
 
     // Message is changed, not valid!
     if ((!!message.subtype) && (message.subtype === 'message_changed')) {
@@ -13,9 +13,9 @@ function validMessage(message:SlackMessage, emojis, allBots:Function) {
     if ((!!message.subtype) && (message.subtype === 'bot_message')) {
         return false;
     }
-    //if (message.text.match(`<@${message.user}>`)) {
+    // if (message.text.match(`<@${message.user}>`)) {
     //    return false;
-    //}
+    // }
 
     const bots = allBots();
 
@@ -35,11 +35,10 @@ function validMessage(message:SlackMessage, emojis, allBots:Function) {
         }
     }
 
-
     return true;
 }
 
-function validBotMention(message:SlackMessage, botUserID:Function) {
+function validBotMention(message:SlackMessageInterface, botUserID:Function) {
     const botid = botUserID();
 
     if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {
@@ -48,4 +47,4 @@ function validBotMention(message:SlackMessage, botUserID:Function) {
     return false;
 }
 
-export {validBotMention, validMessage}
+export { validBotMention, validMessage };

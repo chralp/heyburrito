@@ -1,14 +1,10 @@
-import log from 'bog';
-import EventEmitter from 'events';
-import UserScore from '../types/UserScore.interface';
+import { default as log } from 'bog';
+import { EventEmitter } from 'events';
+import UserScoreInterface from '../types/UserScore.interface';
 
 class BurritoStore extends EventEmitter {
 
-    database:any
-    constructor() {
-        super();
-        this.database = null;
-    }
+    database:any = null;
 
     setDatabase(database) {
         this.database = database;
@@ -34,15 +30,15 @@ class BurritoStore extends EventEmitter {
         return this.database.takeAway(to, from).then(() => this.emit('TAKE_AWAY', to));
     }
 
-    getUserScore(user:string = null): Promise<Array<UserScore>> {
+    getUserScore(user:string = null): Promise<Array<UserScoreInterface>> {
         return this.database.getScore(user);
     }
 
-    getGiven(user:string): Promise<Array<UserScore>> {
+    getGiven(user:string): Promise<Array<UserScoreInterface>> {
         return this.database.getGiven(user);
     }
 
-    getGivers(user:string): Promise<Array<UserScore>> {
+    getGivers(user:string): Promise<Array<UserScoreInterface>> {
         return this.database.getGivers(user);
     }
 }

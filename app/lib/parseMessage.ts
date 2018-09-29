@@ -1,4 +1,8 @@
-export default ((msg, emojis) => {
+
+import EmojiInterface from '../types/Emoji.interface';
+
+export default ((msg, emojis:Array<EmojiInterface>) => {
+
     const hits:Array<any> = [];
     const users:Array<object> = [];
     const updates:Array<object> = [];
