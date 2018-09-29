@@ -5,7 +5,7 @@ import path from 'path';
 import mergeUserData from './lib/mergeUserData';
 import fs from 'fs';
 import ScoreInterface from './types/Score.interface';
-
+import WebSocket from'ws'
 // Webserver port
 const port:string = process.env.PORT || '3333';
 
@@ -69,8 +69,7 @@ export default ((
         console.log(`server is listening on ${port}`);
     });
 
-    const WebSocket = require('ws');
-    const wss = new WebSocket.Server({ port: 8080 });
+    const wss:any = new WebSocket.Server({ port: 8080 });
 
     wss.broadcast = (data) => {
         wss.clients.forEach((client) => {
