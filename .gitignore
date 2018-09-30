@@ -26,4 +26,5 @@ conf-prod.json
 conf-staging.json
 conf-localhost.json
 
+.filedb
 .env

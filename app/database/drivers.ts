@@ -1,5 +1,6 @@
 import config from '../lib/config';
 import { MongoDBDriver } from './drivers/mongodb';
+import FileDriver from './drivers/FileDriver';
 
 export default {
     mongodb: () => {
@@ -13,5 +14,8 @@ export default {
         const arrayDriver = require('./drivers/array').default;
 
         return new arrayDriver();
+    },
+    file: () => {
+        return new FileDriver();
     },
 };
