@@ -116,4 +116,4 @@ class ArrayDriver extends Driver {
     }
 }
 
-export default ArrayDriver
+export default ArrayDriver;

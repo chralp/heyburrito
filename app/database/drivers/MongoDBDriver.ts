@@ -1,5 +1,5 @@
 
-export class MongoDBDriver {
+export default class MongoDBDriver {
 
     MongoClient:any
     url:any
