@@ -79,19 +79,22 @@ export default ((
     };
 
     BurritoStore.on('GIVE', (user) => {
-        console.log("BURRE FÖRSTA", user)
         BurritoStore.getUserScore(user).then((result) => {
             const user = mergeUserData(serverStoredSlackUsers(), result);
-            console.log("BURRE GG ANDRA", user)
-            wss.broadcast(JSON.stringify({ event:'GIVE', data:user }));
+
+            if (user.length) {
+                wss.broadcast(JSON.stringify({event: 'GIVE', data: user[0]}));
+            }
         });
     });
 
     BurritoStore.on('TAKE_AWAY', (user) => {
         BurritoStore.getUserScore(user).then((result) => {
             const user = mergeUserData(serverStoredSlackUsers(), result);
-            console.log("BURRE ON user", user)
-            wss.broadcast(JSON.stringify({ event:'TAKE_AWAY', data:user }));
+
+            if (user.length) {
+                wss.broadcast(JSON.stringify({event: 'TAKE_AWAY', data: user[0]}));
+            }
         });
     });
 
