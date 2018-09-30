@@ -36,15 +36,32 @@ class FileDriver extends Driver {
         this.data = [];
 
         const fd = fs.readFileSync(this.dbPath, 'utf8');
+
+        if (!fd.length) {
+            return;
+        }
+
         const items = fd.split('\n');
 
-        this.data = items.map((item) => {
-            const parsedData = JSON.parse(item);
+        if (!items.length) {
+            return;
+        }
+
+        const mappedItems:Array<ScoreInterface> = items.map((item) => {
+            let parsedData:ScoreInterface;
+
+            try {
+                parsedData = JSON.parse(item);
+            } catch (ex) {
+                return null;
+            }
 
             parsedData.given_at = new Date(parsedData.given_at);
 
             return parsedData;
         });
+
+        this.data = mappedItems.filter(item => item);
     }
 
     async findFrom(user) {
