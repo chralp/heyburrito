@@ -38,7 +38,13 @@ class FileDriver extends Driver {
         const fd = fs.readFileSync(this.dbPath, 'utf8');
         const items = fd.split('\n');
 
-        this.data = items.map(item => JSON.parse(item));
+        this.data = items.map((item) => {
+            const parsedData = JSON.parse(item);
+
+            parsedData.given_at = new Date(parsedData.given_at);
+
+            return parsedData;
+        });
     }
 
     async findFrom(user) {
