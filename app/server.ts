@@ -1,5 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config();
 import { default as log } from 'bog';
 import { default as webserver } from './web';
 import path from 'path';
@@ -13,16 +11,6 @@ import SlackInterface from './types/Slack.interface'
 
 // Configure BurritoStore
 BurritoStore.setDatabase(database);
-
-// Configuration file to use
-const root: string = path.normalize(`${__dirname}/../`);
-const theme: string = ('THEME' in process.env) ? process.env.THEME : 'default';
-const publicPath: string = `${root}www/themes/${theme}`;
-
-// Log level
-const debugMode: boolean = (process.env.DEBUG || process.env.ENV === 'development') ? true : false
-if (debugMode) log.level('debug');
-
 
 
 // Local UserStore
