@@ -82,11 +82,11 @@ function burritoToBot(message, emojis) {
 function validMessage(message: SlackMessageInterface, emojis, allBots: Function) {
 
 
-    // Check if sender is mentioned in message
-    if (selfMention(message)) return false
-
     // We dont want messages with subtypes
     if (message.subtype) return false
+
+    // Check if sender is mentioned in message
+    if (selfMention(message)) return false
 
 
 
