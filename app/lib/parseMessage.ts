@@ -1,67 +1,63 @@
 
 import EmojiInterface from '../types/Emoji.interface';
+const usernameRegex: RegExp = /(\<\@[A-Z0-9]{2,}\>)/g;
 
-export default ((msg, emojis:Array<EmojiInterface>) => {
-
-    const hits:Array<any> = [];
-    const users:Array<object> = [];
-    const updates:Array<object> = [];
-    const regex:RegExp = /(\<\@[A-Z0-9]{2,}\>)/g;
+/**
+ * @param { string } text from slack message
+ * @returns array<string>, only unique values
+ */
+function parseUsernames(text: string) {
 
     // Regex to get all users from message
-    const usersRaw = msg.text.match(new RegExp(regex));
+    const usersRaw = text.match(new RegExp(usernameRegex));
+    if (!usersRaw) return
 
-    // remove <@ and >
-    if (usersRaw) {
-        for (const u of usersRaw) {
-            const username = u.replace('<@', '').replace('>', '');
+    // replace unwanted chars
+    const users = usersRaw.map(x => x.replace('<@', '').replace('>', ''));
 
-            // Check if username already exists in array
-            if (!users.includes(username)) {
-                users.push(username);
-            }
-        }
-    } else {
-        return false;
-    }
+    // Remove duplicated values
+    const unique: Array<string> = users.filter((v, i, a) => a.indexOf(v) === i);
+    return unique;
+}
 
-    // Count hits
-    emojis.forEach((x) => {
-        const hit = msg.text.match(x.emoji);
+/**
+ * @param { Obejct } msg slackmessage
+ * @param { array<object> } emojis emojis that we want to use. Comes from env
+ * @returns { object } { giver: string, updates:array<object> }
+ *  - giver: sent from , ex => giver: USER1
+ *  - updates: array<object> containing, username, and type. ex:
+ *  - [ { username: 'USER2', type: 'inc' },
+ *    { username: 'USER2', type: 'dec' } ] }
+ */
+function parseMessage(msg, emojis: Array<EmojiInterface>) {
 
-        if (hit) {
-            const emojihit = msg.text.match(new RegExp(x.emoji, 'g'));
+    // Array containg data of whom to give / remove points from
+    const updates = []
 
-            for (const e of emojihit) {
-                const obj = {
-                    emoji: x.emoji,
-                    type: x.type,
-                };
+    // Array with "allowed" emojis mentioned in slackmessage
+    const emojiHits = []
 
-                hits.push(obj);
-            }
-        }
-    });
+    // Get usernames from slack message
+    const users = parseUsernames(msg.text)
 
-    if (hits.length === 0) {
-        return false;
-    }
+    // Match and push allowed emojis to emojiHits
+    emojis.map(x => {
+        const hitsRaw = msg.text.match(new RegExp(x.emoji, 'g'))
+        if (hitsRaw) hitsRaw.forEach(x => emojiHits.push(x))
+    })
 
-    // Create object for each user for each emoji hit
+    // Rebuild emoji object with emojiHits
+    const hits = emojiHits.map(x => ({ emoji: x, type: emojis.filter(t => t.emoji == x)[0].type }))
 
-    for (const i of hits) {
-        for (const u of users) {
-            const obj:object = {
-                username: u,
-                type: i.type,
-            };
+    if (hits.length === 0) return false;
 
-            updates.push(obj);
-        }
-    }
+    // For each emojiHits give each user a update
+    hits.map(x => users.forEach(u => updates.push({ username: u, type: x.type })))
 
     return {
         giver: msg.user,
         updates,
     };
-});
+};
+
+export { parseMessage, parseUsernames }
