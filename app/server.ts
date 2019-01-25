@@ -8,28 +8,34 @@ import BurritoStore from './store/BurritoStore';
 import { RTMClient, WebClient } from '@slack/client';
 import Bot from './Bot';
 
+//Interfaces
+import SlackInterface from './types/Slack.interface'
+
 // Configure BurritoStore
 BurritoStore.setDatabase(database);
 
 // Configuration file to use
-const root:string = path.normalize(`${__dirname}/../`);
-const theme:string = ('THEME' in process.env) ? process.env.THEME : 'default';
-const publicPath:string = `${root}www/themes/${theme}`;
+const root: string = path.normalize(`${__dirname}/../`);
+const theme: string = ('THEME' in process.env) ? process.env.THEME : 'default';
+const publicPath: string = `${root}www/themes/${theme}`;
 
 // Log level
-const isLocal:boolean = !process.env.ENV || process.env.ENV === 'development';
-if (isLocal) log.level('debug');
+const debugMode: boolean = (process.env.DEBUG || process.env.ENV === 'development') ? true : false
+if (debugMode) log.level('debug');
+
+
 
 // Local UserStore
-let storedSlackBots:Array<object>;
-let storedSlackUsers:Array<object>;
-let botId:string;
+let storedSlackBots: Array<SlackInterface.Stored>;
+let storedSlackUsers: Array<SlackInterface.Stored>;
+let botId: string;
 
 // Set and start RTM
 const rtm = new RTMClient(process.env.SLACK_API_TOKEN);
 rtm.start();
 
 function serverStoredSlackUsers() {
+    console.log("stored", JSON.stringify(storedSlackUsers))
     return storedSlackUsers;
 }
 // Fun
@@ -47,7 +53,7 @@ function getBotUsername() {
         return;
     }
 
-    storedSlackBots.forEach((x:any) => {
+    storedSlackBots.forEach((x: any) => {
         if (x.name === process.env.BOT_NAME) {
             botId = x.id;
         }
@@ -73,6 +79,7 @@ async function localStore() {
     storedSlackBots = null;
     storedSlackUsers = res.users;
     storedSlackBots = res.bots;
+    console.log("StoredBot", storedSlackBots)
     return getBotUsername();
 }
 
