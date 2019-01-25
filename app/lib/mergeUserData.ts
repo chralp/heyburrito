@@ -1,28 +1,21 @@
 import UserInterface from '../types/User.interface';
-import SlackUserInterface from '../types/SlackUser.interface';
+import SlackInterface from '../types/Slack.interface';
 
-export default ((slackUsers:Array<SlackUserInterface>, data) => {
+export default ((slackUsers: Array<SlackInterface.Stored>, data) => {
 
-    const res:Array<UserInterface> = [];
+    const res: Array<UserInterface> = [];
 
     if (slackUsers.length === 0) {
         return [];
     }
 
-    data.forEach((x) => {
+    const user = slackUsers.filter(x => x.id === data[0]._id)[0]
 
-        slackUsers.forEach((u) => {
-
-            if ((u.id) && (u.id.match(x._id))) {
-                res.push({
-                    username: x._id,
-                    name: u.name,
-                    score: x.score,
-                    avatar: u.avatar,
-                });
-            }
-
-        });
+    res.push({
+        username: user.id,
+        name: user.name,
+        score: data[0].score,
+        avatar: user.avatar,
     });
 
     return res;
