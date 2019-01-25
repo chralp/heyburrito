@@ -55,8 +55,7 @@ describe('validator-test', () => {
                 return storedBots;
             }
             res = sentFromBot(msg, getBots)
-            console.log("aasd", res)
-            expect(res).to.equal(true)
+            expect(res).to.be.true
         });
 
         it('should retrun false', () => {
@@ -70,8 +69,6 @@ describe('validator-test', () => {
             res = sentFromBot(msg, getBots)
             expect(res).to.equal(false)
         });
-
-
     });
 
 
