@@ -9,8 +9,8 @@ import WebSocket from 'ws'
 const port: string = process.env.PORT || '3333';
 
 export default ((
-    publicPath,
-    serverStoredSlackUsers,
+    publicPath: string,
+    serverStoredSlackUsers: Function,
 ) => {
     const requestHandler = (request, response) => {
         log.info('request ', request.url);
@@ -99,7 +99,6 @@ export default ((
     });
 
     wss.on('connection', function connection(ws: any) {
-        console.log("NY CONNECTION ?")
         ws.on('message', function incoming(message) {
 
             message = JSON.parse(message);
@@ -112,9 +111,7 @@ export default ((
 
         const messageHandlers = {
             getReceivedList() {
-                console.log('getReceivedList');
                 BurritoStore.getUserScore().then((users) => {
-                    console.log('users', users);
                     const result: Array<object> = mergeUserData(serverStoredSlackUsers(), users);
                     ws.send(JSON.stringify({ event: 'receivedList', data: result }));
                 });

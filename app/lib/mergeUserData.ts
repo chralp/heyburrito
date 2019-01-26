@@ -9,13 +9,18 @@ export default ((slackUsers: Array<SlackInterface.Stored>, data) => {
 
     if (!slackUsers.length) return [];
 
-    const user = slackUsers.filter(x => x.id === data[0]._id)[0]
-    res.push({
-        username: user.id,
-        name: user.name,
-        score: data[0].score,
-        avatar: user.avatar,
-    });
+    slackUsers.filter(x => {
+        for (const u of data) {
+            if (u._id === x.id) {
+                res.push({
+                    username: u._id,
+                    name: x.name,
+                    score: u.score,
+                    avatar: x.avatar,
+                });
+            }
+        }
+    })
 
     return res;
 });
