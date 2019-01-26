@@ -1,69 +1,242 @@
-// Get full list of received Burritos
+const users = document.getElementById('users');
+let store = [];
+
 hey.on('open', function () {
     hey.get('getReceivedList', { type: 'burrito', sort: 'points', order: 'asc', take: 5, skip: 0 });
 });
 
-hey.on('receivedList', renderList);
-hey.on('userStats', userStats);
+hey.on('receivedList', (data) => {
+    store = data;
 
-hey.on('GIVE',GIVE)
-function GIVE(data){
-    console.log("data",data)
+    sortUsers();
+    render();
+});
+
+hey.on('userStats', addStats);
+
+function sortUsers() {
+    store.sort((a, b) => Math.sign(b.score - a.score));
+
+    store = store.map((item, i) => {
+        const mappedItem = Object.assign({}, item);
+        const position = i + 1;
+
+        mappedItem.last_position = ('position' in mappedItem) ? mappedItem.position : 0;
+        mappedItem.position = position;
+
+        return mappedItem;
+    });
 }
-/*
-* Special help functions
-*/
-function returnPercent(totalScore,user) {
-    return (user / totalScore) * 100;
+
+function displayItem(element, wait, rerender) {
+    setTimeout(() => {
+        element.classList.add('display');
+
+        setTimeout(() => {
+            element.classList.add('displayed');
+
+            if (rerender) {
+                setTimeout(() => {
+                    sortUsers();
+                    render(true);
+                }, 1000);
+            }
+        }, 300);
+    }, wait);
 }
 
-function openStats(user) {
-    hey.get('getUserStats', user);
-}
+function displayStats(data, element) {
+    const statsEl = element.querySelector('.scoreboard__user__stats');
 
-function renderList(data) {
-    $("#content").empty();
+    if (statsEl.classList.contains('display')) {
+        console.log('hej då');
+        statsEl.style.cssText = 'height: 0px';
+        statsEl.classList.remove('display');
+    } else {
+        console.log('hej', data.username);
 
-    for (const a of data) {
-        if (!$('.row').hasClass(a.username)) {
-            $('#content').append(`<tr data-uuid="${a.username}" onclick="openStats('${a.username}')" class="row"><td class="avatar"><img src="${a.avatar}"></img></td><td class="name"> <p>${a.name}</p></td><td class="score">${a.score}</td></tr>`);
-        }
+        hey.get('getUserStats', data.username);
     }
 }
 
-// Box, showUser stats
-function userStats (data) {
-    console.log('data', data);
+function addStatsRow(user, container) {
+    const html = `
+        <li>
+            <img width="30" height="30" src="${user.avatar}">
+            <strong>${user.name}</strong>
+            <span class="score">${user.score}</span>
+        </li>
+    `;
 
-    const x = document.getElementById('hiddenBox');
-    x.style.display = 'block';
+    container.appendChild(document.createRange().createContextualFragment(html));
+}
 
-    $('#head').empty();
-    $('#head').append(`<p><img src="${data.user.avatar}"></p>`);
-    $('#head').append(`<p>${data.user.name}</p>`);
+function addStats(data) {
+    const element = document.getElementById(`user:${data.user.username}`);
+    const statsEl = element.querySelector('[data-stats]');
+    const fromEl = element.querySelector('[data-from]');
+    const toEl = element.querySelector('[data-to]');
 
-    $('#stats').empty();
-    $('#stats').append(`<p>Total given: ${data.gived}</p>`);
-    $('#stats').append(`<p>Total received: ${data.user.score}</p>`);
-    $('#stats').append(`<br><br>`);
+    fromEl.innerHTML = '';
+    toEl.innerHTML = '';
+
+    if (data.gived.length) {
+        data.gived.forEach((user) => addStatsRow(user, toEl));
+    }
 
     if (data.givers.length) {
-        for (const a of data.givers) {
-            const tjeeena = returnPercent(data.score,a.score);
-            $('#stats').append(`<div class="progress"><p>${a.name}</p><div class="bar"><div class="bar-progress" style="height:24px;width:${tjeeena}%"></div></div>`);
+        data.givers.forEach((user) => addStatsRow(user, fromEl));
+    }
+
+    requestAnimationFrame(() => {
+        statsEl.classList.add('display');
+        statsEl.style.cssText = `
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: auto;
+            transition: none;
+        `;
+
+        requestAnimationFrame(() => {
+            const height = statsEl.getBoundingClientRect().height;
+
+            statsEl.style.cssText = '';
+
+            requestAnimationFrame(() => {
+                statsEl.style.cssText = `height: ${height}px`;
+            });
+        });
+    });
+}
+
+function createElement(data, display) {
+    const element = document.createElement('article');
+
+    element.className = 'scoreboard__user';
+    element.id = `user:${data.username}`;
+
+    if (display) {
+        element.className += ' display';
+    }
+
+    element.setAttribute('data-uuid', data.username);
+    element.setAttribute('data-score', data.score);
+
+    element.innerHTML = `
+        <div class="scoreboard__user__row scoreboard__user__summary">
+            <div>
+                <img width="60" height="60" src="${data.avatar}" alt="">
+            </div>
+            <div>${data.name}</div>
+            <div><span data-element="score" class="score">${data.score}</span></div>
+        </div>
+        <div class="scoreboard__user__stats" data-stats>
+            <div class="scoreboard__user__stats__column">
+                <strong class="scoreboard__user__stats__title">From</strong>
+
+                <ol class="scoreboard__user__stats__list" data-from>
+                </ol>
+            </div>
+            <div class="scoreboard__user__stats__column">
+                <strong class="scoreboard__user__stats__title">To</strong>
+
+                <ol class="scoreboard__user__stats__list" data-to>
+                </ol>
+            </div>
+        </div>
+    `;
+
+    element.querySelector('.scoreboard__user__summary').addEventListener('click', () => displayStats(data, element), false);
+
+    return element;
+}
+
+function newPosition(element) {
+    const newClass = ' pulse animated';
+    element.className += newClass;
+
+    setTimeout(() => {
+        element.className = element.className.replace(newClass, '').trim();
+    }, 1000);
+}
+
+function render(refresh) {
+    const wait = 200;
+    let currentWait = 0;
+
+    users.innerHTML = '';
+
+    store.forEach((item) => {
+        currentWait += wait;
+
+        const element = createElement(item, refresh);
+        users.appendChild(element);
+
+        if (refresh) {
+            if (item.last_position !== item.position) {
+                newPosition(element);
+            }
+        } else {
+            displayItem(element, currentWait);
         }
-    }
+    });
 }
 
-// Hax to fix box on startup
-function close() {
-    const x = document.getElementById('hiddenBox');
+function appendUser(data) {
+    store.push(data);
 
-    if(x.style.display === 'none') {
-        x.style.display = 'block';
+    const element = createElement(data);
+
+    users.appendChild(element);
+
+    displayItem(element, 200, true);
+}
+
+function updateUser(data, direction, item) {
+    const score = data.score;
+    const scoreEl = item.querySelector('[data-element="score"]');
+    const className = (direction === 'up') ? ' tada animated good' : ' shake animated bad';
+
+    item.setAttribute('data-score', score);
+    scoreEl.innerHTML = score;
+    scoreEl.className += className;
+
+    store = store.slice().map((user) => {
+        const uppdatedUser = Object.assign({}, user);
+
+        if (user.username === data.username) {
+            uppdatedUser.score = data.score;
+        }
+
+        return uppdatedUser;
+    });
+
+    setTimeout(() => {
+        scoreEl.className = scoreEl.className.replace(className, '').trim();
+
+        setTimeout(() => {
+            sortUsers();
+            render(true);
+        }, 1500);
+    }, 1000);
+}
+
+function updateScore(data, direction) {
+    console.log(data, direction);
+    const item = document.querySelector(`[data-uuid="${data.username}"]`);
+
+    if (item) {
+        updateUser(data, direction, item);
     } else {
-        x.style.display = 'none';
+        appendUser(data);
     }
 }
 
-close();
+hey.on('GIVE', (data) => {
+    updateScore(data, 'up');
+});
+
+hey.on('TAKE_AWAY', (data) => {
+    updateScore(data, 'down');
+});

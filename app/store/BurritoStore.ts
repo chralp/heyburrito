@@ -23,7 +23,7 @@ class BurritoStore extends EventEmitter {
         return this.database.give(to, from).then(() => this.emit('GIVE', to));
     }
 
-    takeAwayBurrito(to: string, from: string) {
+    async takeAwayBurrito(to: string, from: string) {
         log.info('Burrito taken away from %s by %s', to, from);
         return this.getUserScore(to).then((data) => {
 

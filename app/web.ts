@@ -115,9 +115,9 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
                 });
             },
 
-            getUserStats(user) {
+            getUserStats(user: string) {
                 BurritoStore.getGivers(user).then(users => mergeUserData(serverStoredSlackUsers(), users)).then((givers) => {
-                    BurritoStore.getGiven(user).then((gived) => {
+                    BurritoStore.getGiven(user).then(users => mergeUserData(serverStoredSlackUsers(), users)).then((gived) => {
                         BurritoStore.getUserScore(user).then((userScoreData) => {
                             const result: Array<object> = mergeUserData(serverStoredSlackUsers(), userScoreData);
                             ws.send(JSON.stringify({
