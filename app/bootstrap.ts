@@ -67,7 +67,6 @@ async function bootstrap() {
     const firstCheck = config.filter(x => {
         if ((!x.value) && !!(x.required)) {
             log.warn(`You have to set ENV ${x.key}`)
-
             return x
         }
     })
@@ -91,7 +90,6 @@ async function bootstrap() {
         }
     }
 
-
     /*
      * Set theme
      */
@@ -101,21 +99,33 @@ async function bootstrap() {
     if (envThemeUrl) {
         // Theme set in env
         // Check if valid Url
-        console.log("THEME URL SET")
         const urlObj = url.parse(envThemeUrl.value);
         if (!urlObj.slashes) {
             log.warn('Invalid Theme URL, defaulting to heyburrito default theme')
             theme = `${publicPath}default`
 
         } else {
+            log.info('Theme url provided')
             theme = await installTheme(urlObj, publicPath)
         }
     } else {
+        log.info('No theme url provided, defaulting..')
         theme = `${publicPath}default`
     }
-    console.log("theme", theme)
+    log.info(`Using ${theme}`)
+
+    const keys = {}
+
+    for (const k of config) {
+        if (k.value) {
+            keys[k.key] = k.value
+        }
+    }
+    keys["THEME"] = theme
+    return keys
 }
 
+// Will clone repo to theme folder
 async function cloneRepo(urlObj, dest: string) {
     await gitCloneRepo(urlObj.pathname, {
         host: urlObj.host,
@@ -131,7 +141,6 @@ function installTheme(urlObj, publicPath: string) {
     const [, , project] = urlObj.pathname.split('/')
 
     // Unless project default theme
-    //if (!project) return false
     const themePath = `${publicPath}${project}`
     if (fs.existsSync(themePath)) {
         log.info('Theme installed, setting theme...')
@@ -145,7 +154,5 @@ function installTheme(urlObj, publicPath: string) {
         })
     }
 }
-
-bootstrap()
 
 export default bootstrap;
