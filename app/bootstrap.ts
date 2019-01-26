@@ -5,11 +5,12 @@ import url from 'url';
 import fs from 'fs';
 import gitCloneRepo from 'git-clone-repo'
 dotenv.config();
+// Configuration file to use
+const root: string = path.normalize(`${__dirname}/../`);
+const publicPath: string = `${root}www/themes/`;
 
 async function bootstrap() {
 
-    // Configuration file to use
-    const root: string = path.normalize(`${__dirname}/../`);
 
     // Log level
     const debugMode: boolean = (process.env.DEBUG || process.env.ENV === 'development') ? true : false
@@ -64,8 +65,9 @@ async function bootstrap() {
     ]
 
     const firstCheck = config.filter(x => {
-        if ((!x.value) && (x.required)) {
+        if ((!x.value) && !!(x.required)) {
             log.warn(`You have to set ENV ${x.key}`)
+
             return x
         }
     })
@@ -79,7 +81,7 @@ async function bootstrap() {
     if (mongodb) {
         // Check so keys for mongodb is set
         const mongoDBKeys = config.filter(x => {
-            if ((x.key === "MONGODB_URL" || "MONGODB_DATABASE") && !(x.value)) {
+            if ((x.key === "MONGODB_URL" || x.key === "MONGODB_DATABASE") && !(x.value)) {
                 log.warn(`You have to set ENV ${x.key}`)
                 return x
             }
@@ -89,45 +91,59 @@ async function bootstrap() {
         }
     }
 
-    const themeUrl = config.filter(x => (x.key === 'THEME') && (x.value))[0]
-    const publicPath: string = `${root}www/themes/`;
-    if (themeUrl) {
-        const urlObj = url.parse(themeUrl.value);
+
+    /*
+     * Set theme
+     */
+    let theme: string;
+    const envThemeUrl = config.filter(x => (x.key === 'THEME') && (x.value))[0]
+
+    if (envThemeUrl) {
+        // Theme set in env
+        // Check if valid Url
+        console.log("THEME URL SET")
+        const urlObj = url.parse(envThemeUrl.value);
         if (!urlObj.slashes) {
-            log.warn('Invalid Theme URL')
+            log.warn('Invalid Theme URL, defaulting to heyburrito default theme')
+            theme = `${publicPath}default`
+
         } else {
-            const themeInstaller = await installTheme(urlObj, publicPath)
-
+            theme = await installTheme(urlObj, publicPath)
         }
+    } else {
+        theme = `${publicPath}default`
     }
-
-    const theme: string = ('THEME' in process.env) ? process.env.THEME : 'default';
+    console.log("theme", theme)
 }
 
-function installTheme(urlObj, publicPath) {
-    /*
-      Test if URL is valid
-      Parseurl
-      - getRepoName
-      check if repoName exists under themefolder
-      if true
-      cd git pull
-      else
-      git clone
-    */
+async function cloneRepo(urlObj, dest: string) {
+    await gitCloneRepo(urlObj.pathname, {
+        host: urlObj.host,
+        destination: dest
+    });
+    return dest
+}
+
+
+function installTheme(urlObj, publicPath: string) {
+
+    // Get value that we want
     const [, , project] = urlObj.pathname.split('/')
-    if (!project) return false
 
-    if (fs.existsSync(`${publicPath}${project}`)) {
-        console.log("PATH EXITS")
+    // Unless project default theme
+    //if (!project) return false
+    const themePath = `${publicPath}${project}`
+    if (fs.existsSync(themePath)) {
+        log.info('Theme installed, setting theme...')
+        return themePath
     } else {
-        console.log("PATH DOES NOT EXIST")
-        gitCloneRepo(urlObj.pathname, {
-            host: urlObj.host,
-            destination: `${publicPath}${project}`
-        });
+        log.info('Theme not installed, installing..')
+        const dest = themePath
+        return cloneRepo(urlObj, dest).then((data) => {
+            // data = themePath
+            return data
+        })
     }
-
 }
 
 bootstrap()
