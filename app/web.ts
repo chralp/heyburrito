@@ -5,13 +5,11 @@ import path from 'path';
 import mergeUserData from './lib/mergeUserData';
 import fs from 'fs';
 import WebSocket from 'ws'
+
 // Webserver port
 const port: string = process.env.PORT || '3333';
 
-export default ((
-    publicPath: string,
-    serverStoredSlackUsers: Function,
-) => {
+export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
     const requestHandler = (request, response) => {
         log.info('request ', request.url);
 
@@ -65,7 +63,7 @@ export default ((
         if (err) {
             return console.log('something bad happened', err);
         }
-        console.log(`server is listening on ${port}`);
+        log.info(`Webserver started on ${port}`);
     });
 
     const wss: any = new WebSocket.Server({ port: 8080 });

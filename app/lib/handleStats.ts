@@ -5,10 +5,10 @@ import mergeUserData from './mergeUserData';
 import UserScoreInterface from '../types/UserScore.interface';
 import UserInterface from '../types/User.interface';
 
-export default ((serverStoredSlackUsers:Function) => {
+export default ((serverStoredSlackUsers: Function) => {
 
-    async function getUserStats(username:string) {
-        const users:Array<UserInterface> = mergeUserData(serverStoredSlackUsers(), [{ _id: username }]);
+    async function getUserStats(username: string) {
+        const users: Array<UserInterface> = mergeUserData(serverStoredSlackUsers(), [{ _id: username }]);
         let returnUser = null;
 
         if (users.length) {
@@ -16,12 +16,12 @@ export default ((serverStoredSlackUsers:Function) => {
         }
 
         if (!returnUser) {
-            return(null);
+            return (null);
         }
 
-        const userScoreData:Array<UserScoreInterface> = await BurritoStore.getUserScore(username);
-        const givers:Array<UserScoreInterface> = await BurritoStore.getGivers(username);
-        const given:Array<UserScoreInterface> = await BurritoStore.getGiven(username);
+        const userScoreData: Array<UserScoreInterface> = await BurritoStore.getUserScore(username);
+        const givers: Array<UserScoreInterface> = await BurritoStore.getGivers(username);
+        const given: Array<UserScoreInterface> = await BurritoStore.getGiven(username);
 
         if (userScoreData.length) {
             returnUser.score = userScoreData[0].score;
@@ -32,7 +32,7 @@ export default ((serverStoredSlackUsers:Function) => {
         returnUser.givers = mergeUserData(serverStoredSlackUsers(), givers);
         returnUser.given = mergeUserData(serverStoredSlackUsers(), given);
 
-        await(returnUser);
+        await (returnUser);
     }
 
     return { getUserStats };

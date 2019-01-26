@@ -9,7 +9,7 @@ async function slackUsers(wbc) {
     const users: Array<SlackInterface.Stored> = [];
     const bots: Array<SlackInterface.Stored> = [];
 
-    log.info('Getting slack users');
+    log.info('Fetching slack users via wbc');
 
     await wbc.users.list()
         .then((res: SlackInterface.WbcList) => {
