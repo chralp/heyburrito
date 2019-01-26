@@ -39,6 +39,7 @@ function parseMessage(msg, emojis: Array<EmojiInterface>) {
 
     // Get usernames from slack message
     const users = parseUsernames(msg.text)
+    if (!users) return false
 
     // Match and push allowed emojis to emojiHits
     emojis.map(x => {
