@@ -49,12 +49,9 @@ function displayStats(data, element) {
     const statsEl = element.querySelector('.scoreboard__user__stats');
 
     if (statsEl.classList.contains('display')) {
-        console.log('hej då');
         statsEl.style.cssText = 'height: 0px';
         statsEl.classList.remove('display');
     } else {
-        console.log('hej', data.username);
-
         hey.get('getUserStats', data.username);
     }
 }
@@ -126,7 +123,7 @@ function createElement(data, display) {
     element.innerHTML = `
         <div class="scoreboard__user__row scoreboard__user__summary">
             <div>
-                <img width="60" height="60" src="${data.avatar}" alt="">
+                <img width="48" height="48" src="${data.avatar}" alt="">
             </div>
             <div>${data.name}</div>
             <div><span data-element="score" class="score">${data.score}</span></div>
@@ -166,8 +163,8 @@ function render(refresh) {
     let currentWait = 0;
 
     users.innerHTML = '';
-
-    store.forEach((item) => {
+    const top20 = store.slice(0,20)
+    top20.forEach((item) => {
         currentWait += wait;
 
         const element = createElement(item, refresh);
@@ -223,7 +220,6 @@ function updateUser(data, direction, item) {
 }
 
 function updateScore(data, direction) {
-    console.log(data, direction);
     const item = document.querySelector(`[data-uuid="${data.username}"]`);
 
     if (item) {
@@ -235,8 +231,22 @@ function updateScore(data, direction) {
 
 hey.on('GIVE', (data) => {
     updateScore(data, 'up');
+    rainBurritos();
 });
 
 hey.on('TAKE_AWAY', (data) => {
     updateScore(data, 'down');
 });
+
+function rainBurritos(){
+    for (i = 0; i < 50; i++) {
+        document.getElementById("rain").innerHTML+= `<i class="rain burrito-rain">🌯</i>`
+    }
+
+    setTimeout(() => {
+        var i, elements = document.getElementsByClassName('rain');
+        for (i = elements.length; i--;) {
+            elements[i].parentNode.removeChild(elements[i]);
+        }
+    }, 15000)
+}

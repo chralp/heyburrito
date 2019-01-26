@@ -11,7 +11,6 @@ const port: string = process.env.PORT || '3333';
 
 export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
     const requestHandler = (request, response) => {
-        log.info('request ', request.url);
 
         let filePath: string = publicPath + request.url;
 
@@ -61,7 +60,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
 
     server.listen(port, (err) => {
         if (err) {
-            return console.log('something bad happened', err);
+            return log.warn('something bad happened', err);
         }
         log.info(`Webserver started on ${port}`);
     });
@@ -143,5 +142,4 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
             }
         }
     });
-
 });
