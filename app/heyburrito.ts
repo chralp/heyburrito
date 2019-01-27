@@ -12,7 +12,7 @@ import getUserStats from './lib/handleStats';
 import SlackInterface from './types/Slack.interface'
 import ConfigInterface from './types/Config.interface'
 
-function heyburrito(config: ConfigInterface.doc) {
+function heyburrito(config) {
 
     // Configure BurritoStore
     BurritoStore.setDatabase(database);

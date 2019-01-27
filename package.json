@@ -6,7 +6,9 @@
     "start": "ts-node ./app/server.ts",
     "test": "mocha -r ts-node/register test/* || true",
     "lint": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts test/*.ts",
-    "lintFix": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts test/*.ts --fix"
+    "lintFix": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts test/*.ts --fix",
+    "docker-build": "docker build -t chralp/heyburrito . && docker tag chralp/heyburrito chralp/heyburrito",
+    "docker-push": "docker push chralp/heyburrito"
   },
   "dependencies": {
     "@slack/client": "^4.3.1",
