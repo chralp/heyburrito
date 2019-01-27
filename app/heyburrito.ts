@@ -15,7 +15,7 @@ import ConfigInterface from './types/Config.interface'
 function heyburrito(config) {
 
     // Configure BurritoStore
-    BurritoStore.setDatabase(database);
+    BurritoStore.setDatabase(database(config));
 
     // Local store
     let storedSlackBots: Array<SlackInterface.Stored>;
