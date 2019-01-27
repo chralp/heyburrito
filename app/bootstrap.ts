@@ -123,6 +123,7 @@ async function bootstrap() {
     }
     keys["THEME"] = theme
     return keys
+
 }
 
 // Will clone repo to theme folder
