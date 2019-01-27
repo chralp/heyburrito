@@ -96,7 +96,7 @@ export default class MongoDBDriver {
         return this.sum('burritos', 'value', match);
     }
 
-    getGiven(user = null) {
+    getGiven(user: string) {
         const match = (user) ? { from: user } : null;
 
         return this.sum('burritos', 'value', match);

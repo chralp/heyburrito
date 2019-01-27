@@ -1,7 +1,8 @@
 import BurritoStore from '../store/BurritoStore';
 import { default as log } from 'bog';
+import config from '../lib/config'
 
-const dailyCap: number = process.env.SLACK_DAILY_CAP ? parseInt(process.env.SLACK_DAILY_CAP) : 5;
+const dailyCap: number = parseInt(config("SLACK_DAILY_CAP"));
 
 function handleMsg(giver: string, updates) {
     BurritoStore.givenBurritosToday(giver).then((burritos) => {

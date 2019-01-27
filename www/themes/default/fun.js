@@ -77,6 +77,9 @@ function addStats(data) {
     fromEl.innerHTML = '';
     toEl.innerHTML = '';
 
+    data.gived.sort((a, b) => Math.sign(b.score - a.score));
+    data.givers.sort((a, b) => Math.sign(b.score - a.score));
+
     if (data.gived.length) {
         data.gived.forEach((user) => addStatsRow(user, toEl));
     }
@@ -164,7 +167,7 @@ function render(refresh) {
 
     users.innerHTML = '';
     const top20 = store.slice(0,20)
-    top20.forEach((item) => {
+    store.forEach((item) => {
         currentWait += wait;
 
         const element = createElement(item, refresh);

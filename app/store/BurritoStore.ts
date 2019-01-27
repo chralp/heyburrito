@@ -19,12 +19,12 @@ class BurritoStore extends EventEmitter {
     }
 
     giveBurrito(to: string, from: string) {
-        log.info('Burrito given to %s from %s', to, from);
+        log.info(`Burrito given to ${to} from ${from}`);
         return this.database.give(to, from).then(() => this.emit('GIVE', to));
     }
 
     async takeAwayBurrito(to: string, from: string) {
-        log.info('Burrito taken away from %s by %s', to, from);
+        log.info(`Burrito taken away from ${to} by ${from}`);
         return this.getUserScore(to).then((data) => {
 
             // Loweset score possible should be 0 ( ZERO )

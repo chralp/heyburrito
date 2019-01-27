@@ -47,7 +47,6 @@ class Bot {
     listener(): void {
         log.info('Listening on slack messages');
         this.rtm.on('message', (event: SlackMessageInterface) => {
-            console.log("EVENT", event)
             this.handleEvent(event)
         })
     }
@@ -66,7 +65,6 @@ class Bot {
                     });
                 } else {
                     const result = parseMessage(event, emojis);
-                    console.log('result', result);
                     if (result) {
                         storeminator(result);
                     }
