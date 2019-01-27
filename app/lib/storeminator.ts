@@ -1,10 +1,9 @@
-import config from './config';
 import BurritoStore from '../store/BurritoStore';
 import { default as log } from 'bog';
 
-const dailyCap:string = config('SLACK_DAILY_CAP');
+const dailyCap: number = process.env.SLACK_DAILY_CAP ? parseInt(process.env.SLACK_DAILY_CAP) : 5;
 
-function handleMsg(giver, updates) {
+function handleMsg(giver: string, updates) {
     BurritoStore.givenBurritosToday(giver).then((burritos) => {
         log.info('%s has given %d burritos today', giver, burritos.length);
 
@@ -17,18 +16,18 @@ function handleMsg(giver, updates) {
 
         if (a.type === 'inc') {
             BurritoStore.giveBurrito(a.username, giver)
-            .then(() => {
-                if (updates.length) {
-                    handleMsg(giver, updates);
-                }
-            });
+                .then(() => {
+                    if (updates.length) {
+                        handleMsg(giver, updates);
+                    }
+                });
         } else if (a.type === 'dec') {
             BurritoStore.takeAwayBurrito(a.username, giver)
-            .then(() => {
-                if (updates.length) {
-                    handleMsg(giver, updates);
-                }
-            });
+                .then(() => {
+                    if (updates.length) {
+                        handleMsg(giver, updates);
+                    }
+                });
         }
 
     });
