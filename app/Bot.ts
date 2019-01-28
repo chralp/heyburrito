@@ -12,12 +12,12 @@ import { RTMClient } from '@slack/client';
 const emojis: Array<EmojiInterface> = [];
 
 if (process.env.SLACK_EMOJI_INC) {
-    const incEmojis = process.env.SLACK_EMOJI_INC.replace(/'/gi, '').split(', ');
+    const incEmojis = process.env.SLACK_EMOJI_INC.split(', ');
     incEmojis.forEach(emoji => emojis.push({ type: 'inc', emoji }));
 }
 
 if (process.env.SLACK_EMOJI_DEC) {
-    const incEmojis = process.env.SLACK_EMOJI_DEC.replace(/'/gi, '').split(',');
+    const incEmojis = process.env.SLACK_EMOJI_DEC.split(',');
     incEmojis.forEach(emoji => emojis.push({ type: 'dec', emoji }));
 }
 class Bot {
