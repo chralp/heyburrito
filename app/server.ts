@@ -13,7 +13,6 @@ import getUserStats from './lib/handleStats';
 //Interfaces
 import SlackInterface from './types/Slack.interface'
 
-
 log.info("Staring heyburrito")
 
 // Configure BurritoStore

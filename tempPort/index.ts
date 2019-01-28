@@ -90,9 +90,9 @@ function importFromRedis() {
             getGivers(u.user).then((res: any) => {
                 const total = u.score
                 const resTot = res.length
-                //res.forEach(x => {
-                //    givePort(u.user, x)
-                //})
+                res.forEach(x => {
+                    givePort(u.user, x)
+                })
                 const diff = total - resTot
                 console.log("================")
                 console.log("Total", total)
