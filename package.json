@@ -19,7 +19,6 @@
     "dotenv": "^6.0.0",
     "git-clone-repo": "^1.0.0",
     "mongodb": "^3.0.10",
-    "nodegit": "^0.24.0",
     "redis": "^2.8.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3",
