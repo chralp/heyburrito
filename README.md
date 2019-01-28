@@ -40,17 +40,17 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 5. Invite the new bot to your slack channels ( where u want to be able to send burritos ).
 
 ### Docker
-1. Open and edit docker-compose.yml
+1. Open and edit `docker-compose.yml`.
 2. Set environment variables that you need / want. Check "Environment variables" for more details.
-3. docker-compose up -d
+3. `docker-compose up -d`.
 
 ### Node
-1. git clone git@github.com:chralp/heyburrito.git 
-2. cd heyburrito
-3. npm install
-4. cp .env.example .env
+1. `git clone git@github.com:chralp/heyburrito.git`
+2. `cd heyburrito`
+3. `npm install`
+4. `cp .env.example .env`
 5. Set environment variables that you need / want. Check "Environment variables" for more details.
-6. npm run start
+6. `npm run start`
 
 ### Environment Variables
 
@@ -75,7 +75,7 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 
 
 ### Theme
-You will be able to provide a link to a gitrepo. When linking to a gitrepo, heyburrito will install and use the theme. ( not working yet tho.. see issue https://github.com/chralp/heyburrito/issues/37 )
+You will be able to provide a link to a gitrepo. When linking to a gitrepo, heyburrito will install and use the theme. ( not working yet tho.. see issue https://github.com/chralp/heyburrito/issues/37 ).
 
 Defaults today to heyburritotheme. Heyburritotheme is a fork of https://github.com/tbleckert/cardi-burrito .
 
