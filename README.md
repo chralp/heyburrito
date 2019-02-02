@@ -44,6 +44,7 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 2. Set environment variables that you need / want. Check "Environment variables" for more details.
 3. `docker-compose up -d`.
 
+( Dockerhub repo => https://hub.docker.com/r/chralp/heyburrito  )
 ### Node
 1. `git clone git@github.com:chralp/heyburrito.git`
 2. `cd heyburrito`
