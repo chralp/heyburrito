@@ -9,16 +9,22 @@ import WebSocket from 'ws'
 // Webserver port
 const port: string = process.env.PORT || '3333';
 
+const defaultUrlPath: string = '/heyburrito'
 export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
     const requestHandler = (request, response) => {
 
-        let filePath: string = publicPath + request.url;
+        let urlReplaced: string = request.url.replace(defaultUrlPath, '')
+        let filePath: string = publicPath + urlReplaced;
 
-        if (request.url == '/') {
-            filePath += '/index.html';
+        if (!urlReplaced) {
+            urlReplaced = '/'
+        }
+        if (urlReplaced == '/') {
+            filePath += 'index.html';
         }
 
         const extname = String(path.extname(filePath)).toLowerCase();
+
         const mimeTypes: object = {
             '.html': 'text/html',
             '.js': 'text/javascript',
@@ -29,7 +35,6 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
         };
 
         const contentType: string = mimeTypes[extname] || 'application/octet-stream';
-
         fs.readFile(filePath, 'utf-8', function(error, content) {
             if (error) {
                 if (error.code == 'ENOENT') {
@@ -46,7 +51,6 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
                 if (contentType === 'text/html') {
                     const www: string = path.normalize(`${publicPath}/../../lib/`);
                     const js: string = fs.readFileSync(`${www}Hey.js`, 'utf-8');
-
                     content = content.replace('</head>', `<script>${js}</script></head>`);
                 }
 
@@ -114,22 +118,23 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
                 });
             },
 
-            getUserStats(user: string) {
-                BurritoStore.getGivers(user).then(users => mergeUserData(serverStoredSlackUsers(), users)).then((givers) => {
-                    BurritoStore.getGiven(user).then(users => mergeUserData(serverStoredSlackUsers(), users)).then((gived) => {
-                        BurritoStore.getUserScore(user).then((userScoreData) => {
-                            const result: Array<object> = mergeUserData(serverStoredSlackUsers(), userScoreData);
-                            ws.send(JSON.stringify({
-                                event: 'userStats',
-                                data: {
-                                    user: result[0],
-                                    gived,
-                                    givers,
-                                }
-                            }));
-                        });
-                    });
-                });
+            async getUserStats(user: string) {
+
+                const [givers, given, userScore] = await Promise.all([
+                    BurritoStore.getGivers(user),
+                    BurritoStore.getGiven(user),
+                    BurritoStore.getUserScore(user)
+                ]);
+
+                const result: Array<object> = mergeUserData(serverStoredSlackUsers(), userScore);
+                ws.send(JSON.stringify({
+                    event: 'userStats',
+                    data: {
+                        user: result[0],
+                        gived: mergeUserData(serverStoredSlackUsers(), given),
+                        givers: mergeUserData(serverStoredSlackUsers(), givers),
+                    }
+                }));
             },
 
             getGivenList() {

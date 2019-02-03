@@ -11,11 +11,14 @@ export default ((slackUsers: Array<SlackInterface.Stored>, data) => {
 
     slackUsers.filter(x => {
         for (const u of data) {
+
             if ((u._id === x.id) && (x.name)) {
                 res.push({
                     username: u._id,
                     name: x.name,
                     score: u.score,
+                    given: u.givenTotal,
+                    today: u.givenToday,
                     avatar: x.avatar,
                 });
             }
