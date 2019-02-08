@@ -17,7 +17,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
         let filePath: string = publicPath + urlReplaced;
 
         if (!urlReplaced) {
-            urlReplaced = '/'
+            urlReplaced = '/';
         }
         if (urlReplaced == '/') {
             filePath += 'index.html';
@@ -123,7 +123,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
                 const [givers, given, userScore] = await Promise.all([
                     BurritoStore.getGivers(user),
                     BurritoStore.getGiven(user),
-                    BurritoStore.getUserScore(user)
+                    BurritoStore.getUserScore(user),
                 ]);
 
                 const result: Array<object> = mergeUserData(serverStoredSlackUsers(), userScore);
