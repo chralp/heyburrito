@@ -38,8 +38,29 @@ class BurritoStore extends EventEmitter {
         })
     }
 
-    getUserScore(user: string = null): Promise<Array<UserScoreInterface>> {
-        return this.database.getScore(user);
+    async getUserStats(user: string) {
+        const [score, given, givenTodayArr] = await Promise.all([
+            this.database.getScore(user),
+            this.database.getGiven(user),
+            this.database.findFromToday(user)
+        ])
+
+        // Always return something
+        const givenTotal = given.length ? given.reduce((acc, current) => ({ score: acc.score + current.score })) : { score: 0 }
+
+        score.push({
+            givenTotal: givenTotal.score,
+            givenToday: Object.keys(givenTodayArr).length
+        })
+
+        const merged = score.reduce((acc, current) => Object.assign({}, acc, current))
+        return [merged]
+    }
+
+
+    async getUserScore(user: string = null): Promise<Array<UserScoreInterface>> {
+        const data = user ? this.getUserStats(user) : this.database.getScore(user)
+        return data
     }
 
     getGiven(user: string): Promise<Array<UserScoreInterface>> {
