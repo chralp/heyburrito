@@ -13,12 +13,10 @@ async function handleMsg(giver: string, updates) {
 
     log.info(`${giver} has given ${burritos.length} burritos today`);
 
-
     const diff = dailyCap - burritos.length
 
     if (updates.length > diff) {
         // Send message to user
-        Bot.sendToUser("", "")
         log.info(`User ${giver} is trying to give ${updates.length}, but u have only ${diff} left`)
         return;
     }

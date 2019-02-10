@@ -36,7 +36,6 @@ function serverStoredSlackUsers() {
     return storedSlackUsers;
 }
 
-getUserStats(serverStoredSlackUsers);
 
 // Match heyburrito bot and assign username to botid
 function getBotUsername() {
@@ -63,7 +62,7 @@ function getAllBots() {
 }
 
 // Start bot instance
-const BotInstance = new Bot(rtm, botUserID, getUserStats, getAllBots);
+const BotInstance = new Bot(rtm, wbc, botUserID, serverStoredSlackUsers, getAllBots);
 BotInstance.listener();
 
 // Update local stores
