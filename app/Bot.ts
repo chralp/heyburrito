@@ -1,14 +1,11 @@
 import { default as log } from 'bog';
 import { parseMessage } from './lib/parseMessage';
 import { validBotMention, validMessage } from './lib/validator';
-import storeminator from './lib/storeminator';
 import BurritoStore from './store/BurritoStore';
 
 // interfaces
 import EmojiInterface from './types/Emoji.interface';
 import SlackMessageInterface from './types/SlackMessage.interface';
-import UserInterface from './types/User.interface';
-import { RTMClient } from '@slack/client';
 import config from './lib/config'
 
 const dailyCap: number = parseInt(config("SLACK_DAILY_CAP"));
@@ -41,9 +38,6 @@ class Bot {
     }
 
     async sendToUser(username: string, text: string) {
-        log.info('Will send to user', username);
-        log.info('With data', text);
-
         const res = await this.wbc.chat.postMessage({
             channel: username,
             text: text,
@@ -97,7 +91,7 @@ class Bot {
 
         if (updates.length > diff) {
 
-            this.sendToUser(giver, `You are trying to give away ${updates.length}, but u have only ${diff} left!`)
+            this.sendToUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diff} burritos left today!`)
             log.info(`User ${giver} is trying to give ${updates.length}, but u have only ${diff} left`)
             return;
         }
