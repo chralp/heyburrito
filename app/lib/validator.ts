@@ -2,30 +2,6 @@ import { default as log } from 'bog'
 import { parseUsernames } from './parseMessage'
 import SlackMessageInterface from '../types/SlackMessage.interface';
 
-/*
-  if ((!!event.subtype) && (event.subtype === 'channel_join')) {
-      log.info('Joined channel', event.channel);
-  }
-
-        if (event.type === 'message') {
-
-            if (validMessage(event, emojis, this.allBots)) {
-                if (validBotMention(event, this.botUserID)) {
-                    // Geather data and send back to user
-                    this.getUserStats(event.user).then((res) => {
-                        this.sendToUser(event.user, res);
-                    });
-                } else {
-                    const result = parseMessage(event, emojis);
-                    console.log('result', result);
-                    if (result) {
-                        storeminator(result);
-                    }
-                }
-            }
-        }
-*/
-
 function selfMention(message) {
     const selfMention = message.text.match(`<@${message.user}>`) ? true : false
     if (selfMention) log.warn('Not valid, sender mentioned in message')
@@ -43,8 +19,6 @@ function sentFromBot(message, allBots) {
 
 function sentToBot(message, allBots) {
     const bots = allBots();
-    console.log("message", message)
-
     // Get all users from message.text
     const usersArr = parseUsernames(message.text)
     if (!usersArr) return false
@@ -53,7 +27,6 @@ function sentToBot(message, allBots) {
         usersArr.includes(v.id)
     })
     //a.indexOf(v) === i);
-    console.log("sentToBot", sentToBot)
     return !!sentToBot.length
 }
 
@@ -113,7 +86,6 @@ function validMessage(message: SlackMessageInterface, emojis, allBots: Function)
 
 function validBotMention(message: SlackMessageInterface, botUserID: Function) {
     const botid = botUserID();
-
     if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {
         return true;
     }

@@ -8,7 +8,6 @@ import webserver from './web';
 import database from './database';
 import BurritoStore from './store/BurritoStore';
 import slackUsers from './lib/getSlackUsers';
-import getUserStats from './lib/handleStats';
 
 //Interfaces
 import SlackInterface from './types/Slack.interface'
@@ -36,7 +35,20 @@ function serverStoredSlackUsers() {
     return storedSlackUsers;
 }
 
-getUserStats(serverStoredSlackUsers);
+// Return heyburrito botid
+function botUserID() {
+    return botId;
+}
+
+// Returns all bots
+function getAllBots() {
+    return storedSlackBots;
+}
+
+// Start bot instance
+const BotInstance = new Bot(rtm, wbc, botUserID, serverStoredSlackUsers, getAllBots);
+BotInstance.listener();
+
 
 // Match heyburrito bot and assign username to botid
 function getBotUsername() {
@@ -51,20 +63,6 @@ function getBotUsername() {
         log.warn(`Could not found bot ${config("BOT_NAME")} on slack account`);
     }
 }
-
-// Return heyburrito botid
-function botUserID() {
-    return botId;
-}
-
-// Returns all bots
-function getAllBots() {
-    return storedSlackBots;
-}
-
-// Start bot instance
-const BotInstance = new Bot(rtm, botUserID, getUserStats, getAllBots);
-BotInstance.listener();
 
 // Update local stores
 async function localStore() {
