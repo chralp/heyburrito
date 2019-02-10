@@ -100,6 +100,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
     });
 
     wss.on('connection', function connection(ws: any) {
+
         ws.on('message', function incoming(message) {
 
             message = JSON.parse(message);
@@ -111,11 +112,18 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
         });
 
         const messageHandlers = {
-            getReceivedList() {
-                BurritoStore.getUserScore().then((users) => {
-                    const result: Array<object> = mergeUserData(serverStoredSlackUsers(), users);
-                    ws.send(JSON.stringify({ event: 'receivedList', data: result }));
-                });
+
+            async getReceivedList() {
+
+                const [users] = await Promise.all([
+                    BurritoStore.getUserScore(),
+                ])
+
+                ws.send(JSON.stringify({
+                    event: 'receivedList',
+                    data: mergeUserData(serverStoredSlackUsers(), users),
+                }));
+
             },
 
             async getUserStats(user: string) {
@@ -126,24 +134,26 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
                     BurritoStore.getUserScore(user),
                 ]);
 
-                const result: Array<object> = mergeUserData(serverStoredSlackUsers(), userScore);
                 ws.send(JSON.stringify({
                     event: 'userStats',
                     data: {
-                        user: result[0],
+                        user: (mergeUserData(serverStoredSlackUsers(), userScore))[0],
                         gived: mergeUserData(serverStoredSlackUsers(), given),
                         givers: mergeUserData(serverStoredSlackUsers(), givers),
                     }
                 }));
             },
 
-            getGivenList() {
-                BurritoStore.getUserScore().then((users) => {
-                    const result = mergeUserData(serverStoredSlackUsers(), users.map((user) => {
-                        return user;
-                    }));
-                    ws.send(JSON.stringify({ event: 'givenList', data: result }));
-                });
+            async getGivenList() {
+
+                const [users] = await Promise.all([
+                    BurritoStore.getUserScore(),
+                ]);
+
+                ws.send(JSON.stringify({
+                    event: 'givenList',
+                    data: mergeUserData(serverStoredSlackUsers(), users.map((user) => user))
+                }));
             }
         }
     });
