@@ -28,12 +28,7 @@ class Bot {
     getUserStats: Function;
     allBots: Function;
 
-    constructor(
-        rtm,
-        botUserID: Function,
-        getUserStats: Function,
-        allBots: Function,
-    ) {
+    constructor(rtm, botUserID: Function, getUserStats: Function, allBots: Function) {
         this.rtm = rtm;
         this.botUserID = botUserID;
         this.getUserStats = getUserStats;
@@ -71,7 +66,6 @@ class Bot {
             if (validMessage(event, emojis, this.allBots)) {
                 if (validBotMention(event, this.botUserID)) {
                     // Geather data and send back to user
-                    this.rtm.sendMessage("STFU niggha", event.client_msg_id)
 
                 } else {
                     const result = parseMessage(event, emojis);

@@ -2,30 +2,6 @@ import { default as log } from 'bog'
 import { parseUsernames } from './parseMessage'
 import SlackMessageInterface from '../types/SlackMessage.interface';
 
-/*
-  if ((!!event.subtype) && (event.subtype === 'channel_join')) {
-      log.info('Joined channel', event.channel);
-  }
-
-        if (event.type === 'message') {
-
-            if (validMessage(event, emojis, this.allBots)) {
-                if (validBotMention(event, this.botUserID)) {
-                    // Geather data and send back to user
-                    this.getUserStats(event.user).then((res) => {
-                        this.sendToUser(event.user, res);
-                    });
-                } else {
-                    const result = parseMessage(event, emojis);
-                    console.log('result', result);
-                    if (result) {
-                        storeminator(result);
-                    }
-                }
-            }
-        }
-*/
-
 function selfMention(message) {
     const selfMention = message.text.match(`<@${message.user}>`) ? true : false
     if (selfMention) log.warn('Not valid, sender mentioned in message')
