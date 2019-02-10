@@ -2,36 +2,47 @@ import BurritoStore from '../store/BurritoStore';
 import { default as log } from 'bog';
 import config from '../lib/config'
 
+import Bot from '../Bot'
+
 const dailyCap: number = parseInt(config("SLACK_DAILY_CAP"));
 
-function handleMsg(giver: string, updates) {
-    BurritoStore.givenBurritosToday(giver).then((burritos) => {
-        log.info('%s has given %d burritos today', giver, burritos.length);
+async function handleMsg(giver: string, updates) {
 
-        if (burritos.length >= dailyCap) {
-            log.info('Daily cap of %d reached', dailyCap);
-            return;
+    // Get given burritos today
+    const burritos = await BurritoStore.givenBurritosToday(giver)
+
+    log.info(`${giver} has given ${burritos.length} burritos today`);
+
+
+    const diff = dailyCap - burritos.length
+
+    if (updates.length > diff) {
+        // Send message to user
+        Bot.sendToUser("", "")
+        log.info(`User ${giver} is trying to give ${updates.length}, but u have only ${diff} left`)
+        return;
+    }
+
+    if (burritos.length >= dailyCap) {
+        log.info(`Daily cap of ${dailyCap} reached`);
+        return;
+    }
+
+    const a = updates.shift();
+
+    if (a.type === 'inc') {
+
+        await BurritoStore.giveBurrito(a.username, giver)
+        if (updates.length) {
+            handleMsg(giver, updates);
         }
 
-        const a = updates.shift();
-
-        if (a.type === 'inc') {
-            BurritoStore.giveBurrito(a.username, giver)
-                .then(() => {
-                    if (updates.length) {
-                        handleMsg(giver, updates);
-                    }
-                });
-        } else if (a.type === 'dec') {
-            BurritoStore.takeAwayBurrito(a.username, giver)
-                .then(() => {
-                    if (updates.length) {
-                        handleMsg(giver, updates);
-                    }
-                });
+    } else if (a.type === 'dec') {
+        await BurritoStore.takeAwayBurrito(a.username, giver)
+        if (updates.length) {
+            handleMsg(giver, updates);
         }
-
-    });
+    }
 }
 
 function storeminator(msg) {

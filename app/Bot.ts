@@ -2,6 +2,7 @@ import { default as log } from 'bog';
 import { parseMessage } from './lib/parseMessage';
 import { validBotMention, validMessage } from './lib/validator';
 import storeminator from './lib/storeminator';
+import BurritoStore from './store/BurritoStore';
 
 // interfaces
 import EmojiInterface from './types/Emoji.interface';
@@ -42,6 +43,15 @@ class Bot {
     sendToUser(username: string, data: UserInterface) {
         log.info('Will send to user', username);
         log.info('With data', data);
+
+
+        //wbc.chat.postMessage({ channel: "UEKN9GNAJ", text: 'Hello there', username: "heyburrito", icon_emoji: ":burrito:" })
+        //    .then((res) => {
+        // `res` contains information about the posted message
+        //       console.log('Message sent: ', res.ts);
+        //   })
+        //  .catch(console.error);
+
     }
 
     listener(): void {
@@ -52,6 +62,7 @@ class Bot {
     }
 
     handleEvent(event) {
+
         if ((!!event.subtype) && (event.subtype === 'channel_join')) {
             log.info('Joined channel', event.channel);
         }
@@ -60,9 +71,8 @@ class Bot {
             if (validMessage(event, emojis, this.allBots)) {
                 if (validBotMention(event, this.botUserID)) {
                     // Geather data and send back to user
-                    this.getUserStats(event.user).then((res) => {
-                        this.sendToUser(event.user, res);
-                    });
+                    this.rtm.sendMessage("STFU niggha", event.client_msg_id)
+
                 } else {
                     const result = parseMessage(event, emojis);
                     if (result) {
@@ -71,7 +81,6 @@ class Bot {
                 }
             }
         }
-
     }
 }
 

@@ -43,8 +43,6 @@ function sentFromBot(message, allBots) {
 
 function sentToBot(message, allBots) {
     const bots = allBots();
-    console.log("message", message)
-
     // Get all users from message.text
     const usersArr = parseUsernames(message.text)
     if (!usersArr) return false
@@ -53,7 +51,6 @@ function sentToBot(message, allBots) {
         usersArr.includes(v.id)
     })
     //a.indexOf(v) === i);
-    console.log("sentToBot", sentToBot)
     return !!sentToBot.length
 }
 
@@ -113,7 +110,6 @@ function validMessage(message: SlackMessageInterface, emojis, allBots: Function)
 
 function validBotMention(message: SlackMessageInterface, botUserID: Function) {
     const botid = botUserID();
-
     if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {
         return true;
     }
