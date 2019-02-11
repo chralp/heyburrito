@@ -41,7 +41,7 @@ class Bot {
         const res = await this.wbc.chat.postMessage({
             channel: username,
             text: text,
-            username: "heyburrito",
+            username: config("BOT_NAME"),
             icon_emoji: ":burrito:"
         })
         if (res.ok) {
