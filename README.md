@@ -3,7 +3,7 @@
 </p>    
   
 ### Whats Heyburrito
-Heyburrito slack application allows you to send :burrito: to your colleagues / friends, each burrito is converted to points witch can be showed on a scoreboard.
+Heyburrito is a slack reward system that allows slack team members to recognize and reward team members who have performed well. Reward your colleagues / friends by sending them a :burrito:, each burrito is converted to points witch can be showed on a scoreboard.
 Heyburrito is like heytaco, but free and you host it yourself.
 
 ### How does it work
