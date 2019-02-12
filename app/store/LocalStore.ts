@@ -5,15 +5,19 @@ import slackUsers from '../lib/getSlackUsers';
 //Interfaces
 import SlackInterface from '../types/Slack.interface'
 
+/*
+* class Handles localstore of slackusers and bots
+* and provides functions to get stored users and bots
+*/
 class LocalStore {
 
-    wbc: any = null;
+    wbc = null;
     botId: string = null
     storedBots: Array<SlackInterface.Stored>;
     storedUsers: Array<SlackInterface.Stored>;
     botName: string = config("BOT_NAME");
 
-    start(wbc) {
+    start(wbc: any) {
         this.wbc = wbc
         this.fetchSlackUsers()
     }
@@ -59,7 +63,6 @@ class LocalStore {
             log.warn(`Could not found bot ${config("BOT_NAME")} on slack account`);
         }
     }
-
 
 }
 
