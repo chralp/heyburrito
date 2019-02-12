@@ -1,9 +1,11 @@
 import UserInterface from '../types/User.interface';
 import SlackInterface from '../types/Slack.interface';
+import LocalStore from '../store/LocalStore'
 
-export default ((slackUsers: Array<SlackInterface.Stored>, data) => {
+export default ((data) => {
 
     const res: Array<UserInterface> = [];
+    const slackUsers = LocalStore.getSlackUsers()
 
     if (!data) return [];
 
@@ -26,4 +28,5 @@ export default ((slackUsers: Array<SlackInterface.Stored>, data) => {
     })
 
     return res;
+
 });

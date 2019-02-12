@@ -2,6 +2,7 @@ import { default as log } from 'bog';
 import { parseMessage } from './lib/parseMessage';
 import { validBotMention, validMessage } from './lib/validator';
 import BurritoStore from './store/BurritoStore';
+import LocalStore from './store/LocalStore';
 
 // interfaces
 import EmojiInterface from './types/Emoji.interface';
@@ -21,20 +22,17 @@ if (process.env.SLACK_EMOJI_DEC) {
     const incEmojis = process.env.SLACK_EMOJI_DEC.split(',');
     incEmojis.forEach(emoji => emojis.push({ type: 'dec', emoji }));
 }
+
+
+
 class Bot {
 
     rtm;
     wbc;
-    botUserID: Function;
-    serverStoredSlackUsers: Function;
-    allBots: Function;
 
-    constructor(rtm, wbc, botUserID: Function, serverStoredSlackUsers: Function, allBots: Function) {
+    constructor(rtm, wbc) {
         this.rtm = rtm;
         this.wbc = wbc;
-        this.botUserID = botUserID;
-        this.serverStoredSlackUsers = serverStoredSlackUsers;
-        this.allBots = allBots;
     }
 
     async sendToUser(username: string, text: string) {
@@ -63,8 +61,8 @@ class Bot {
         }
 
         if (event.type === 'message') {
-            if (validMessage(event, emojis, this.allBots)) {
-                if (validBotMention(event, this.botUserID)) {
+            if (validMessage(event, emojis, LocalStore.getAllBots())) {
+                if (validBotMention(event, LocalStore.botUserID())) {
                     // Geather data and send back to user
 
                 } else {

@@ -10,20 +10,18 @@ function selfMention(message) {
 
 function sentFromBot(message, allBots) {
 
-    const bots = allBots();
-    const sentFromBot = bots.filter(x => message.user.match(x.id))
+    const sentFromBot = allBots.filter(x => message.user.match(x.id))
     return !!sentFromBot.length
 
 }
 
-
 function sentToBot(message, allBots) {
-    const bots = allBots();
+
     // Get all users from message.text
     const usersArr = parseUsernames(message.text)
     if (!usersArr) return false
 
-    const sentToBot = bots.filter((v) => {
+    const sentToBot = allBots.filter((v) => {
         usersArr.includes(v.id)
     })
     //a.indexOf(v) === i);
@@ -52,8 +50,7 @@ function burritoToBot(message, emojis) {
 }
 
 
-function validMessage(message: SlackMessageInterface, emojis, allBots: Function) {
-
+function validMessage(message: SlackMessageInterface, emojis, allBots) {
 
     // We dont want messages with subtypes
     if (message.subtype) return false
@@ -61,12 +58,7 @@ function validMessage(message: SlackMessageInterface, emojis, allBots: Function)
     // Check if sender is mentioned in message
     if (selfMention(message)) return false
 
-
-
-    const bots = allBots();
-
-
-    for (const x of bots) {
+    for (const x of allBots) {
         // Message is sent from bot
         if (message.user.match(`${x.id}`)) return false;
 
@@ -84,9 +76,8 @@ function validMessage(message: SlackMessageInterface, emojis, allBots: Function)
 }
 
 
-function validBotMention(message: SlackMessageInterface, botUserID: Function) {
-    const botid = botUserID();
-    if ((message.text.match(`<@${botid}>`)) && (message.text.match('stats'))) {
+function validBotMention(message: SlackMessageInterface, botUserID) {
+    if ((message.text.match(`<@${botUserID}>`)) && (message.text.match('stats'))) {
         return true;
     }
     return false;

@@ -2,15 +2,15 @@ import { default as log } from 'bog';
 import http from 'http';
 import BurritoStore from './store/BurritoStore';
 import path from 'path';
-import mergeUserData from './lib/mergeUserData';
 import fs from 'fs';
 import WebSocket from 'ws'
+import mergeUserData from './lib/mergeUserData'
 
 // Webserver port
 const port: string = process.env.PORT || '3333';
 
 const defaultUrlPath: string = '/heyburrito'
-export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
+export default ((publicPath: string) => {
     const requestHandler = (request, response) => {
 
         let urlReplaced: string = request.url.replace(defaultUrlPath, '')
@@ -81,7 +81,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
 
     BurritoStore.on('GIVE', (user) => {
         BurritoStore.getUserScore(user).then((result) => {
-            const user = mergeUserData(serverStoredSlackUsers(), result);
+            const user: any = mergeUserData(result);
 
             if (user.length) {
                 wss.broadcast(JSON.stringify({ event: 'GIVE', data: user[0] }));
@@ -91,7 +91,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
 
     BurritoStore.on('TAKE_AWAY', (user) => {
         BurritoStore.getUserScore(user).then((result) => {
-            const user = mergeUserData(serverStoredSlackUsers(), result);
+            const user: any = mergeUserData(result);
 
             if (user.length) {
                 wss.broadcast(JSON.stringify({ event: 'TAKE_AWAY', data: user[0] }));
@@ -121,7 +121,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
 
                 ws.send(JSON.stringify({
                     event: 'receivedList',
-                    data: mergeUserData(serverStoredSlackUsers(), users),
+                    data: mergeUserData(users),
                 }));
 
             },
@@ -137,9 +137,9 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
                 ws.send(JSON.stringify({
                     event: 'userStats',
                     data: {
-                        user: (mergeUserData(serverStoredSlackUsers(), userScore))[0],
-                        gived: mergeUserData(serverStoredSlackUsers(), given),
-                        givers: mergeUserData(serverStoredSlackUsers(), givers),
+                        user: (mergeUserData(userScore))[0],
+                        gived: mergeUserData(given),
+                        givers: mergeUserData(givers),
                     }
                 }));
             },
@@ -152,7 +152,7 @@ export default ((publicPath: string, serverStoredSlackUsers: Function, ) => {
 
                 ws.send(JSON.stringify({
                     event: 'givenList',
-                    data: mergeUserData(serverStoredSlackUsers(), users.map((user) => user))
+                    data: mergeUserData(users.map((user) => user))
                 }));
             }
         }
