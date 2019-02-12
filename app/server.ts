@@ -7,21 +7,13 @@ import Bot from './Bot';
 import webserver from './web';
 import database from './database';
 import BurritoStore from './store/BurritoStore';
-import slackUsers from './lib/getSlackUsers';
+import LocalStore from './store/LocalStore'
 
-//Interfaces
-import SlackInterface from './types/Slack.interface'
-
+log.level('debug')
 log.info("Staring heyburrito")
 
 // Configure BurritoStore
 BurritoStore.setDatabase(database);
-
-// Local store
-const botName: string = config("BOT_NAME")
-let botId: string;
-let storedSlackBots: Array<SlackInterface.Stored>;
-let storedSlackUsers: Array<SlackInterface.Stored>;
 
 // Set and start RTM
 const rtm = new RTMClient(config("SLACK_API_TOKEN"));
@@ -30,55 +22,12 @@ rtm.start();
 // Set up webClient and fetch slackUsers
 const wbc = new WebClient(config("SLACK_API_TOKEN"));
 
-// Return localstore of slackusers
-function serverStoredSlackUsers() {
-    return storedSlackUsers;
-}
-
-// Return heyburrito botid
-function botUserID() {
-    return botId;
-}
-
-// Returns all bots
-function getAllBots() {
-    return storedSlackBots;
-}
+// Initialize new LocalStore
+LocalStore.start(wbc)
 
 // Start bot instance
-const BotInstance = new Bot(rtm, wbc, botUserID, serverStoredSlackUsers, getAllBots);
+const BotInstance = new Bot(rtm, wbc);
 BotInstance.listener();
 
-
-// Match heyburrito bot and assign username to botid
-function getBotUsername() {
-
-    storedSlackBots.forEach((x: any) => {
-        if (x.name === botName) {
-            botId = x.id;
-        }
-    });
-
-    if (!botId) {
-        log.warn(`Could not found bot ${config("BOT_NAME")} on slack account`);
-    }
-}
-
-// Update local stores
-async function localStore() {
-    const res = await slackUsers(wbc);
-    storedSlackUsers = null;
-    storedSlackBots = null;
-    storedSlackUsers = res.users;
-    storedSlackBots = res.bots;
-    return getBotUsername();
-}
-
-// Run localstore
-localStore();
-
-// Run update of localstore every hour
-setInterval(localStore, 60 * 60 * 1000);
-
 // Start webserver
-webserver(config("THEME"), serverStoredSlackUsers);
+webserver(config("THEME"));
