@@ -9,7 +9,6 @@ import database from './database';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore'
 
-log.level('debug')
 log.info("Staring heyburrito")
 
 // Configure BurritoStore
