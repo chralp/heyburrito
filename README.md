@@ -1,6 +1,9 @@
 <p align="center">
     <img src="https://user-images.githubusercontent.com/13852280/41594451-c511cb82-73c3-11e8-87fa-aab8ccf2c816.png" width="50%" height="50%">
-</p>    
+</p>
+
+[![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
   
 ### Whats Heyburrito
 Heyburrito is a slack reward system that allows slack team members to recognize and reward team members who have performed well. Reward your colleagues / friends by sending them a :burrito:, each burrito is converted to points witch can be showed on a scoreboard.
