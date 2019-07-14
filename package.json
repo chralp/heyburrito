@@ -4,18 +4,21 @@
   "repository": "github.com/chralp/heyburrito",
   "scripts": {
     "start": "ts-node ./app/server.ts",
+    "dev": "nodemon --watch '*.ts' --exec 'ts-node' ./app/server.ts",
     "test": "mocha -r ts-node/register test/* || true",
-    "lint": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts test/*.ts",
-    "lintFix": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts test/*.ts --fix",
+    "lint": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts",
+    "lintFix": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts --fix",
     "docker-build": "docker build -t chralp/heyburrito . && docker tag chralp/heyburrito chralp/heyburrito",
     "docker-push": "docker push chralp/heyburrito"
   },
   "dependencies": {
     "@slack/client": "^4.12.0",
     "@types/dotenv": "^4.0.3",
+    "@types/hapi": "^18.0.2",
     "bog": "^1.0.2",
     "dotenv": "^6.0.0",
     "git-clone-repo": "^1.0.0",
+    "hapi": "^18.1.0",
     "mongodb": "^3.2.6",
     "ts-node": "^7.0.1",
     "typescript": "^3.5.1",

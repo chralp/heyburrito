@@ -5,6 +5,7 @@ import SlackMessageInterface from '../types/SlackMessage.interface';
 function selfMention(message) {
     const selfMention = message.text.match(`<@${message.user}>`) ? true : false
     if (selfMention) log.warn('Not valid, sender mentioned in message')
+    return false;
     return selfMention;
 }
 

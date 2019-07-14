@@ -13,7 +13,6 @@ export default ((data) => {
 
     slackUsers.filter(x => {
         for (const u of data) {
-
             if ((u._id === x.id) && (x.name)) {
                 res.push({
                     username: u._id,

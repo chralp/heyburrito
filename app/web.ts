@@ -63,9 +63,7 @@ export default ((publicPath: string) => {
     const server = http.createServer(requestHandler);
 
     server.listen(port, (err) => {
-        if (err) {
-            return log.warn('something bad happened', err);
-        }
+        if (err) log.warn('something bad happened', err);
         log.info(`Webserver started on ${port}`);
     });
 
@@ -116,7 +114,7 @@ export default ((publicPath: string) => {
             async getReceivedList() {
 
                 const [users] = await Promise.all([
-                    BurritoStore.getUserScore(),
+                    BurritoStore.getUserScore({ scoreType: 'to' }),
                 ])
 
                 ws.send(JSON.stringify({
@@ -127,27 +125,29 @@ export default ((publicPath: string) => {
             },
 
             async getUserStats(user: string) {
-
+                console.log(user);
                 const [givers, given, userScore] = await Promise.all([
                     BurritoStore.getGivers(user),
                     BurritoStore.getGiven(user),
-                    BurritoStore.getUserScore(user),
+                    BurritoStore.getUserScore({ user }),
                 ]);
 
+                const data = {
+                    user: (mergeUserData(userScore))[0],
+                    gived: mergeUserData(given),
+                    givers: mergeUserData(givers),
+                }
+                console.log(data);
                 ws.send(JSON.stringify({
                     event: 'userStats',
-                    data: {
-                        user: (mergeUserData(userScore))[0],
-                        gived: mergeUserData(given),
-                        givers: mergeUserData(givers),
-                    }
+                    data
                 }));
             },
 
             async getGivenList() {
 
                 const [users] = await Promise.all([
-                    BurritoStore.getUserScore(),
+                    BurritoStore.getUserScore({ scoreType: 'from' }),
                 ]);
 
                 ws.send(JSON.stringify({

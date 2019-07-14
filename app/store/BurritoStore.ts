@@ -25,51 +25,52 @@ class BurritoStore extends EventEmitter {
 
     async takeAwayBurrito(to: string, from: string) {
         log.info(`Burrito taken away from ${to} by ${from}`);
-        return this.getUserScore(to).then((data) => {
+        const data = await this.getUserScore({ user: to });
 
-            // Loweset score possible should be 0 ( ZERO )
-            const score = data.map(x => x.score)[0]
+        // Loweset score possible should be 0 ( ZERO )
+        const score = data.map(x => x.score)[0]
 
-            if (!score) return []
+        if (!score) return []
 
-            if (score > 0) {
-                return this.database.takeAway(to, from).then(() => this.emit('TAKE_AWAY', to));
-            }
-        })
+        if (score > 0) return this.database.takeAway(to, from).then(() => this.emit('TAKE_AWAY', to));
     }
 
     async getUserStats(user: string) {
         const [score, given, givenTodayArr] = await Promise.all([
-            this.database.getScore(user),
+            this.database.getScore({ user, scoreType: 'to' }),
             this.database.getGiven(user),
             this.database.findFromToday(user)
         ])
 
         // Always return something
         const givenTotal = given.length ? given.reduce((acc, current) => ({ score: acc.score + current.score })) : { score: 0 }
-
         score.push({
             givenTotal: givenTotal.score,
             givenToday: Object.keys(givenTodayArr).length
         })
 
         const merged = score.reduce((acc, current) => Object.assign({}, acc, current))
-        return [merged]
+        return [merged];
     }
 
-
-    async getUserScore(user: string = null): Promise<Array<UserScoreInterface>> {
-        const data = user ? this.getUserStats(user) : this.database.getScore(user)
-        return data
+    async getUserScore({ user = null, scoreType = null }): Promise<Array<UserScoreInterface>> {
+        const data = user ? this.getUserStats(user) : this.database.getScore({ user, scoreType });
+        return data;
     }
 
     getGiven(user: string): Promise<Array<UserScoreInterface>> {
         return this.database.getGiven(user);
     }
 
-    getGivers(user: string): Promise<Array<UserScoreInterface>> {
+
+    getGivers(user: string = null): Promise<Array<UserScoreInterface>> {
         return this.database.getGivers(user);
     }
+
+    getUserScoreList({ ...args }): Promise<Array<UserScoreInterface>> {
+        return this.database.getUserScoreList(args);
+    }
+
 }
 
 // Export as singleton
