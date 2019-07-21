@@ -64,15 +64,15 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 | BOT_NAME         |               | Yes      | Same botname as in Get started section                                      |
 | DATABASE_DRIVER  |               | Yes      | See database drivers section                                                |
 | MONGODB_URL      |               | Yes*     | Only requierd if DATABASE_DRIVER is mongodb, mongodb = recomended           |
-| MONGODB_DATABASE |               | Yes*     | Only requierd if DATABASE_DRIVER is mongodb, mongodb = recomende            |
+| MONGODB_DATABASE |               | Yes*     | Only requierd if DATABASE_DRIVER is mongodb, mongodb = recomended           |
 | SLACK_API_TOKEN  |               | Yes      | See Get started section                                                     |
-| SLACK_EMOJI_INC  |               | Yes      | Emoji to increment points. ex:( :burrito: )                                 |
+| SLACK_EMOJI_INC  | :burrito:     | No       | Emoji to increment points. ex:( :burrito: )                                 |
 | SLACK_EMOJI_DEC  |               | No       | Emoji to decrement points. ex:( :rottenburrito: ). Disabled if not provided |
 | SLACK_DAILY_CAP  | 5             | No       | Defaults to 5/day                                                           |
 | API_PATH         | /api/         | No       | Must start and end with slash                                               |
 | WEB_PATH         | /heyburrito/  | No       | Serving html from .                                                         |
 | HTTP_PORT        | 3333          | no       | For API and website                                                         |
-
+| WSS_POR          | 3334          |          |                                                                             |
 ### Database drivers
 
 | Name    | Recomended | Note                           |

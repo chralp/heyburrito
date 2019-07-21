@@ -1,4 +1,4 @@
-import config from '../lib/config';
+import config from '../config';
 import drivers from './drivers';
 
 const driverName = config('DATABASE_DRIVER');
