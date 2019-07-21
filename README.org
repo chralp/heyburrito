@@ -4,7 +4,7 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
-  
+
 ### Whats Heyburrito
 Heyburrito is a slack reward system that allows slack team members to recognize and reward team members who have performed well. Reward your colleagues / friends by sending them a :burrito:, each burrito is converted to points witch can be showed on a scoreboard.
 Heyburrito is like heytaco, but free and you host it yourself.
@@ -16,29 +16,29 @@ And a rottenburrito will decrement "burrito" - points
 Give away burrito ( :burrito: ) to a colleague if they done something good.
 ...Or maybe a rottenburrito ( :rottenburrit: , emoji needed ) if they done something bad.. :)
 
-Ping one or several of your colleagues and give away :burritos: if the deserv it. Otherwise :rottenburrito: if not ...  
+Ping one or several of your colleagues and give away :burritos: if the deserv it. Otherwise :rottenburrito: if not ...
 
-Example:  
+Example:
 This will increase chralps "burrito" - points by 3
-`@chralp :burrito::burrito::burrito: - awesome app!` 
+`@chralp :burrito::burrito::burrito: - awesome app!`
 
 This will decrease chralps "burrito" - points by 2
 `@chralp :rottenburrito::rottenburrito: - bad app...`
 
 This will increase chralps and fagges "burrito" - points by 2 ( each )
-`@chralp @fagge :burrito::burrito: - awesome app!` 
+`@chralp @fagge :burrito::burrito: - awesome app!`
 
 
 ### Requirments
 - slack ( ofc )
 - mongodb
-- node ( lts/dubnium ) 
+- node ( lts/dubnium )
 
 ### Get started
 
-1. Go to https://yourworkspace.slack.com/apps and search for Bots.  
-2. Add **Bots ( Connect a bot to the Slack Real Time Messaging API)**.  
-3. Give the bot a name, ex: heyburrito, and obtain apiToken.  
+1. Go to https://yourworkspace.slack.com/apps and search for Bots.
+2. Add **Bots ( Connect a bot to the Slack Real Time Messaging API)**.
+3. Give the bot a name, ex: heyburrito, and obtain apiToken.
 4. Choose how to run it => See Docker or Node section .
 5. Invite the new bot to your slack channels ( where u want to be able to send burritos ).
 
@@ -59,16 +59,19 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 ### Environment Variables
 
 | ENV Variables    | Default Value | Required | Note                                                                        |
-| ---------------- | ------  | ------   | -------                                                                     |
-| THEME            | default | No       | See Theme section                                                           |
-| BOT_NAME         |         | Yes      | Same botname as in Get started section                                      |
-| DATABASE_DRIVER  |         | Yes      | See database drivers section                                                |
-| MONGODB_URL      |         | Yes*     | Only requierd if DATABASE_DRIVER is mongodb                                 |
-| MONGODB_DATABASE |         | Yes*     | Only requierd if DATABASE_DRIVER is mongodb                                 |
-| SLACK_API_TOKEN  |         | Yes      | See Get started section                                                     |
-| SLACK_EMOJI_INC  |         | Yes      | Emoji to increment points. ex:( :burrito: )                                 |
-| SLACK_EMOJI_DEC  |         | No       | Emoji to decrement points. ex:( :rottenburrito: ). Disabled if not provided |
-| SLACK_DAILY_CAP  | 5       | No       | Defaults to 5/day                                                           |
+| ---------------- | ------------- | ------   | --------                                                                    |
+| THEME            | default       | No       | See Theme section                                                           |
+| BOT_NAME         |               | Yes      | Same botname as in Get started section                                      |
+| DATABASE_DRIVER  |               | Yes      | See database drivers section                                                |
+| MONGODB_URL      |               | Yes*     | Only requierd if DATABASE_DRIVER is mongodb, mongodb = recomended           |
+| MONGODB_DATABASE |               | Yes*     | Only requierd if DATABASE_DRIVER is mongodb, mongodb = recomende            |
+| SLACK_API_TOKEN  |               | Yes      | See Get started section                                                     |
+| SLACK_EMOJI_INC  |               | Yes      | Emoji to increment points. ex:( :burrito: )                                 |
+| SLACK_EMOJI_DEC  |               | No       | Emoji to decrement points. ex:( :rottenburrito: ). Disabled if not provided |
+| SLACK_DAILY_CAP  | 5             | No       | Defaults to 5/day                                                           |
+| API_PATH         | /api/         | No       | Must start and end with slash                                               |
+| WEB_PATH         | /heyburrito/  | No       | Serving html from .                                                         |
+| HTTP_PORT        | 3333          | no       | For API and website                                                         |
 
 ### Database drivers
 
@@ -98,8 +101,8 @@ Showcase
 -----------
 <p align="center">
     <img src="https://user-images.githubusercontent.com/13852280/51863905-8fddc400-2342-11e9-8ace-c21c675264d2.png" width="75%" height="75%">
-</p>    
+</p>
 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/13852280/51863890-82283e80-2342-11e9-95c6-a37d2d3aeac7.png" width="75%" height="75%">
-</p>    
+</p>

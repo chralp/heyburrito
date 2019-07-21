@@ -8,7 +8,6 @@ import webserver from './web';
 import database from './database';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
-import Api from './api';
 
 log.info("Staring heyburrito");
 
@@ -31,5 +30,3 @@ BotInstance.listener();
 
 // Start webserver
 webserver(config("THEME"));
-
-Api();

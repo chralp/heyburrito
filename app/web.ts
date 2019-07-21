@@ -7,11 +7,27 @@ import WebSocket from 'ws'
 import mergeUserData from './lib/mergeUserData'
 
 // Webserver port
-const port: string = process.env.PORT || '3333';
+const port: string = process.env.HTTP_PORT || '3333';
 
-const defaultUrlPath: string = '/heyburrito'
+const defaultUrlPath: string = process.env.WEB_PATH || '/heyburrito/'
+const apiPath: string = process.env.API_PATH || '/api/';
+
+import APIHandler from './api';
+
+
+
 export default ((publicPath: string) => {
+
     const requestHandler = (request, response) => {
+
+
+        /**
+         * Check if request is a API call, then let apiHandler take care of it
+         */
+        if (request.url.includes(apiPath)) return APIHandler(request, response);
+
+
+
 
         let urlReplaced: string = request.url.replace(defaultUrlPath, '')
         let filePath: string = publicPath + urlReplaced;

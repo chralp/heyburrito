@@ -6,7 +6,7 @@
 Get scoreboard given
 
 #+BEGIN_SRC http :pretty
-GET http://localhost:1337/heyburrito/scoreboard/given
+GET http://heyburrito:3333/api/scoreboard/given
 #+END_SRC
 
 #+RESULTS:
@@ -25,7 +25,7 @@ GET http://localhost:1337/heyburrito/scoreboard/given
     {
       "username": "UEKN9GNAJ",
       "name": "chralp",
-      "score": 2,
+      "score": 3,
       "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
     }
   ]
@@ -37,7 +37,7 @@ GET http://localhost:1337/heyburrito/scoreboard/given
 Get scoreboard givers
 
 #+BEGIN_SRC http :pretty
-GET http://localhost:1337/heyburrito/scoreboard/givers
+GET http://heyburrito:3333/api/scoreboard/givers
 #+END_SRC
 
 #+RESULTS:
@@ -50,7 +50,7 @@ GET http://localhost:1337/heyburrito/scoreboard/givers
     {
       "username": "UEKN9GNAJ",
       "name": "chralp",
-      "score": 5,
+      "score": 6,
       "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
     }
   ]
@@ -62,7 +62,7 @@ GET http://localhost:1337/heyburrito/scoreboard/givers
 Get userstats, append slackUserID
 
 #+BEGIN_SRC http :pretty
-GET http://localhost:1337/heyburrito/userstats/UEHUXHG0G
+GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
 #+END_SRC
 
 #+RESULTS:
@@ -73,14 +73,27 @@ GET http://localhost:1337/heyburrito/userstats/UEHUXHG0G
   "message": null,
   "data": {
     "user": {
-      "username": "UEHUXHG0G",
-      "name": "Stefan",
+      "username": "UEKN9GNAJ",
+      "name": "chralp",
       "score": 3,
-      "given": 0,
-      "today": 0,
-      "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0016-48.png"
+      "given": 6,
+      "today": 1,
+      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
     },
-    "gived": [],
+    "gived": [
+      {
+        "username": "UEHUXHG0G",
+        "name": "Stefan",
+        "score": 3,
+        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0016-48.png"
+      },
+      {
+        "username": "UEKN9GNAJ",
+        "name": "chralp",
+        "score": 3,
+        "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
+      }
+    ],
     "givers": [
       {
         "username": "UEKN9GNAJ",
@@ -100,8 +113,11 @@ Search in history
 *keys*
 
 userId: <slackuserid>, string
+
 startDate: <date>, string
+
 endDate: <date>, string
+
 list: given | givers
 
 none of the keys are requierd.
@@ -121,7 +137,7 @@ Example:
 #+END_SRC
 
 #+BEGIN_SRC http :pretty
-  POST http://localhost:1337/heyburrito/histogram
+  POST http://heyburrito:3333/api/histogram
   Content-Type: application/json
 
   {
@@ -130,4 +146,6 @@ Example:
 #+END_SRC
 
 #+RESULTS:
-: {}
+: {
+:   "error": true
+: }
