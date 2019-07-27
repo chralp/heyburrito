@@ -23,8 +23,6 @@ if (process.env.SLACK_EMOJI_DEC) {
     incEmojis.forEach(emoji => emojis.push({ type: 'dec', emoji }));
 }
 
-
-
 class Bot {
 
     rtm;

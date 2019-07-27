@@ -11,7 +11,6 @@ export default ((key: string, required: boolean = false) => {
 
     let envKey: string = inEnv(key);
 
-
     if (!envKey && required) throw new Error(`Missing ENV key => ${key}`);
 
     return envKey;

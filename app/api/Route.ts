@@ -1,6 +1,11 @@
 import log from 'bog';
 
+// Defaults
+const ALLOWED_VERBS: string[] = ['post', 'get'];
 
+/**
+ * Save All routes in array
+*/
 const apiRoutes = [];
 
 /**
@@ -11,14 +16,20 @@ const cleanUp = (path: string) => {
     const result = arr.map(x => {
         if (x.length && !x.match(/{/)) return x;
     });
+
     const cleaned = result.filter(item => item);
     return cleaned;
 };
 
-const ALLOWED_VERBS: string[] = ['post', 'get'];
-
+/**
+ * Api route handler
+ */
 class Route {
 
+    /**
+     * Add / register endpoints
+     * check if endpoint is allowed and if it already exists
+     */
     add({ method, path, handler }): void {
         method = method.toLowerCase();
         if (ALLOWED_VERBS.includes(method)) {
@@ -38,14 +49,21 @@ class Route {
         }
     };
 
+
+    /**
+     * Check request if path is registerd
+     * Also get all params posted and assign to request object
+     */
     check({ method, path, req }) {
 
-        log.info('check got', method, path)
+        log.debug('Route :: check :: ', method, path)
 
-
-        // Get registed route
+        /**
+         * Get registerd endpoint, match method and path.
+         */
         const [route] = apiRoutes.filter(x => {
 
+            // Clean up paths
             const routeSplitted: string[] = cleanUp(x.path)
             const reqSplitted: string[] = cleanUp(path)
 
@@ -56,9 +74,9 @@ class Route {
             reqSplitted.map(x => reqUrl += `${x}/`);
 
             if (method === x.method && reqUrl.startsWith(routeUrl)) return x;
-
         });
 
+        // Unless route not found, return error
         if (!route) return { error: true };
 
         // Args that we want

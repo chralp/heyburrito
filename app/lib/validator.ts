@@ -5,7 +5,6 @@ import SlackMessageInterface from '../types/SlackMessage.interface';
 function selfMention(message) {
     const selfMention = message.text.match(`<@${message.user}>`) ? true : false
     if (selfMention) log.warn('Not valid, sender mentioned in message')
-    return false;
     return selfMention;
 }
 
@@ -20,12 +19,13 @@ function sentToBot(message, allBots) {
 
     // Get all users from message.text
     const usersArr = parseUsernames(message.text)
+
     if (!usersArr) return false
 
-    const sentToBot = allBots.filter((v) => {
-        usersArr.includes(v.id)
-    })
-    //a.indexOf(v) === i);
+    const sentToBot = allBots.filter((v: any) => {
+        if (usersArr.includes(v.id)) return v
+    });
+
     return !!sentToBot.length
 }
 

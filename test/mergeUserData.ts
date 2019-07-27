@@ -1,9 +1,9 @@
 import { stub } from 'sinon';
 import { expect } from 'chai';
-import slackUsers from './data/slackUsers'
-import mergeUserData  from '../app/lib/mergeUserData'
-
-let storedUsers, param2, mapped;
+import slackUsers from './data/slackUsers';
+import mergeUserData from '../app/lib/mergeUserData';
+import LocalStore from '../app/store/LocalStore';
+let storedUsers, param2, mapped, wbc;
 
 before(() => {
     storedUsers = [
@@ -28,18 +28,25 @@ before(() => {
             "avatar": "https://link.to.avatar.48.burrito"
         }
     ]
-    param2 = [ { _id: 'USER4', score: 2 } ]
+    param2 = [{ _id: 'USER4', score: 2 }]
 
-    mapped =[{ username: 'USER4',
-               name: 'User4',
-               score: 2,
-               avatar: 'https://link.to.avatar.48.burrito' }]
+    mapped = [{
+        username: 'USER4',
+        name: 'User4',
+        score: 2,
+        avatar: 'https://link.to.avatar.48.burrito'
+    }]
+
+    wbc = stub().returns(Promise.resolve(slackUsers))
+    LocalStore.start(wbc)
+
+
 })
 
 describe('mergeUserData-test', () => {
 
     it('should return object where param2 is mapped to storedSlackUsers', () => {
-        expect(mergeUserData(storedUsers,param2)).to.deep.equal(mapped)
+        expect(mergeUserData(param2)).to.deep.equal(mapped)
     });
 
 });

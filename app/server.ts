@@ -47,7 +47,6 @@ const requestHandler = (request: http.IncomingMessage, response: http.ServerResp
      */
     if (request.url.includes(config('API_PATH', true))) return APIHandler(request, response);
 
-
     /**
      * Check if request url contains webpath, then let WEBHandler take care of it
      */

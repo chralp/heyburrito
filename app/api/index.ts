@@ -1,16 +1,27 @@
 import log from 'bog';
-import Middleware from '../Middleware';
 import Route from './Route'
-const apiPath: string = process.env.API_PATH || '/api/';
+import Middleware from '../Middleware';
+import config from '../config'
 
+//Types
+import Http from '../types/Http'
+
+// defaults
+const apiPath: string = config('API_PATH');
 const ALLOWED_LISTTYPES: string[] = [
     'given',
     'givers'
 ];
-const response = (content: object, res, statusCode: number = 200) => {
+
+/**
+ * http response function
+ * @param { object } content
+ * @param { object } res
+ * @params { number } statuscode
+ */
+const response = (content: Http.Response, res: any, statusCode: number = 200): void => {
     res.writeHead(statusCode, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(content), 'utf-8');
-
 };
 
 Route.add({
@@ -36,6 +47,7 @@ Route.add({
                 message: null,
                 data: score,
             };
+
             return response(data, res);
 
         } catch (err) {
@@ -52,6 +64,9 @@ Route.add({
     }
 });
 
+/**
+ * Add route for userstats
+ */
 Route.add({
     method: 'GET',
     path: `${apiPath}userstats/{user}`,
@@ -127,8 +142,6 @@ Route.add({
         }
     }
 });
-
-
 
 export default (req, res) => {
 

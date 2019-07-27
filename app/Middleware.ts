@@ -1,17 +1,18 @@
-import { default as log } from 'bog';
+import log from 'bog';
 
 import BurritoStore from './store/BurritoStore';
 import mergeUserData from './lib/mergeUserData';
 
+/**
+ * Middleware for API and Websocket
+ */
 class Middleware {
-
 
     async getUserScore({ user = null, scoreType = null }) {
         const score = await BurritoStore.getUserScore({ user, scoreType });
         const data = mergeUserData(score);
         return data;
-    }
-
+    };
 
     async getUserStats(user: string) {
         const [givers, given, userScore] = await Promise.all([
