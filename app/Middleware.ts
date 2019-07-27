@@ -1,5 +1,4 @@
 import { default as log } from 'bog';
-import config from './lib/config';
 
 import BurritoStore from './store/BurritoStore';
 import mergeUserData from './lib/mergeUserData';
