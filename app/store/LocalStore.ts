@@ -24,12 +24,18 @@ class LocalStore {
 
     // Fetch / get all slackUsers from API
     async fetchSlackUsers() {
-        const res = await slackUsers(this.wbc);
-        this.storedUsers = [];
-        this.storedBots = [];
-        this.storedUsers = res.users;
-        this.storedBots = res.bots;
-        this.getBotUsername()
+        try {
+            const res = await slackUsers(this.wbc);
+            this.storedUsers = [];
+            this.storedBots = [];
+            this.storedUsers = res.users;
+            this.storedBots = res.bots;
+            this.getBotUsername()
+        }
+        catch (e) {
+            log.warn(e);
+        }
+
 
         // Run update of localstore every hour
         setInterval(this.fetchSlackUsers, 60 * 60 * 1000);

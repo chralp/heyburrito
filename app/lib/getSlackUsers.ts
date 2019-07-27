@@ -25,6 +25,7 @@ async function slackUsers(wbc) {
     });
 
     return { users, bots };
+
 }
 
 export default slackUsers;

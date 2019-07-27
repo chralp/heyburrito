@@ -2,6 +2,7 @@ import log from 'bog';
 import WebSocket from 'ws';
 import mergeUserData from '../lib/mergeUserData';
 import BurritoStore from '../store/BurritoStore';
+import Middleware from '../Middleware';
 import config from '../config';
 
 export default () => {
@@ -17,25 +18,22 @@ export default () => {
         });
     };
 
-    BurritoStore.on('GIVE', (user) => {
-        BurritoStore.getUserScore({ user }).then((result) => {
-            const user: any = mergeUserData(result);
+    BurritoStore.on('GIVE', async (user: string) => {
 
-            if (user.length) {
-                wss.broadcast(JSON.stringify({ event: 'GIVE', data: user[0] }));
-            }
-        });
+        const result = await Middleware.getUserScore({ user });
+        if (result.length) {
+            wss.broadcast(JSON.stringify({ event: 'GIVE', data: result[0] }));
+        }
     });
 
-    BurritoStore.on('TAKE_AWAY', (user) => {
-        BurritoStore.getUserScore({ user }).then((result) => {
-            const user: any = mergeUserData(result);
+    BurritoStore.on('TAKE_AWAY', async (user) => {
 
-            if (user.length) {
-                wss.broadcast(JSON.stringify({ event: 'TAKE_AWAY', data: user[0] }));
-            }
-        });
+        const result = Middleware.getUserScore({ user });
+        if (user.length) {
+            wss.broadcast(JSON.stringify({ event: 'TAKE_AWAY', data: result[0] }));
+        }
     });
+
 
     wss.on('connection', function connection(ws: any) {
 
@@ -53,31 +51,24 @@ export default () => {
 
             async getReceivedList() {
 
-                const [users] = await Promise.all([
-                    BurritoStore.getUserScore({ scoreType: 'to' }),
-                ])
+                const users = await Middleware.getUserScore({ scoreType: 'to' });
 
                 ws.send(JSON.stringify({
                     event: 'receivedList',
-                    data: mergeUserData(users),
+                    data: users,
                 }));
 
             },
 
-            async getUserStats(user: string) {
-                console.log(user);
-                const [givers, given, userScore] = await Promise.all([
-                    BurritoStore.getGivers(user),
-                    BurritoStore.getGiven(user),
-                    BurritoStore.getUserScore({ user }),
-                ]);
+            async getUserStats(userId: string) {
 
+                const { user, gived, givers }: any = await Middleware.getUserStats(userId);
                 const data = {
-                    user: (mergeUserData(userScore))[0],
-                    gived: mergeUserData(given),
-                    givers: mergeUserData(givers),
+                    user,
+                    gived,
+                    givers,
                 }
-                console.log(data);
+
                 ws.send(JSON.stringify({
                     event: 'userStats',
                     data
@@ -86,10 +77,8 @@ export default () => {
 
             async getGivenList() {
 
-                const [users] = await Promise.all([
-                    BurritoStore.getUserScore({ scoreType: 'from' }),
-                ]);
-
+                const users = await Middleware.getUserScore({ scoreType: 'from' });
+                console.log(users)
                 ws.send(JSON.stringify({
                     event: 'givenList',
                     data: mergeUserData(users.map((user) => user))

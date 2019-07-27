@@ -28,4 +28,4 @@ conf-localhost.json
 
 .filedb
 .env
-.tern
+.tern*

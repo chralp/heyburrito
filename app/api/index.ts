@@ -1,11 +1,12 @@
 import log from 'bog';
-import BurritoStore from '../store/BurritoStore'
-import mergeUserData from '../lib/mergeUserData';
+import Middleware from '../Middleware';
 import Route from './Route'
-
 const apiPath: string = process.env.API_PATH || '/api/';
 
-
+const ALLOWED_LISTTYPES: string[] = [
+    'given',
+    'givers'
+];
 const response = (content: object, res, statusCode: number = 200) => {
     res.writeHead(statusCode, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(content), 'utf-8');
@@ -17,28 +18,23 @@ Route.add({
     path: `${apiPath}scoreboard/{listType}`,
     handler: async (request: any, res: any) => {
 
-        const ALLOWED_LISTTYPES: string[] = [
-            'given',
-            'givers'
-        ];
-
         try {
 
             const { listType } = request.params;
 
             if (!ALLOWED_LISTTYPES.includes(listType)) throw ({
-                message: 'Allowed listType is given or received',
+                message: 'Allowed listType is given or givers',
                 code: 400,
             });
 
             const scoreType: string = listType === 'given' ? 'to' : 'from';
-            const score = await BurritoStore.getUserScore({ scoreType });
+            const score = await Middleware.getUserScore({ scoreType });
 
             const data = {
                 error: false,
                 code: 200,
                 message: null,
-                data: mergeUserData(score),
+                data: score,
             };
             return response(data, res);
 
@@ -63,29 +59,23 @@ Route.add({
 
         try {
 
-            const { user } = request.params;
+            const { user: userId } = request.params;
 
-            if (!user.length) throw ({
+            if (!userId.length) throw ({
                 message: 'You must provide slack userid',
                 code: 500
             });
 
-            const [givers, given, userScore] = await Promise.all([
-                BurritoStore.getUserScoreList({ user, scoreType: 'from' }),
-                BurritoStore.getUserScoreList({ user, scoreType: 'to' }),
-                BurritoStore.getUserScore({ user }),
-            ]);
-
-            const [userStats] = mergeUserData(userScore);
+            const { user, gived, givers }: any = await Middleware.getUserStats(userId);
 
             const data = {
                 error: false,
                 code: 200,
                 message: null,
                 data: {
-                    user: userStats,
-                    gived: mergeUserData(given),
-                    givers: mergeUserData(givers),
+                    user,
+                    gived,
+                    givers,
                 }
             };
 

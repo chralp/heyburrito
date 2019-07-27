@@ -34,8 +34,10 @@ export default (request: http.IncomingMessage, response: http.ServerResponse) =>
     };
 
     const contentType: string = mimeTypes[extname] || 'application/octet-stream';
-    fs.readFile(filePath, 'utf-8', function(error, content) {
+
+    fs.readFile('./www/themes' + filePath, 'utf-8', function(error, content) {
         if (error) {
+            console.log(error)
             if (error.code == 'ENOENT') {
                 fs.readFile('./404.html', function(error, content) {
                     response.writeHead(200, { 'Content-Type': contentType });
@@ -48,7 +50,8 @@ export default (request: http.IncomingMessage, response: http.ServerResponse) =>
             }
         } else {
             if (contentType === 'text/html') {
-                const www: string = path.normalize(`${publicPath}/../../lib/`);
+                const www: string = path.normalize(`./www/lib/`);
+                console.log(www)
                 const js: string = fs.readFileSync(`${www}Hey.js`, 'utf-8');
                 content = content.replace('</head>', `<script>${js}</script></head>`);
             }
