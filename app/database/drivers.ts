@@ -1,4 +1,4 @@
-import config from '../lib/config'
+import config from '../config'
 import MongoDBDriver from './drivers/MongoDBDriver';
 import FileDriver from './drivers/FileDriver';
 import ArrayDriver from './drivers/ArrayDriver';

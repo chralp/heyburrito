@@ -7,7 +7,7 @@ import LocalStore from './store/LocalStore';
 // interfaces
 import EmojiInterface from './types/Emoji.interface';
 import SlackMessageInterface from './types/SlackMessage.interface';
-import config from './lib/config'
+import config from './config'
 
 const dailyCap: number = parseInt(config("SLACK_DAILY_CAP"));
 
