@@ -70,7 +70,12 @@ class Bot {
                     if (result) {
                         const { giver, updates } = result;
                         if (updates.length) {
-                            this.handleBurritos(giver, updates);
+                            let receivers = [];
+                            this.handleBurritos(giver, updates, receivers);
+
+                            Array.from(new Set(receivers)).forEach((receiver) => {
+                                this.sendToUser(receiver, "Congrats! You've been recognized for doing something great! Checkout the scoreboard here: ");
+                            })
                         }
                     }
                 }
@@ -78,7 +83,7 @@ class Bot {
         }
     }
 
-    async handleBurritos(giver: string, updates) {
+    async handleBurritos(giver: string, updates: any[], receivers: String[]) {
 
         // Get given burritos today
         const burritos = await BurritoStore.givenBurritosToday(giver)
@@ -103,15 +108,17 @@ class Bot {
 
         if (a.type === 'inc') {
 
-            await BurritoStore.giveBurrito(a.username, giver)
+            await BurritoStore.giveBurrito(a.username, giver);
+            receivers.push(a.username);
+
             if (updates.length) {
-                this.handleBurritos(giver, updates);
+                this.handleBurritos(giver, updates, receivers);
             }
 
         } else if (a.type === 'dec') {
             await BurritoStore.takeAwayBurrito(a.username, giver)
             if (updates.length) {
-                this.handleBurritos(giver, updates);
+                this.handleBurritos(giver, updates, receivers);
             }
         }
     }
