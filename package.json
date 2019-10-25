@@ -18,24 +18,27 @@
     "bog": "^1.0.2",
     "dotenv": "^6.0.0",
     "git-clone-repo": "^1.0.0",
-    "mongodb": "^3.2.7",
+    "mongodb": "^3.3.3",
+    "next": "^9.1.1",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
     "ts-node": "^7.0.1",
-    "typescript": "^3.5.3",
+    "typescript": "^3.6.4",
     "ws": "^6.2.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.6",
+    "@types/chai": "^4.2.4",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.14.13",
+    "@types/node": "^10.17.0",
     "babel-eslint": "^8.2.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
     "mocha": "^5.2.0",
-    "mocha-jenkins-reporter": "^0.4.1",
+    "mocha-jenkins-reporter": "^0.4.2",
     "sinon": "^6.3.5",
     "sinon-chai": "^3.2.0",
-    "tslint": "^5.18.0",
-    "tslint-config-airbnb": "^5.11.0"
+    "tslint": "^5.20.0",
+    "tslint-config-airbnb": "^5.11.2"
   }
 }
