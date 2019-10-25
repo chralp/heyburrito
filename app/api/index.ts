@@ -1,10 +1,10 @@
 import log from 'bog';
-import Route from './Route'
+import Route from './Route';
 import Middleware from '../Middleware';
-import config from '../config'
+import config from '../config';
 
 //Types
-import Http from '../types/Http'
+import Http from '../types/Http';
 
 // defaults
 const apiPath: string = config('API_PATH');

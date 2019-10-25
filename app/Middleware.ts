@@ -15,17 +15,18 @@ class Middleware {
     };
 
     async getUserStats(user: string) {
+
         const [givers, given, userScore] = await Promise.all([
             BurritoStore.getUserScoreList({ user, scoreType: 'from' }),
             BurritoStore.getUserScoreList({ user, scoreType: 'to' }),
             BurritoStore.getUserScore({ user }),
         ]);
-
         const data = {
             user: mergeUserData(userScore)[0],
             gived: mergeUserData(given),
             givers: mergeUserData(givers),
         }
+
         return data;
     }
 }
