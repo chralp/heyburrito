@@ -18,7 +18,7 @@ if (config.slack.emoji_inc) {
     incEmojis.forEach((emoji: string) => emojis.push({ type: 'inc', emoji }));
 }
 
-if (config.slack.enable_decrease && config.slack.emoji_dec) {
+if (config.slack.enable_decrement && config.slack.emoji_dec) {
     const incEmojis = config.slack.emoji_dec.split(',');
     incEmojis.forEach((emoji: string) => emojis.push({ type: 'dec', emoji }));
 }

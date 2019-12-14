@@ -31,10 +31,10 @@ export default (request: http.IncomingMessage, response: http.ServerResponse) =>
 
     const contentType: string = mimeTypes[extname] || 'application/octet-stream';
 
-    fs.readFile(filePath, 'utf-8', function(error, content) {
+    fs.readFile(filePath, 'utf-8', function(error: any, content: any) {
         if (error) {
             if (error.code == 'ENOENT') {
-                fs.readFile(`${publicPath}404.html`, function(error, content) {
+                fs.readFile(`${publicPath}404.html`, function(error: any, content: any) {
                     if (error) log.warn('No 404 page found');
                     response.writeHead(200, { 'Content-Type': 'text/html' });
                     response.end(content, 'utf-8');
