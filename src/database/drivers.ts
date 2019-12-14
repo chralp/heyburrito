@@ -8,8 +8,8 @@ export default {
         const client = require('mongodb').MongoClient;
 
         return new MongoDBDriver(client, {
-            url: config("MONGODB_URL"),
-            database: config("MONGODB_DATABASE"),
+            url: config.db.db_url,
+            database: config.db.db_name,
         });
     },
     array: () => {

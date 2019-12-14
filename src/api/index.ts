@@ -7,7 +7,7 @@ import config from '../config';
 import Http from '../types/Http';
 
 // defaults
-const apiPath: string = config('API_PATH');
+const apiPath: string = config.http.api_path;
 const ALLOWED_LISTTYPES: string[] = [
     'given',
     'givers'

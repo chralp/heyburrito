@@ -9,19 +9,20 @@ import EmojiInterface from './types/Emoji.interface';
 import SlackMessageInterface from './types/SlackMessage.interface';
 import config from './config'
 
-const dailyCap: number = parseInt(config("SLACK_DAILY_CAP"));
+const dailyCap: number = parseInt(config.slack.daily_cap);
 
 const emojis: Array<EmojiInterface> = [];
 
-if (process.env.SLACK_EMOJI_INC) {
-    const incEmojis = process.env.SLACK_EMOJI_INC.split(', ');
-    incEmojis.forEach(emoji => emojis.push({ type: 'inc', emoji }));
+if (config.slack.emoji_inc) {
+    const incEmojis = config.slack.emoji_inc.split(', ');
+    incEmojis.forEach((emoji: string) => emojis.push({ type: 'inc', emoji }));
 }
 
-if (process.env.SLACK_EMOJI_DEC) {
-    const incEmojis = process.env.SLACK_EMOJI_DEC.split(',');
-    incEmojis.forEach(emoji => emojis.push({ type: 'dec', emoji }));
+if (config.slack.enable_decrease && config.slack.emoji_dec) {
+    const incEmojis = config.slack.emoji_dec.split(',');
+    incEmojis.forEach((emoji: string) => emojis.push({ type: 'dec', emoji }));
 }
+
 
 class Bot {
 
@@ -37,7 +38,7 @@ class Bot {
         const res = await this.wbc.chat.postMessage({
             channel: username,
             text: text,
-            username: config("BOT_NAME"),
+            username: config.slack.bot_name,
             icon_emoji: ":burrito:"
         })
         if (res.ok) {

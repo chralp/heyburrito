@@ -7,9 +7,10 @@ import config from '../config';
 
 export default () => {
 
-    const wss = new WebSocket.Server({ port: config('WSS_PORT') });
+    const wss = new WebSocket.Server({ port: config.http.wss_port });
 
-    log.info(`WebSocketServer started on port ${config('WSS_PORT')}`)
+    log.info(`WebSocketServer started on port ${config.http.wss_port}`);
+
     wss.broadcast = (data) => {
         wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {

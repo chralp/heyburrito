@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "repository": "github.com/chralp/heyburrito",
   "scripts": {
-    "start": "ts-node ./app/server.ts",
-    "dev": "nodemon --watch '*.ts' --exec 'ts-node' ./app/server.ts",
+    "start": "ts-node ./src/server.ts",
+    "dev": "nodemon --watch '*.ts' --exec 'ts-node' ./src/server.ts",
     "test": "mocha -r ts-node/register test/*-test.ts || true",
     "lint": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts",
     "lintFix": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts --fix",
@@ -17,19 +17,15 @@
     "@types/dotenv": "^4.0.3",
     "bog": "^1.0.2",
     "dotenv": "^6.0.0",
-    "git-clone-repo": "^1.0.0",
-    "mongodb": "^3.3.3",
-    "next": "^9.1.1",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
+    "mongodb": "^3.4.0",
     "ts-node": "^7.0.1",
-    "typescript": "^3.6.4",
+    "typescript": "^3.7.3",
     "ws": "^6.2.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.4",
+    "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.0",
+    "@types/node": "^10.17.9",
     "babel-eslint": "^8.2.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -38,7 +34,7 @@
     "mocha-jenkins-reporter": "^0.4.2",
     "sinon": "^6.3.5",
     "sinon-chai": "^3.2.0",
-    "tslint": "^5.20.0",
+    "tslint": "^5.20.1",
     "tslint-config-airbnb": "^5.11.2"
   }
 }

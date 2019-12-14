@@ -25,10 +25,10 @@ class Middleware {
             user: mergeUserData(userScore)[0],
             gived: mergeUserData(given),
             givers: mergeUserData(givers),
-        }
+        };
 
         return data;
-    }
-}
+    };
+};
 
 export default new Middleware();

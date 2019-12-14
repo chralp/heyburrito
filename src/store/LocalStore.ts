@@ -16,7 +16,7 @@ class LocalStore {
     botId: string = null
     storedBots: Array<SlackInterface.Stored>;
     storedUsers: Array<SlackInterface.Stored>;
-    botName: string = config("BOT_NAME");
+    botName: string = config.slack.bot_name;
 
     async start(wbc: any) {
         this.wbc = wbc;
@@ -71,7 +71,7 @@ class LocalStore {
         });
 
         if (!this.botId) {
-            log.warn(`Could not found bot ${config("BOT_NAME")} on slack account`);
+            log.warn(`Could not found bot ${config.slack.bot_name} on slack account`);
         }
     }
 

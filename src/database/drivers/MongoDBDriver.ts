@@ -19,7 +19,7 @@ export default class MongoDBDriver {
         if (this.client && typeof this.client.isConnected === 'function' && this.client.isConnected()) {
             return Promise.resolve(this.client);
         }
-        return this.MongoClient.connect(`${this.url}/${this.databaseName}`, { useNewUrlParser: true }).then((client: any) => {
+        return this.MongoClient.connect(`${this.url}/${this.databaseName}`, { useNewUrlParser: true, useUnifiedTopology: true }).then((client: any) => {
             this.client = client;
             this.db = client.db(this.databaseName);
         });

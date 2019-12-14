@@ -2,25 +2,21 @@ import log from 'bog';
 import fs from 'fs';
 import http from 'http';
 import path from 'path';
-
-
 import config from '../config';
 
-const defaultUrlPath: string = config('WEB_PATH');
-const publicPath: string = config("THEME")
-
+// Defaults
+const defaultUrlPath: string = config.http.web_path;
+const publicPath: string = config.misc.theme;
+const libPath: string = path.normalize(`./www/lib/`);
 
 export default (request: http.IncomingMessage, response: http.ServerResponse) => {
 
     let urlReplaced: string = request.url.replace(defaultUrlPath, '');
     let filePath: string = publicPath + urlReplaced;
 
-    if (!urlReplaced) {
-        urlReplaced = '/';
-    }
-    if (urlReplaced == '/') {
-        filePath += 'index.html';
-    }
+    if (!urlReplaced) urlReplaced = '/';
+
+    if (urlReplaced == '/') filePath += 'index.html';
 
     const extname = String(path.extname(filePath)).toLowerCase();
 
@@ -35,12 +31,12 @@ export default (request: http.IncomingMessage, response: http.ServerResponse) =>
 
     const contentType: string = mimeTypes[extname] || 'application/octet-stream';
 
-    fs.readFile('./www/themes' + filePath, 'utf-8', function(error, content) {
+    fs.readFile(filePath, 'utf-8', function(error, content) {
         if (error) {
-            console.log(error)
             if (error.code == 'ENOENT') {
-                fs.readFile('./404.html', function(error, content) {
-                    response.writeHead(200, { 'Content-Type': contentType });
+                fs.readFile(`${publicPath}404.html`, function(error, content) {
+                    if (error) log.warn('No 404 page found');
+                    response.writeHead(200, { 'Content-Type': 'text/html' });
                     response.end(content, 'utf-8');
                 });
             } else {
@@ -50,12 +46,9 @@ export default (request: http.IncomingMessage, response: http.ServerResponse) =>
             }
         } else {
             if (contentType === 'text/html') {
-                const www: string = path.normalize(`./www/lib/`);
-                console.log(www)
-                const js: string = fs.readFileSync(`${www}Hey.js`, 'utf-8');
+                const js: string = fs.readFileSync(`${libPath}Hey.js`, 'utf-8');
                 content = content.replace('</head>', `<script>${js}</script></head>`);
             }
-
             response.writeHead(200, { 'Content-Type': contentType });
             response.end(content, 'utf-8');
         }

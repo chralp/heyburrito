@@ -10,6 +10,7 @@ import database from './database';
 import config from './config';
 import Bot from './Bot';
 
+log.level(config.misc.log_level);
 bootstrap();
 
 // HTTP handlers
@@ -23,12 +24,11 @@ log.info("Staring heyburrito");
 BurritoStore.setDatabase(database);
 
 // Set and start RTM
-const rtm = new RTMClient(config('SLACK_API_TOKEN'));
+const rtm = new RTMClient(config.slack.api_token);
 rtm.start();
 
 // Set up webClient and fetch slackUsers
-const wbc = new WebClient(config('SLACK_API_TOKEN'));
-
+const wbc = new WebClient(config.slack.api_token);
 
 // Initialize new LocalStore
 LocalStore.start(wbc);
@@ -45,18 +45,18 @@ const requestHandler = (request: http.IncomingMessage, response: http.ServerResp
     /**
      * Check if request url contains api path, then let APIHandler take care of it
      */
-    if (request.url.includes(config('API_PATH', true))) return APIHandler(request, response);
+    if (request.url.includes(config.http.api_path)) return APIHandler(request, response);
 
     /**
      * Check if request url contains webpath, then let WEBHandler take care of it
      */
-    if (request.url.includes(config('WEB_PATH', true))) return WEBHandler(request, response);
+    if (request.url.includes(config.http.web_path)) return WEBHandler(request, response);
 
     /**
      * redirect all other requests to webPath
      */
     response.writeHead(301, {
-        location: config('WEB_PATH')
+        location: config.http.web_path
     });
     response.end();
 
@@ -66,9 +66,11 @@ const requestHandler = (request: http.IncomingMessage, response: http.ServerResp
  * Start HTTP / WSS server
  */
 const httpserver = http.createServer(requestHandler);
-httpserver.listen(config('HTTP_PORT', true), (err) => {
-    if (err) throw new Error(`Could not start HTTP server, error => ${err}`)
+httpserver.listen(config.http.http_port, (err) => {
 
+    if (err) throw new Error(`Could not start HTTP server, error => ${err}`);
+
+    // Start WSS instance
     WSSHandler();
-    log.info(`HttpServer started on ${config('HTTP_PORT', true)}`);
+    log.info(`HttpServer started on ${config.http.http_port}`);
 });

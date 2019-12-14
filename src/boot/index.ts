@@ -33,13 +33,15 @@ export default () => {
     // If url then install theme and return THEME_PATH as path to theme
 
     // Check that required ENV keys exists
-    required.forEach(x => config(x));
 
-    // Check if required subkeys exists if mongodb is set DATABASE_DRIVER
-    const envDB = config('DATABASE_DRIVER');
-    if (envDB == 'mongodb') {
-        if (!config('MONGODB_URL')) throw new Error('Missing required env key MONGODB_URL');
-        if (!config('MONGODB_DATABASE')) throw new Error('Missing required env key MONGODB_DATABASE');
-    }
+    /*
+        required.forEach(x => config(x));
 
+        // Check if required subkeys exists if mongodb is set DATABASE_DRIVER
+        const envDB = config('DATABASE_DRIVER');
+        if (envDB == 'mongodb') {
+            if (!config('MONGODB_URL')) throw new Error('Missing required env key MONGODB_URL');
+            if (!config('MONGODB_DATABASE')) throw new Error('Missing required env key MONGODB_DATABASE');
+        }
+    */
 };
