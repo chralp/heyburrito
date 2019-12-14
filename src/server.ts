@@ -3,7 +3,6 @@ dotenv.config();
 import log from 'bog';
 import http from 'http';
 import { RTMClient, WebClient } from '@slack/client';
-import bootstrap from './boot';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
 import database from './database';
@@ -11,7 +10,7 @@ import config from './config';
 import Bot from './Bot';
 
 log.level(config.misc.log_level);
-bootstrap();
+
 
 // HTTP handlers
 import APIHandler from './api';
