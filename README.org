@@ -69,7 +69,7 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 | SLACK_EMOJI_INC  | :burrito:       | No       | Emoji to increment points. ex:( :burrito: )                       |
 | SLACK_EMOJI_DEC  | :rottenburrito: | No       | Emoji to decrement points. ex:( :rottenburrito: )                 |
 | SLACK_DAILY_CAP  | 5               | No       | Defaults to 5/day                                                 |
-| ENABLE_DECREMENT | false           | No       | Disable decrement of points                                       |
+| ENABLE_DECREMENT | true            | No       | Enable decrement of points, set false to disable                  |
 | API_PATH         | /api/           | No       | Must start and end with slash                                     |
 | WEB_PATH         | /heyburrito/    | No       | Serving html from .                                               |
 | HTTP_PORT        | 3333            | no       | For API and website                                               |
