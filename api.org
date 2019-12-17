@@ -9,7 +9,7 @@
 }
 #+END_SRC
 
-** Get scoreboard
+** /api/scoreboard/
 
 Append given or givers for different scoreboard
 
@@ -17,7 +17,7 @@ Append given or givers for different scoreboard
 GET http://heyburrito:3333/api/scoreboard/given
 #+END_SRC
 
-#+RESULTS:
+#+djaha: #+RESULTS:
 #+begin_example
 {
   "error": false,
@@ -40,49 +40,11 @@ GET http://heyburrito:3333/api/scoreboard/given
 }
 #+end_example
 
-Return data:
+result
+#+djaha:
+** /api/userstats/
 
-#+BEGIN_SRC json
-{
-  "error": false,
-  "code": 200,
-  "message": null,
-  "data": [
-    {
-      "username": "chralp",
-      "name": "chralp",
-      "score": 1337,
-      "avatar": "https://secure.gravatar.com/chralp.png"
-    },
-    {
-      "username": "burrito",
-      "name": "burrito",
-      "score": 1336,
-      "avatar": "https://secure.gravatar.com/burrito.png"
-    }
-  ]
-}
-#+END_SRC
-
-#+RESULTS:
-#+begin_example
-{
-  "error": false,
-  "code": 200,
-  "message": null,
-  "data": [
-    {
-      "username": "chralp",
-      "name": "chralp",
-      "score": 1337,
-      "avatar": "https://secure.gravatar.com/chralp.png"
-    }
-  ]
-}
-#+end_example
-** Get Userstats
-
-Append given or givers for different scoreboard
+Append username of the user you want to get more stats from
 
 #+BEGIN_SRC http :pretty
 GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
@@ -126,46 +88,5 @@ GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
       }
     ]
   }
-}
-#+end_example
-
-Return data:
-
-#+BEGIN_SRC json
-{
-  "error": false,
-  "code": 200,
-  "message": null,
-  "data": [
-    {
-      "username": "chralp",
-      "name": "chralp",
-      "score": 1337,
-      "avatar": "https://secure.gravatar.com/chralp.png"
-    },
-    {
-      "username": "burrito",
-      "name": "burrito",
-      "score": 1336,
-      "avatar": "https://secure.gravatar.com/burrito.png"
-    }
-  ]
-}
-#+END_SRC
-
-#+RESULTS:
-#+begin_example
-{
-  "error": false,
-  "code": 200,
-  "message": null,
-  "data": [
-    {
-      "username": "chralp",
-      "name": "chralp",
-      "score": 1337,
-      "avatar": "https://secure.gravatar.com/chralp.png"
-    }
-  ]
 }
 #+end_example
