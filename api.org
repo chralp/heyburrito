@@ -22,7 +22,7 @@ Result
       "avatar": "https://secure.gravatar.com/chralp.png"
     },
     {
-      "username": "burrito"
+      "username": "burrito",
       "name": "burrito",
       "score": 1336,
       "avatar": "https://secure.gravatar.com/burrito.png"
