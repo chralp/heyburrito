@@ -94,10 +94,12 @@ GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
 Be able to search with filters
 
 Should be able to take folling params
-userID || null
-startDate || null
-endDate || null
-type ( given / gived ) || return both ?
+| params                 | type   | required |
+|------------------------+--------+----------|
+| userID                 | string | no       |
+| startDate              | string | no       |
+| endDate                | string | no       |
+| type ( given / gived ) | string | no       |
 
 #+BEGIN_SRC http :pretty
 POST http://heyburrito:3333/api/histogram
