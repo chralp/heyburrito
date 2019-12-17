@@ -79,7 +79,6 @@ export default () => {
             async getGivenList() {
 
                 const users = await Middleware.getUserScore({ scoreType: 'from' });
-                console.log(users)
                 ws.send(JSON.stringify({
                     event: 'givenList',
                     data: mergeUserData(users.map((user) => user))
