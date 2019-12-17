@@ -114,9 +114,9 @@ Route.add({
 
 Route.add({
     method: 'POST',
-    path: `${apiPath}scoreboard/histogram`,
-    handler: async (request: any, h: any) => {
-        console.log(request.payload)
+    path: `${apiPath}/histogram`,
+    handler: async (request: any, res: any) => {
+
         try {
 
             /* Should be able to take folling params
@@ -126,19 +126,24 @@ Route.add({
              * type ( given / gived ) | return both ?
              *
              */
-
-            return h.response({}).code(200);
+            const data = {
+                error: false,
+                code: 200,
+                message: null,
+                data: null
+            }
+            return response(data, res);
 
         } catch (err) {
 
             log.warn(err);
 
-            return h.response({
+            return response({
                 error: true,
                 code: err.code || 500,
                 message: err.message,
                 data: null
-            }).code(err.code || 500);
+            }, res, err.code || 500);
         }
     }
 });
