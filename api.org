@@ -40,6 +40,30 @@ GET http://heyburrito:3333/api/scoreboard/given
 }
 #+end_example
 
+Return data:
+#+RESULTS:
+#+begin_example json
+{
+  "error": false,
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "username": "UEHUXHG0G",
+      "name": "Stefan",
+      "score": 6,
+      "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png"
+    },
+    {
+      "username": "UEKN9GNAJ",
+      "name": "chralp",
+      "score": 7,
+      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+    }
+  ]
+}
+#+end_example
+
 ** /api/userstats/
 
 Append username of the user you want to get more stats from
