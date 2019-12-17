@@ -3,38 +3,38 @@
   "version": "0.0.1",
   "repository": "github.com/chralp/heyburrito",
   "scripts": {
-    "start": "ts-node ./app/server.ts",
-    "test": "mocha -r ts-node/register test/* || true",
-    "lint": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts test/*.ts",
-    "lintFix": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts test/*.ts --fix",
+    "start": "ts-node ./src/server.ts",
+    "dev": "nodemon --watch '*.ts' --exec 'ts-node' ./src/server.ts",
+    "test": "mocha -r ts-node/register test/*-test.ts || true",
+    "lint": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts",
+    "lintFix": "tslint -t stylish -c tslint.json lib/*.ts types/*.ts --fix",
     "docker-build": "docker build -t chralp/heyburrito . && docker tag chralp/heyburrito chralp/heyburrito",
     "docker-push": "docker push chralp/heyburrito"
   },
+  "license": "MIT",
   "dependencies": {
     "@slack/client": "^4.12.0",
     "@types/dotenv": "^4.0.3",
     "bog": "^1.0.2",
     "dotenv": "^6.0.0",
-    "git-clone-repo": "^1.0.0",
-    "mongodb": "^3.2.6",
+    "mongodb": "^3.4.0",
     "ts-node": "^7.0.1",
-    "typescript": "^3.5.1",
+    "typescript": "^3.7.3",
     "ws": "^6.2.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.6",
+    "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.14.8",
+    "@types/node": "^10.17.9",
     "babel-eslint": "^8.2.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "dirty-chai": "^2.0.1",
     "mocha": "^5.2.0",
-    "mocha-jenkins-reporter": "^0.4.1",
+    "mocha-jenkins-reporter": "^0.4.2",
     "sinon": "^6.3.5",
     "sinon-chai": "^3.2.0",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.16.0",
-    "tslint-config-airbnb": "^5.11.0"
+    "tslint": "^5.20.1",
+    "tslint-config-airbnb": "^5.11.2"
   }
 }

@@ -30,9 +30,9 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 
 
 ### Requirments
-- slack ( ofc )
+- slack ( of course )
 - mongodb
-- node ( lts/dubnium ) 
+- node ( lts/erbium ) 
 
 ### Get started
 
@@ -58,18 +58,22 @@ This will increase chralps and fagges "burrito" - points by 2 ( each )
 
 ### Environment Variables
 
-| ENV Variables    | Default | Required | Note                                                                        |
-| ---------------- | ------  | ------   | -------                                                                     |
-| THEME            | default | No       | See Theme section                                                           |
-| BOT_NAME         |         | Yes      | Same botname as in Get started section                                      |
-| DATABASE_DRIVER  |         | Yes      | See database drivers section                                                |
-| MONGODB_URL      |         | Yes*     | Only requierd if DATABASE_DRIVER is mongodb                                 |
-| MONGODB_DATABASE |         | Yes*     | Only requierd if DATABASE_DRIVER is mongodb                                 |
-| SLACK_API_TOKEN  |         | Yes      | See Get started section                                                     |
-| SLACK_EMOJI_INC  |         | Yes      | Emoji to increment points. ex:( :burrito: )                                 |
-| SLACK_EMOJI_DEC  |         | No       | Emoji to decrement points. ex:( :rottenburrito: ). Disabled if not provided |
-| SLACK_DAILY_CAP  | 5       | No       | Defaults to 5/day                                                           |
-
+| ENV Variables    | Default Value   | Required | Note                                                              |
+| ---------------- | -------------   | ------   | --------                                                          |
+| BOT_NAME         |                 | Yes      | Same botname as in Get started section                            |
+| DATABASE_DRIVER  |                 | Yes      | See database drivers section                                      |
+| MONGODB_URL      |                 | Yes*     | Only requierd if DATABASE_DRIVER is mongodb, mongodb = recomended |
+| MONGODB_DATABASE |                 | Yes*     | Only requierd if DATABASE_DRIVER is mongodb, mongodb = recomended |
+| SLACK_API_TOKEN  |                 | Yes      | See Get started section                                           |
+| SLACK_EMOJI_INC  | :burrito:       | No       | Emoji to increment points. ex:( :burrito: )                       |
+| SLACK_EMOJI_DEC  | :rottenburrito: | No       | Emoji to decrement points. ex:( :rottenburrito: )                 |
+| SLACK_DAILY_CAP  | 5               | No       | Defaults to 5/day                                                 |
+| ENABLE_DECREMENT | true            | No       | Enable decrement of points, set false to disable                  |
+| API_PATH         | /api/           | No       | Must start and end with slash                                     |
+| WEB_PATH         | /heyburrito/    | No       | Serving html from .                                               |
+| HTTP_PORT        | 3333            | no       | For API and website                                               |
+| WSS_PORT         | 3334            |          |                                                                   |
+| THEME            | default         | No       | See Theme section                                                 |
 ### Database drivers
 
 | Name    | Recomended | Note                           |
@@ -90,6 +94,9 @@ Available third party themes
 | cardi-burrito | tbleckert | https://github.com/tbleckert/cardi-burrito |
 
 If you want your theme to be on the list, create a PR or issue!
+
+### API
+API endpoints and doc can be found here https://github.com/chralp/heyburrito/blob/master/api.org
 
 ### Scoreboard
 Scoreboard is accessable via localhost or host on port `3333`.

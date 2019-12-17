@@ -10,7 +10,6 @@ async function slackUsers(wbc) {
     const bots: Array<SlackInterface.Stored> = [];
 
     log.info('Fetching slack users via wbc');
-
     const result: SlackInterface.WbcList = await wbc.users.list()
     result.members.forEach((x: any) => {
 
@@ -25,6 +24,7 @@ async function slackUsers(wbc) {
     });
 
     return { users, bots };
+
 }
 
 export default slackUsers;

@@ -7,7 +7,7 @@ export default class MongoDBDriver {
     db: any
     client: any
 
-    constructor(MongoClient, config: any = {}) {
+    constructor(MongoClient: any, config: any = {}) {
         this.MongoClient = MongoClient;
         this.url = config.url;
         this.databaseName = config.database;
@@ -19,14 +19,13 @@ export default class MongoDBDriver {
         if (this.client && typeof this.client.isConnected === 'function' && this.client.isConnected()) {
             return Promise.resolve(this.client);
         }
-        log.info(`Database in use: ${this.url}/${this.databaseName}`)
-        return this.MongoClient.connect(`${this.url}/${this.databaseName}`, { useNewUrlParser: true }).then((client) => {
+        return this.MongoClient.connect(`${this.url}/${this.databaseName}`, { useNewUrlParser: true, useUnifiedTopology: true }).then((client: any) => {
             this.client = client;
             this.db = client.db(this.databaseName);
         });
     }
 
-    async store(collection, data) {
+    async store(collection: string, data) {
         await this.connect();
 
         if (Array.isArray(data)) {
@@ -90,10 +89,9 @@ export default class MongoDBDriver {
         });
     }
 
-    getScore(user = null) {
+    getScore({ user = null, scoreType = null }) {
         const match = (user) ? { to: user } : null;
-
-        return this.sum('burritos', 'value', match);
+        return this.sum('burritos', 'value', match, scoreType);
     }
 
     getGiven(user: string) {
@@ -102,7 +100,14 @@ export default class MongoDBDriver {
         return this.sum('burritos', 'value', match);
     }
 
-    getGivers(user: string) {
-        return this.sum('burritos', 'value', { to: user }, 'from');
+
+    getGivers(user: string = null) {
+        const match = user ? { to: user } : null;
+        return this.sum('burritos', 'value', match, 'from');
+    }
+
+    getUserScoreList({ user, scoreType }) {
+        const match = scoreType === 'from' ? { to: user } : { from: user }
+        return this.sum('burritos', 'value', match, scoreType);
     }
 }

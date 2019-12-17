@@ -1,5 +1,5 @@
 import { default as log } from 'bog';
-import config from '../lib/config'
+import config from '../config'
 import slackUsers from '../lib/getSlackUsers';
 
 //Interfaces
@@ -9,30 +9,41 @@ import SlackInterface from '../types/Slack.interface'
 * class Handles localstore of slackusers and bots
 * and provides functions to get stored users and bots
 */
+
 class LocalStore {
 
-    wbc = null;
+    wbc: any;
     botId: string = null
     storedBots: Array<SlackInterface.Stored>;
     storedUsers: Array<SlackInterface.Stored>;
-    botName: string = config("BOT_NAME");
+    botName: string = config.slack.bot_name;
 
-    start(wbc: any) {
-        this.wbc = wbc
-        this.fetchSlackUsers()
+    async start(wbc: any) {
+        this.wbc = wbc;
+        this.fetch();
+    }
+
+    async fetch() {
+        this.fetchSlackUsers();
     }
 
     // Fetch / get all slackUsers from API
     async fetchSlackUsers() {
-        const res = await slackUsers(this.wbc);
-        this.storedUsers = [];
-        this.storedBots = [];
-        this.storedUsers = res.users;
-        this.storedBots = res.bots;
-        this.getBotUsername()
+        try {
+            const res = await slackUsers(this.wbc);
+            this.storedUsers = [];
+            this.storedBots = [];
+            this.storedUsers = res.users;
+            this.storedBots = res.bots;
+            this.getBotUsername();
+        }
+
+        catch (e) {
+            log.warn(e);
+        }
 
         // Run update of localstore every hour
-        setInterval(this.fetchSlackUsers, 60 * 60 * 1000);
+        setTimeout(() => this.fetch(), 60 * 60 * 1000);
 
     }
 
@@ -60,7 +71,7 @@ class LocalStore {
         });
 
         if (!this.botId) {
-            log.warn(`Could not found bot ${config("BOT_NAME")} on slack account`);
+            log.warn(`Could not found bot ${config.slack.bot_name} on slack account`);
         }
     }
 

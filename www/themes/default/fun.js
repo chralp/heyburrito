@@ -77,14 +77,13 @@ function addStats(data) {
     fromEl.innerHTML = '';
     toEl.innerHTML = '';
 
-    data.gived.sort((a, b) => Math.sign(b.score - a.score));
-    data.givers.sort((a, b) => Math.sign(b.score - a.score));
-
-    if (data.gived.length) {
+    if (data.gived) {
+        data.gived.sort((a, b) => Math.sign(b.score - a.score));
         data.gived.forEach((user) => addStatsRow(user, toEl));
     }
 
-    if (data.givers.length) {
+    if (data.givers) {
+         data.givers.sort((a, b) => Math.sign(b.score - a.score));
         data.givers.forEach((user) => addStatsRow(user, fromEl));
     }
 

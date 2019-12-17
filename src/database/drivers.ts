@@ -1,4 +1,4 @@
-import config from '../lib/config'
+import config from '../config'
 import MongoDBDriver from './drivers/MongoDBDriver';
 import FileDriver from './drivers/FileDriver';
 import ArrayDriver from './drivers/ArrayDriver';
@@ -8,8 +8,8 @@ export default {
         const client = require('mongodb').MongoClient;
 
         return new MongoDBDriver(client, {
-            url: config("MONGODB_URL"),
-            database: config("MONGODB_DATABASE"),
+            url: config.db.db_url,
+            database: config.db.db_name,
         });
     },
     array: () => {

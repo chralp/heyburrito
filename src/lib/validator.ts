@@ -19,12 +19,13 @@ function sentToBot(message, allBots) {
 
     // Get all users from message.text
     const usersArr = parseUsernames(message.text)
+
     if (!usersArr) return false
 
-    const sentToBot = allBots.filter((v) => {
-        usersArr.includes(v.id)
-    })
-    //a.indexOf(v) === i);
+    const sentToBot = allBots.filter((v: any) => {
+        if (usersArr.includes(v.id)) return v
+    });
+
     return !!sentToBot.length
 }
 
