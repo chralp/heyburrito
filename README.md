@@ -95,6 +95,9 @@ Available third party themes
 
 If you want your theme to be on the list, create a PR or issue!
 
+### API
+API endpoints and doc can be found here https://github.com/chralp/heyburrito/blob/master/api.org
+
 ### Scoreboard
 Scoreboard is accessable via localhost or host on port `3333`.
 
