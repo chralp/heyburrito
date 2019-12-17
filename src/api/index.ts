@@ -76,7 +76,7 @@ Route.add({
 
             const { user: userId } = request.params;
 
-            if (!userId.length) throw ({
+            if (!userId) throw ({
                 message: 'You must provide slack userid',
                 code: 500
             });

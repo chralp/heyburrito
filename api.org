@@ -1,13 +1,135 @@
 * API endpoints
-** Get scoreboard
-
-Append `given` or `givers` for different scoreboard
-
-#+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/scoreboard/<type>
+** Return object
+#+BEGIN_SRC code
+{
+  "error": true || false,
+  "code": HTTP codes as number,
+  "message": String or null,
+  "data": Object or array
+}
 #+END_SRC
 
-Result
+** Get scoreboard
+
+Append given or givers for different scoreboard
+
+#+BEGIN_SRC http :pretty
+GET http://heyburrito:3333/api/scoreboard/given
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{
+  "error": false,
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "username": "UEHUXHG0G",
+      "name": "Stefan",
+      "score": 6,
+      "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png"
+    },
+    {
+      "username": "UEKN9GNAJ",
+      "name": "chralp",
+      "score": 7,
+      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+    }
+  ]
+}
+#+end_example
+
+Return data:
+
+#+BEGIN_SRC json
+{
+  "error": false,
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "username": "chralp",
+      "name": "chralp",
+      "score": 1337,
+      "avatar": "https://secure.gravatar.com/chralp.png"
+    },
+    {
+      "username": "burrito",
+      "name": "burrito",
+      "score": 1336,
+      "avatar": "https://secure.gravatar.com/burrito.png"
+    }
+  ]
+}
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{
+  "error": false,
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "username": "chralp",
+      "name": "chralp",
+      "score": 1337,
+      "avatar": "https://secure.gravatar.com/chralp.png"
+    }
+  ]
+}
+#+end_example
+** Get Userstats
+
+Append given or givers for different scoreboard
+
+#+BEGIN_SRC http :pretty
+GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{
+  "error": false,
+  "code": 200,
+  "message": null,
+  "data": {
+    "user": {
+      "username": "UEKN9GNAJ",
+      "name": "chralp",
+      "score": 7,
+      "given": 13,
+      "today": 0,
+      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+    },
+    "gived": [
+      {
+        "username": "UEHUXHG0G",
+        "name": "Stefan",
+        "score": 6,
+        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png"
+      },
+      {
+        "username": "UEKN9GNAJ",
+        "name": "chralp",
+        "score": 7,
+        "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+      }
+    ],
+    "givers": [
+      {
+        "username": "UEKN9GNAJ",
+        "name": "chralp",
+        "score": 7,
+        "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+      }
+    ]
+  }
+}
+#+end_example
+
+Return data:
 
 #+BEGIN_SRC json
 {
