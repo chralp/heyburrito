@@ -96,7 +96,7 @@ Be able to search with filters
 Should be able to take folling params
 | params                 | type   | required |
 |------------------------+--------+----------|
-| userID                 | string | no       |
+| username               | string | no       |
 | startDate              | string | no       |
 | endDate                | string | no       |
 | type ( given / gived ) | string | no       |
@@ -105,9 +105,7 @@ Should be able to take folling params
 POST http://heyburrito:3333/api/histogram
 Content-Type: application/json
 
-{
 
-}
 #+END_SRC
 
 #+RESULTS:
