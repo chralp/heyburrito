@@ -1,0 +1,25 @@
+* API endpoints
+** Get scoreboard
+
+Append `given` or `givers` for different scoreboard
+
+#+BEGIN_SRC http :pretty
+GET http://heyburrito:3333/api/scoreboard/<type>
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{
+  "error": false,
+  "code": 200,
+  "message": null,
+  "data": [
+    {
+      "username": "chralp",
+      "name": "chralp",
+      "score": 1337,
+      "avatar": "https://secure.gravatar.com/chralp.png"
+    }
+  ]
+}
+#+end_example

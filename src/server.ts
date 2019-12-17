@@ -11,7 +11,6 @@ import Bot from './Bot';
 
 log.level(config.misc.log_level);
 
-
 // HTTP handlers
 import APIHandler from './api';
 import WEBHandler from './web';

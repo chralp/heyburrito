@@ -1,13 +1,14 @@
-import { default as log } from 'bog';
+import log from 'bog';
 import { parseMessage } from './lib/parseMessage';
 import { validBotMention, validMessage } from './lib/validator';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
+import config from './config'
 
 // interfaces
 import EmojiInterface from './types/Emoji.interface';
 import SlackMessageInterface from './types/SlackMessage.interface';
-import config from './config'
+
 
 const dailyCap: number = parseInt(config.slack.daily_cap);
 
