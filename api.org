@@ -18,7 +18,7 @@ GET http://heyburrito:3333/api/scoreboard/given
 #+END_SRC
 
 #+RESULTS:
-#+begin_example json
+#+begin_example
 {
   "error": false,
   "code": 200,
