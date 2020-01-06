@@ -1,0 +1,4 @@
+src/types
+src/bot.ts
+src/database/drivers/Filedriver.ts
+src/database/drivers/ArrayDriver.ts

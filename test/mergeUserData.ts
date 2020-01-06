@@ -1,8 +1,8 @@
 import { stub } from 'sinon';
 import { expect } from 'chai';
 import slackUsers from './data/slackUsers';
-import mergeUserData from '../app/lib/mergeUserData';
-import LocalStore from '../app/store/LocalStore';
+import mergeUserData from '../src/lib/mergeUserData';
+import LocalStore from '../src/store/LocalStore';
 let storedUsers, param2, mapped, wbc;
 
 before(() => {

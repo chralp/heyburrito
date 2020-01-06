@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { validBotMention, validMessage, selfMention, sentFromBot, sentToBot } from '../app/lib/validator'
+import { validBotMention, validMessage, selfMention, sentFromBot, sentToBot } from '../src/lib/validator'
 let msg, resultShouldBe, res, storedBots, joinedChannel, pingUser, dmToBot, kicked, userJoinedChannel, emojis;
 
 describe('/app/lib/validator', () => {

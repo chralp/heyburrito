@@ -1,3 +1,4 @@
+
 * API endpoints
 ** Return object
 #+BEGIN_SRC code
@@ -11,10 +12,10 @@
 
 ** /api/scoreboard/
 
-Append given or givers for different scoreboard
+Append to or from for different scoreboard
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/scoreboard/given
+GET http://heyburrito:3333/api/scoreboard/from
 #+END_SRC
 
 #+RESULTS:
@@ -22,19 +23,31 @@ GET http://heyburrito:3333/api/scoreboard/given
 {
   "error": false,
   "code": 200,
-  "message": null,
+  "message": "ok",
   "data": [
     {
-      "username": "UEHUXHG0G",
-      "name": "Stefan",
-      "score": 6,
-      "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png"
+      "username": "USER2",
+      "name": "User2",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 162
     },
     {
-      "username": "UEKN9GNAJ",
-      "name": "chralp",
-      "score": 7,
-      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+      "username": "USER4",
+      "name": "User4",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 160
+    },
+    {
+      "username": "USER1",
+      "name": "User1",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 144
+    },
+    {
+      "username": "USER3",
+      "name": "User3",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 75
     }
   ]
 }
@@ -45,7 +58,7 @@ GET http://heyburrito:3333/api/scoreboard/given
 Append username of the user you want to get more stats from
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
+GET http://heyburrito:3333/api/userstats/USER2
 #+END_SRC
 
 #+RESULTS:
@@ -53,41 +66,79 @@ GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
 {
   "error": false,
   "code": 200,
-  "message": null,
+  "message": "ok",
   "data": {
     "user": {
-      "username": "UEKN9GNAJ",
-      "name": "chralp",
-      "score": 7,
-      "given": 13,
-      "today": 0,
-      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+      "username": "USER2",
+      "name": "User2",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "receivedToday": 0,
+      "givedToday": 0,
+      "received": 39,
+      "gived": 162
     },
     "gived": [
       {
-        "username": "UEHUXHG0G",
-        "name": "Stefan",
-        "score": 6,
-        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png"
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "score": 57
       },
       {
-        "username": "UEKN9GNAJ",
-        "name": "chralp",
-        "score": 7,
-        "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "score": 57
+      },
+      {
+        "username": "USER1",
+        "name": "User1",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "score": 48
       }
     ],
-    "givers": [
+    "received": [
       {
-        "username": "UEKN9GNAJ",
-        "name": "chralp",
-        "score": 7,
-        "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png"
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "score": 57
+      },
+      {
+        "username": "USER1",
+        "name": "User1",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "score": 40
+      },
+      {
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "score": -58
       }
-    ]
+    ],
+    "givedToday": [],
+    "receivedToday": []
   }
 }
 #+end_example
+** /api/userstats/today/
+Append username of the user you want to get more stats from
+
+#+BEGIN_SRC http :pretty
+GET http://heyburrito:3333/api/userstats/today/USER2
+#+END_SRC
+
+#+RESULTS:
+: {
+:   "error": false,
+:   "code": 200,
+:   "message": "ok",
+:   "data": {
+:     "givedToday": 16,
+:     "receivedToday": 11
+:   }
+: }
 
 ** /api/histogram/ PRE-ALPHA
 

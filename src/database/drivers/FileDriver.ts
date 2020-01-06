@@ -1,4 +1,5 @@
 import Driver from './Driver';
+import { time } from '../../lib/utils';
 import ScoreInterface from '../../types/Score.interface';
 import fs from 'fs';
 import path from 'path';
@@ -6,13 +7,13 @@ import path from 'path';
 function id() {
     // Cred => https://gist.github.com/gordonbrander/2230317
     return '_' + Math.random().toString(36).substr(2, 9);
-}
+};
 
 class FileDriver extends Driver {
-    dbPath:string;
-    connected:boolean;
-    data:Array<ScoreInterface>;
-    dataSynced:boolean;
+    dbPath: string;
+    connected: boolean;
+    data: Array<ScoreInterface>;
+    dataSynced: boolean;
 
     constructor() {
         super();
@@ -47,8 +48,8 @@ class FileDriver extends Driver {
             return;
         }
 
-        const mappedItems:Array<ScoreInterface> = items.map((item) => {
-            let parsedData:ScoreInterface;
+        const mappedItems: Array<ScoreInterface> = items.map((item) => {
+            let parsedData: ScoreInterface;
 
             try {
                 parsedData = JSON.parse(item);
@@ -68,7 +69,7 @@ class FileDriver extends Driver {
         await this.syncData();
 
         const filteredData = this.data.filter(item => item.from == user);
-        return await(filteredData);
+        return await (filteredData);
     }
 
     async findFromToday(user) {
@@ -82,15 +83,15 @@ class FileDriver extends Driver {
 
         const filteredData = this.data.filter(item => item.from == user && item.given_at.getTime() < end.getTime() && item.given_at.getTime() > start.getTime());
 
-        return await(filteredData);
+        return filteredData;
     }
 
-    async give(to:string, from:string) {
+    async give(to: string, from: string) {
         await this.connect();
 
         this.dataSynced = false;
 
-        const score:ScoreInterface = {
+        const score: ScoreInterface = {
             to,
             from,
             _id: id(),
@@ -101,7 +102,7 @@ class FileDriver extends Driver {
         return fs.appendFileSync(this.dbPath, `\n${JSON.stringify(score)}`);
     }
 
-    async takeAway(to:string, from:string) {
+    async takeAway(to: string, from: string) {
         await this.connect();
 
         this.dataSynced = false;
@@ -112,10 +113,10 @@ class FileDriver extends Driver {
             from,
             value: -1,
             given_at:
-            new Date(),
+                new Date(),
         });
 
-        return await(true);
+        return true;
     }
 
     async getScore(user = null) {
@@ -137,7 +138,7 @@ class FileDriver extends Driver {
             userScores[item.to].score += item.value;
         });
 
-        return await((<any>Object).values(userScores));
+        return await ((<any>Object).values(userScores));
     }
 
     async getGiven(user = null) {
@@ -159,7 +160,7 @@ class FileDriver extends Driver {
             userScores[item.from].score += item.value;
         });
 
-        return await((<any>Object).values(userScores));
+        return await ((<any>Object).values(userScores));
     }
 
     async getGivers(user) {
@@ -181,8 +182,32 @@ class FileDriver extends Driver {
             userScores[item.from].score += item.value;
         });
 
-        return await((<any>Object).values(userScores));
+        return await ((<any>Object).values(userScores));
     }
-}
+
+
+    async getScoreBoard(listType: string, scoreType: string) {
+        await this.syncData();
+        let { data } = this;
+        console.log("DATA", data);
+        var groupBy = function(xs, key) {
+            return xs.reduce(function(rv, x) {
+                (rv[x[key]] = rv[x[key]] || []).push(x);
+                return rv;
+            }, {});
+        };
+        const gg = groupBy(data, listType);
+
+        const score = [];
+        for (const a in gg) {
+            score.push({ _id: a, score: gg[a].length });
+        }
+        return score;
+    }
+
+    async getUserScoreList({ user, listType, today }) {
+        await this.syncData();
+    }
+};
 
 export default FileDriver;

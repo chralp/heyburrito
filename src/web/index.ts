@@ -1,4 +1,4 @@
-import log from 'bog';
+import * as log from 'bog';
 import fs from 'fs';
 import http from 'http';
 import path from 'path';
@@ -7,16 +7,15 @@ import config from '../config';
 // Defaults
 const defaultUrlPath: string = config.http.web_path;
 const publicPath: string = config.misc.theme;
-const libPath: string = path.normalize(`./www/lib/`);
+const libPath: string = path.normalize('./www/lib/');
 
 export default (request: http.IncomingMessage, response: http.ServerResponse) => {
-
     let urlReplaced: string = request.url.replace(defaultUrlPath, '');
     let filePath: string = publicPath + urlReplaced;
 
     if (!urlReplaced) urlReplaced = '/';
 
-    if (urlReplaced == '/') filePath += 'index.html';
+    if (urlReplaced === '/') filePath += 'index.html';
 
     const extname = String(path.extname(filePath)).toLowerCase();
 
@@ -31,17 +30,17 @@ export default (request: http.IncomingMessage, response: http.ServerResponse) =>
 
     const contentType: string = mimeTypes[extname] || 'application/octet-stream';
 
-    fs.readFile(filePath, 'utf-8', function(error: any, content: any) {
+    fs.readFile(filePath, 'utf-8', (error: any, content: any) => {
         if (error) {
-            if (error.code == 'ENOENT') {
-                fs.readFile(`${publicPath}404.html`, function(error: any, content: any) {
-                    if (error) log.warn('No 404 page found');
+            if (error.code === 'ENOENT') {
+                fs.readFile(`${publicPath}404.html`, (err: any, cont: any) => {
+                    if (err) log.warn('No 404 page found');
                     response.writeHead(200, { 'Content-Type': 'text/html' });
-                    response.end(content, 'utf-8');
+                    response.end(cont, 'utf-8');
                 });
             } else {
                 response.writeHead(500);
-                response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
+                response.end(`Sorry, check with the site admin for error: ${error.code}  ..\n`);
                 response.end();
             }
         } else {

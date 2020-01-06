@@ -229,4 +229,41 @@ const wbcList = {
         "read"
     ]
 }
-export default wbcList;
+
+const wbcListParsed = {
+    users: [
+        {
+            id: 'USER1',
+            name: 'User1',
+            avatar: 'https://link.to.avatar.48.burrito'
+        },
+        {
+            id: 'USER2',
+            name: 'User2',
+            avatar: 'https://link.to.avatar.48.burrito'
+        },
+        {
+            id: 'USER3',
+            name: 'User3',
+            avatar: 'https://link.to.avatar.48.burrito'
+        },
+        {
+            id: 'USER4',
+            name: 'User4',
+            avatar: 'https://link.to.avatar.48.burrito'
+        }
+    ],
+    bots: [
+        {
+            id: 'BURRITOBOT',
+            name: 'heyburrito',
+            avatar: 'https://link.to.avatar.48.burrito'
+        }
+    ]
+}
+
+
+export {
+    wbcList,
+    wbcListParsed
+};

@@ -1,16 +1,22 @@
 import log from 'bog';
 import Route from './Route';
-import Middleware from '../Middleware';
+import { getScoreBoard, getUserStats, givenBurritosToday } from '../middleware';
 import config from '../config';
 
-//Types
+// Types
 import Http from '../types/Http';
 
 // defaults
 const apiPath: string = config.http.api_path;
+
 const ALLOWED_LISTTYPES: string[] = [
-    'given',
-    'givers'
+    'to',
+    'from',
+];
+
+const ALLOWED_SCORETYPES: string[] = [
+    'inc',
+    'dec',
 ];
 
 /**
@@ -26,42 +32,84 @@ const response = (content: Http.Response, res: any, statusCode: number = 200): v
 
 Route.add({
     method: 'GET',
-    path: `${apiPath}scoreboard/{listType}`,
+    path: `${apiPath}userstats/today/{user}`,
     handler: async (request: any, res: any) => {
-
         try {
+            const { user } = request.params;
+            if (!user) {
+                throw ({
+                    message: 'You must provide slack userid',
+                    code: 500,
+                });
+            }
 
-            const { listType } = request.params;
-
-            if (!ALLOWED_LISTTYPES.includes(listType)) throw ({
-                message: 'Allowed listType is given or givers',
-                code: 400,
-            });
-
-            const scoreType: string = listType === 'given' ? 'to' : 'from';
-            const score = await Middleware.getUserScore({ scoreType });
+            const score = await givenBurritosToday(user);
 
             const data = {
                 error: false,
                 code: 200,
-                message: null,
+                message: 'ok',
                 data: score,
             };
 
             return response(data, res);
-
         } catch (err) {
-
             log.warn(err);
-
             return response({
                 error: true,
                 code: err.code || 500,
                 message: err.message,
-                data: null
+                data: null,
             }, res, err.code || 500);
         }
-    }
+    },
+});
+
+
+
+Route.add({
+    method: 'GET',
+    path: `${apiPath}scoreboard/{listType}/{scoreTypeInput}`,
+    handler: async (request: any, res: any) => {
+        try {
+            const { listType, scoreTypeInput } = request.params;
+
+            const scoreType = scoreTypeInput || 'inc';
+
+            if (!ALLOWED_LISTTYPES.includes(listType)) {
+                throw ({
+                    message: 'Allowed listType is to or from',
+                    code: 400,
+                });
+            }
+
+            if (!ALLOWED_SCORETYPES.includes(scoreType)) {
+                throw ({
+                    message: 'Allowed scoreType is inc or dec',
+                    code: 400,
+                });
+            }
+
+            const score = await getScoreBoard(scoreType, listType);
+
+            const data = {
+                error: false,
+                code: 200,
+                message: 'ok',
+                data: score,
+            };
+
+            return response(data, res);
+        } catch (err) {
+            log.warn(err);
+            return response({
+                error: true,
+                code: err.code || 500,
+                message: err.message,
+                data: null,
+            }, res, err.code || 500);
+        }
+    },
 });
 
 /**
@@ -71,54 +119,44 @@ Route.add({
     method: 'GET',
     path: `${apiPath}userstats/{user}`,
     handler: async (request: any, res: any) => {
-
         try {
-
             const { user: userId } = request.params;
 
-            if (!userId) throw ({
-                message: 'You must provide slack userid',
-                code: 500
-            });
+            if (!userId) {
+                throw ({
+                    message: 'You must provide slack userid',
+                    code: 500,
+                });
+            }
 
-            const { user, gived, givers }: any = await Middleware.getUserStats(userId);
+            const { ...result } = await getUserStats(userId);
 
             const data = {
                 error: false,
                 code: 200,
-                message: null,
+                message: 'ok',
                 data: {
-                    user,
-                    gived,
-                    givers,
-                }
+                    ...result,
+                },
             };
-
-            return response(data, res)
-
+            return response(data, res);
         } catch (err) {
-
             log.warn(err);
-
             return response({
                 error: true,
                 code: err.code || 500,
                 message: err.message,
-                data: null
+                data: null,
             }, res, err.code || 500);
         }
-    }
+    },
 });
-
-
 
 Route.add({
     method: 'POST',
     path: `${apiPath}/histogram`,
     handler: async (request: any, res: any) => {
-
         try {
-
             /* Should be able to take folling params
              * userID | null
              * startDate | null
@@ -130,32 +168,25 @@ Route.add({
                 error: false,
                 code: 200,
                 message: null,
-                data: null
-            }
+                data: null,
+            };
             return response(data, res);
-
         } catch (err) {
-
             log.warn(err);
-
             return response({
                 error: true,
                 code: err.code || 500,
                 message: err.message,
-                data: null
+                data: null,
             }, res, err.code || 500);
         }
-    }
+    },
 });
 
-export default (req, res) => {
-
+export default (req: any, res: any) => {
     const method: string = req.method.toLowerCase();
     const path: string = req.url;
-
-    const { route, request, error } = Route.check({ method, path, req })
-
-    if (error) return response({ error: true }, res, 500)
-    route.handler(request, res)
-
+    const { route, request, error } = Route.check({ method, path, req });
+    if (error) return response({ error: true }, res, 500);
+    return route.handler(request, res);
 };
