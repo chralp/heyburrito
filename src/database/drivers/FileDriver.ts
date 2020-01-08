@@ -4,6 +4,22 @@ import ScoreInterface from '../../types/Score.interface';
 import fs from 'fs';
 import path from 'path';
 
+interface Find {
+    _id: string;
+    to: string;
+    from: string;
+    value: number;
+    given_at: Date;
+}
+
+
+interface Sum {
+    _id?: string; // Username
+    score?: number;
+    scoreinc?: number;
+    scoredec?: number;
+}
+
 function id() {
     // Cred => https://gist.github.com/gordonbrander/2230317
     return '_' + Math.random().toString(36).substr(2, 9);
@@ -17,7 +33,6 @@ class FileDriver extends Driver {
 
     constructor() {
         super();
-
         this.connected = false;
         this.dbPath = path.resolve(__dirname, '../../../.filedb');
         this.dataSynced = false;
@@ -33,24 +48,16 @@ class FileDriver extends Driver {
 
     async syncData() {
         await this.connect();
-
         this.data = [];
 
         const fd = fs.readFileSync(this.dbPath, 'utf8');
-
-        if (!fd.length) {
-            return;
-        }
+        if (!fd.length) return;
 
         const items = fd.split('\n');
-
-        if (!items.length) {
-            return;
-        }
+        if (!items.length) return;
 
         const mappedItems: Array<ScoreInterface> = items.map((item) => {
             let parsedData: ScoreInterface;
-
             try {
                 parsedData = JSON.parse(item);
             } catch (ex) {
@@ -58,32 +65,9 @@ class FileDriver extends Driver {
             }
 
             parsedData.given_at = new Date(parsedData.given_at);
-
             return parsedData;
         });
-
         this.data = mappedItems.filter(item => item);
-    }
-
-    async findFrom(user) {
-        await this.syncData();
-
-        const filteredData = this.data.filter(item => item.from == user);
-        return await (filteredData);
-    }
-
-    async findFromToday(user) {
-        await this.syncData();
-
-        const start = new Date();
-        const end = new Date();
-
-        start.setHours(0, 0, 0, 0);
-        end.setHours(23, 59, 59, 999);
-
-        const filteredData = this.data.filter(item => item.from == user && item.given_at.getTime() < end.getTime() && item.given_at.getTime() > start.getTime());
-
-        return filteredData;
     }
 
     async give(to: string, from: string) {
@@ -115,98 +99,96 @@ class FileDriver extends Driver {
             given_at:
                 new Date(),
         });
-
         return true;
     }
 
-    async getScore(user = null) {
+
+    async getScore(user: string, listType: string): Promise<Find[]> {
         await this.syncData();
-
         let { data } = this;
-
-        if (user) {
-            data = this.data.filter(item => item.to === user);
-        }
-
-        const userScores = {};
-
-        data.forEach((item) => {
-            if (!(item.to in userScores)) {
-                userScores[item.to] = { _id: item.to, score: 0 };
-            }
-
-            userScores[item.to].score += item.value;
-        });
-
-        return await ((<any>Object).values(userScores));
-    }
-
-    async getGiven(user = null) {
-        await this.syncData();
-
-        let { data } = this;
-
-        if (user) {
-            data = this.data.filter(item => item.from === user);
-        }
-
-        const userScores = {};
-
-        data.forEach((item) => {
-            if (!(item.from in userScores)) {
-                userScores[item.from] = { _id: item.from, score: 0 };
-            }
-
-            userScores[item.from].score += item.value;
-        });
-
-        return await ((<any>Object).values(userScores));
-    }
-
-    async getGivers(user) {
-        await this.syncData();
-
-        let { data } = this;
-
-        if (user) {
-            data = this.data.filter(item => item.to === user);
-        }
-
-        const userScores = {};
-
-        data.forEach((item) => {
-            if (!(item.from in userScores)) {
-                userScores[item.from] = { _id: item.from, score: 0 };
-            }
-
-            userScores[item.from].score += item.value;
-        });
-
-        return await ((<any>Object).values(userScores));
+        const filteredData = this.data.filter(item => item[listType] == user);
+        return Promise.resolve(filteredData);
     }
 
 
-    async getScoreBoard(listType: string, scoreType: string) {
+
+
+    async findFromToday(user: string, listType: string): Promise<Find[]> {
+        await this.syncData();
+
+        const filteredData = this.data.filter(item => {
+            if (item[listType] == user &&
+                item.given_at.getTime() < time().end.getTime() &&
+                item.given_at.getTime() > time().start.getTime()) {
+                return item;
+            };
+        })
+        return filteredData;
+    }
+
+    async getScoreBoard({ user, listType, today }): Promise<Sum[]> {
         await this.syncData();
         let { data } = this;
-        console.log("DATA", data);
-        var groupBy = function(xs, key) {
-            return xs.reduce(function(rv, x) {
-                (rv[x[key]] = rv[x[key]] || []).push(x);
-                return rv;
-            }, {});
-        };
-        const gg = groupBy(data, listType);
+
+
+        let listTypeSwitch: string;
+        if (user) {
+            listTypeSwitch = (listType === 'from') ? 'to' : 'from';
+        } else {
+            listTypeSwitch = listType;
+        }
+
+        let selected = data.filter((item) => {
+
+            if (today) {
+                if (item.given_at.getTime() < time().end.getTime() &&
+                    item.given_at.getTime() > time().start.getTime()) {
+                    if (user) {
+
+                        if (item[listTypeSwitch] == user) return item
+                    } else {
+                        return item;
+                    }
+                }
+            } else {
+                if (user) {
+
+                    if (item[listTypeSwitch] === user) return item
+                } else {
+                    return item;
+                }
+            }
+
+        });
+
+
+        const uniqueUsername = [...new Set(selected.map((x) => x[listType]))];
 
         const score = [];
-        for (const a in gg) {
-            score.push({ _id: a, score: gg[a].length });
-        }
-        return score;
-    }
+        uniqueUsername.forEach((u) => {
+            const hej = selected.filter(e => e[listType] === u)
 
-    async getUserScoreList({ user, listType, today }) {
-        await this.syncData();
+            if (user) {
+
+                const scoreinc = hej.filter((x) => x.value === 1);
+                const scoredec = hej.filter((x) => x.value === -1);
+
+                score.push({
+                    _id: u,
+                    scoreinc: scoreinc.length,
+                    scoredec: scoredec.length
+                })
+
+            } else {
+
+                const red = hej.reduce((a: number, item) => {
+                    return a + item.value
+                }, 0);
+                score.push({ _id: u, score: red })
+            }
+
+        });
+        return score;
     }
 };
 

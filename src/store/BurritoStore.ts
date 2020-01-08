@@ -70,8 +70,8 @@ class BurritoStore extends EventEmitter {
             receivedToday,
             givedToday,
             _id: user,
-            received: received.length ? received[0].score : 0,
-            gived: gived.length ? gived[0].score : 0,
+            received: received.length,
+            gived: gived.length,
         };
     }
 

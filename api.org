@@ -15,7 +15,7 @@
 Append to or from for different scoreboard
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/scoreboard/from
+GET http://heyburrito:3333/api/scoreboard/to
 #+END_SRC
 
 #+RESULTS:
@@ -26,28 +26,16 @@ GET http://heyburrito:3333/api/scoreboard/from
   "message": "ok",
   "data": [
     {
-      "username": "USER2",
-      "name": "User2",
-      "avatar": "https://link.to.avatar.48.burrito",
-      "score": 162
+      "username": "UEHUXHG0G",
+      "name": "Stefan",
+      "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png",
+      "score": 4
     },
     {
-      "username": "USER4",
-      "name": "User4",
-      "avatar": "https://link.to.avatar.48.burrito",
-      "score": 160
-    },
-    {
-      "username": "USER1",
-      "name": "User1",
-      "avatar": "https://link.to.avatar.48.burrito",
-      "score": 144
-    },
-    {
-      "username": "USER3",
-      "name": "User3",
-      "avatar": "https://link.to.avatar.48.burrito",
-      "score": 75
+      "username": "UEKN9GNAJ",
+      "name": "chralp",
+      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png",
+      "score": -1
     }
   ]
 }
@@ -58,7 +46,7 @@ GET http://heyburrito:3333/api/scoreboard/from
 Append username of the user you want to get more stats from
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/userstats/USER2
+GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
 #+END_SRC
 
 #+RESULTS:
@@ -69,52 +57,30 @@ GET http://heyburrito:3333/api/userstats/USER2
   "message": "ok",
   "data": {
     "user": {
-      "username": "USER2",
-      "name": "User2",
-      "avatar": "https://link.to.avatar.48.burrito",
+      "username": "UEKN9GNAJ",
+      "name": "chralp",
+      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png",
       "receivedToday": 0,
       "givedToday": 0,
-      "received": 39,
-      "gived": 162
+      "received": 3,
+      "gived": 4
     },
     "gived": [
       {
-        "username": "USER3",
-        "name": "User3",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "score": 57
-      },
-      {
-        "username": "USER4",
-        "name": "User4",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "score": 57
-      },
-      {
-        "username": "USER1",
-        "name": "User1",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "score": 48
+        "username": "UEHUXHG0G",
+        "name": "Stefan",
+        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png",
+        "scoreinc": 4,
+        "scoredec": 0
       }
     ],
     "received": [
       {
-        "username": "USER4",
-        "name": "User4",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "score": 57
-      },
-      {
-        "username": "USER1",
-        "name": "User1",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "score": 40
-      },
-      {
-        "username": "USER3",
-        "name": "User3",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "score": -58
+        "username": "UEHUXHG0G",
+        "name": "Stefan",
+        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png",
+        "scoreinc": 1,
+        "scoredec": 2
       }
     ],
     "givedToday": [],
@@ -126,7 +92,7 @@ GET http://heyburrito:3333/api/userstats/USER2
 Append username of the user you want to get more stats from
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/userstats/today/USER2
+GET http://heyburrito:3333/api/userstats/today/UEKN9GNAJ
 #+END_SRC
 
 #+RESULTS:
@@ -135,8 +101,8 @@ GET http://heyburrito:3333/api/userstats/today/USER2
 :   "code": 200,
 :   "message": "ok",
 :   "data": {
-:     "givedToday": 16,
-:     "receivedToday": 11
+:     "givedToday": 0,
+:     "receivedToday": 0
 :   }
 : }
 

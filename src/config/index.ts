@@ -51,7 +51,7 @@ const config = {
             api_path: process.env.API_PATH ? fixPath(process.env.API_PATH) : '/api/',
         },
         misc: {
-            slackMock: true,
+            slackMock: false,
             log_level: process.env.LOG_LEVEL || 'debug',
             theme: process.env.THEME ? fixPath(process.env.THEME) : `${themePath}default/`,
         },

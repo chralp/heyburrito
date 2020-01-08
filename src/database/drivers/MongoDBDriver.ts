@@ -104,7 +104,7 @@ export default class MongoDBDriver {
      * Should be able to return burrito List ( scoreType inc ) and
      * listtype ( dec ) AKA rottenburritoList
      */
-    async getScoreBoard({ user, listType, today }) {
+    async getScoreBoard({ user, listType, today }): Promise<Sum[]> {
         let match: any = {};
         if (user) {
             match = (listType === 'from') ? { to: user } : { from: user };

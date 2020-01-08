@@ -3,8 +3,10 @@ dotenv.config();
 import { stub } from 'sinon';
 import { expect } from 'chai';
 import { wbcListParsed } from './data/slackUsers';
+import log from 'bog';
 const proxyquire = require('proxyquire').noCallThru();
 
+log.level("0")
 let LocalStore, mapper
 beforeEach(() => {
     LocalStore = {
@@ -28,7 +30,6 @@ describe('mapper-test', async () => {
             }
         ]);
     });
-
 
     it('Should map USER1 and USER3 with data from LocalStore', async () => {
         const result = mapper([{ _id: 'USER1', score: 10 }, { _id: 'USER3', score: 12 }])
