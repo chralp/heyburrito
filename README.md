@@ -1,6 +1,4 @@
-<p align="center">
-    <img src="https://user-images.githubusercontent.com/13852280/41594451-c511cb82-73c3-11e8-87fa-aab8ccf2c816.png" width="50%" height="50%">
-</p>
+![Logo](resources/logo.png)
 
 [![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
