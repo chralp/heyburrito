@@ -1,3 +1,6 @@
+import * as log from 'bog';
+import fs from 'fs';
+
 import UserInterface from '../types/User.interface';
 
 const time = () => {
@@ -27,7 +30,30 @@ const fixPath = (p: string): string => {
     return p;
 };
 
+const pathExists = (path: string) => {
+    try {
+        log.debug('Checking if path exists', path);
+        return fs.lstatSync(path).isDirectory();
+    } catch (e) {
+        return false;
+    }
+};
+
+const createPath = (path: string) => {
+    try {
+        log.debug(`Trying to create path ${path}`);
+        fs.mkdirSync(path);
+        const exists = pathExists(path);
+        if (exists) return true;
+        throw new Error('Neit');
+    } catch (e) {
+        log.debug(`Could not create path ${path}`);
+        return false;
+    }
+};
+
 const mustHave = (key: string) => {
+    if (env === 'development' || 'testing') return process.env[key];
     if (!process.env[key]) throw new Error(`Missing ENV ${key}`);
     return process.env[key];
 };
@@ -38,4 +64,6 @@ export {
     mustHave,
     fixPath,
     env,
+    pathExists,
+    createPath,
 };
