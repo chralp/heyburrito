@@ -1,16 +1,10 @@
 import { MongoClient } from 'mongodb';
 import config from '../config';
 import MongoDBDriver from './drivers/MongoDBDriver';
-import FileDriver from './drivers/FileDriver';
-import ArrayDriver from './drivers/ArrayDriver';
-
-const mongoConf = {
-    url: config.db.db_url,
-    database: config.db.db_name,
-};
+import GenericDriver from './drivers/GenericDriver';
 
 export default {
-    mongodb: () => new MongoDBDriver(MongoClient, mongoConf),
-    array: () => new ArrayDriver(),
-    file: () => new FileDriver(),
+    mongodb: (conf = config.db) => new MongoDBDriver(MongoClient, conf),
+    array: () => new GenericDriver('array'),
+    file: () => new GenericDriver('file'),
 };

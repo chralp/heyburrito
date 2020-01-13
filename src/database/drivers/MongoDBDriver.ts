@@ -1,5 +1,10 @@
 import { time } from '../../lib/utils';
 
+const mongoConf = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+};
+
 interface Find {
     _id: string;
     to: string;
@@ -8,32 +13,32 @@ interface Find {
     given_at: Date;
 }
 
-
 interface Sum {
     _id?: string; // Username
     score?: number;
 }
 
-
-export default class MongoDBDriver {
+class MongoDBDriver {
     constructor(
         public MongoClient: any,
-        public config: any = {},
+        public conf: any = {},
         public client = null,
         public db = null,
     ) { }
 
-    connect() {
-        if (this.client && typeof this.client.isConnected === 'function' && this.client.isConnected()) {
-            return Promise.resolve(this.client);
+    async connect() {
+        if (this.client && this.client.isConnected()) {
+            return this.client;
         }
-        return this.MongoClient.connect(`${this.config.url}/${this.config.database}`, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        }).then((client: any) => {
+
+        try {
+            const client = await this.MongoClient.connect(`${this.conf.db_uri}`, mongoConf);
             this.client = client;
-            this.db = client.db(this.config.database);
-        });
+            this.db = client.db(this.conf.db_database);
+            return true;
+        } catch (e) {
+            throw new Error('Could not connect to Mongodb server');
+        }
     }
 
     async store(collection: string, data: Object) {
@@ -42,6 +47,24 @@ export default class MongoDBDriver {
             return this.db.collection(collection).insertMany(data);
         }
         return this.db.collection(collection).insertOne(data);
+    }
+
+    give(to: string, from: string) {
+        return this.store('burritos', {
+            to,
+            from,
+            value: 1,
+            given_at: new Date(),
+        });
+    }
+
+    takeAway(to: string, from: string) {
+        return this.store('burritos', {
+            to,
+            from,
+            value: -1,
+            given_at: new Date(),
+        });
     }
 
     /**
@@ -55,19 +78,18 @@ export default class MongoDBDriver {
     }
 
     /**
-     * @param { string } collection - burrito / rottenburrito
-     * @param { string } key - defaults to value
+     * @param { string } collection - burrito
      * @param { string | null } match - matchObject to search for
-     * @param { string } groupby - defaults to 'to'
+     * @param { string } listType - defaults to 'to'
      * @return { Object } sum[] - data
      */
-    async sum(collection: string, key: string = 'value', match: Object = null, groupBy: string = 'to'): Promise<Sum[]> {
+    async sum(collection: string, match: Object = null, listType: string): Promise<Sum[]> {
         await this.connect();
         const aggregations: Array<Object> = [{ $match: { to: { $exists: true } } }];
         if (match) {
             aggregations.push({ $match: match });
         }
-        aggregations.push({ $group: { _id: `$${groupBy}`, score: { $sum: `$${key}` } } });
+        aggregations.push({ $group: { _id: listType, score: { $sum: '$value' } } });
         aggregations.push({ $sort: { score: -1 } });
         return this.db.collection(collection).aggregate(aggregations).toArray();
     }
@@ -94,9 +116,14 @@ export default class MongoDBDriver {
      * @param {string} listType - to / from
      * @return {Object} sum[]
      */
-    getScore(user: string, listType: string): Promise<Sum[]> {
-        const match = (user) ? { [listType]: user } : null;
-        return this.sum('burritos', 'value', match, listType);
+    async getScore(user: string, listType: string, num = false) {
+        const match = { [listType]: user };
+
+        if (num) {
+            const data = await this.sum('burritos', match, listType);
+            return data.length ? data[0].score : 0;
+        }
+        return this.find('burritos', match);
     }
 
     /**
@@ -104,32 +131,17 @@ export default class MongoDBDriver {
      * Should be able to return burrito List ( scoreType inc ) and
      * listtype ( dec ) AKA rottenburritoList
      */
-    async getScoreBoard({ user, listType, today }): Promise<Sum[]> {
+    async getScoreBoard({ user, listType, today }) {
         let match: any = {};
+
         if (user) {
             match = (listType === 'from') ? { to: user } : { from: user };
         }
         if (today) {
             match.given_at = { $gte: time().start, $lt: time().end };
         }
-        return this.sum('burritos', 'value', match, listType);
-    }
-
-    give(to: string, from: string) {
-        return this.store('burritos', {
-            to,
-            from,
-            value: 1,
-            given_at: new Date(),
-        });
-    }
-
-    takeAway(to: string, from: string) {
-        return this.store('burritos', {
-            to,
-            from,
-            value: -1,
-            given_at: new Date(),
-        });
+        return this.find('burritos', match);
     }
 }
+
+export default MongoDBDriver;
