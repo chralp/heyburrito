@@ -21,9 +21,9 @@ const getScoreBoard = async (scoreType: string, listType: string) => {
 const getUserStats = async (user: string) => {
     const [
         userStats,
-        givedList,
+        givenList,
         receivedList,
-        givedListToday,
+        givenListToday,
         receivedListToday,
     ] = await Promise.all([
         BurritoStore.getUserStats(user),
@@ -35,9 +35,9 @@ const getUserStats = async (user: string) => {
 
     return {
         user: mapper([userStats])[0],
-        gived: sort(mapper(givedList)),
+        given: sort(mapper(givenList)),
         received: sort(mapper(receivedList)),
-        givedToday: sort(mapper(givedListToday)),
+        givenToday: sort(mapper(givenListToday)),
         receivedToday: sort(mapper(receivedListToday)),
     };
 };
@@ -47,7 +47,7 @@ const getUserStats = async (user: string) => {
  */
 const givenBurritosToday = async (user: string) => {
     const [
-        givedToday,
+        givenToday,
         receivedToday,
     ] = await Promise.all([
         BurritoStore.givenBurritosToday(user, 'to'),
@@ -55,7 +55,7 @@ const givenBurritosToday = async (user: string) => {
     ]);
 
     return {
-        givedToday,
+        givenToday,
         receivedToday,
     };
 };
