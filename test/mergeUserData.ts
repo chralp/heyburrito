@@ -1,6 +1,6 @@
 import { stub } from 'sinon';
 import { expect } from 'chai';
-import slackUsers from './data/slackUsers';
+import { wbcList } from './data/slackUsers';
 import mergeUserData from '../src/lib/mergeUserData';
 import LocalStore from '../src/store/LocalStore';
 let storedUsers, param2, mapped, wbc;
@@ -37,8 +37,8 @@ before(() => {
         avatar: 'https://link.to.avatar.48.burrito'
     }]
 
-    wbc = stub().returns(Promise.resolve(slackUsers))
-    LocalStore.start(wbc)
+    wbc = stub().returns(Promise.resolve(wbcList))
+    //LocalStore.start(wbc)
 
 
 })
