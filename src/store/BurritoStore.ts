@@ -17,9 +17,9 @@ interface Sum {
 interface GetUserStats {
     _id: string;
     received: number;
-    gived: number;
+    given: number;
     receivedToday: number;
-    givedToday: number;
+    givenToday: number;
 }
 
 interface GetScoreBoard {
@@ -35,31 +35,31 @@ class BurritoStore extends EventEmitter {
     database: any = null;
 
     // Set and Store database object
-    setDatabase(database: any): void {
+    setDatabase(database: any) {
         this.database = database;
     }
 
-    async giveBurrito(to: string, from: string) {
+    async giveBurrito(to: string, from: string): Promise<string> {
         log.info(`Burrito given to ${to} from ${from}`);
         await this.database.give(to, from);
-        return this.emit('GIVE', to);
+        this.emit('GIVE', to);
+        return to;
     }
 
-    async takeAwayBurrito(to: string, from: string) {
+    async takeAwayBurrito(to: string, from: string): Promise<string | []> {
         log.info(`Burrito taken away from ${to} by ${from}`);
-        const data: Sum[] = await this.database.getScore(to, 'to');
-        const score: number | undefined = data.map((x: Sum) => x.score)[0];
+        const score: number = await this.database.getScore(to, 'to', true);
         if (!score) return [];
         await this.database.takeAway(to, from);
-        return this.emit('TAKE_AWAY', to);
+        return to;
     }
 
     async getUserStats(user: string): Promise<GetUserStats> {
         const [
             received,
-            gived,
+            given,
             receivedToday,
-            givedToday,
+            givenToday,
         ]: [Sum[], Sum[], number, number] = await Promise.all([
             this.database.getScore(user, 'to'),
             this.database.getScore(user, 'from'),
@@ -68,15 +68,39 @@ class BurritoStore extends EventEmitter {
         ]);
         return {
             receivedToday,
-            givedToday,
+            givenToday,
             _id: user,
             received: received.length,
-            gived: gived.length,
+            given: given.length,
         };
     }
 
-    async getScoreBoard(args: GetScoreBoard): Promise<Sum[]> {
-        return this.database.getScoreBoard(args);
+    async getScoreBoard({ ...args }: GetScoreBoard) {
+        const { user, listType, scoreType } = args;
+        const data = await this.database.getScoreBoard({ ...args });
+        const score = [];
+        const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
+        uniqueUsername.forEach((u) => {
+            if (user) {
+                const dataByUser = data.filter((e: any) => e[listType] === u);
+                const scoreinc = dataByUser.filter((x: any) => x.value === 1);
+                const scoredec = dataByUser.filter((x: any) => x.value === -1);
+                score.push({
+                    _id: u,
+                    scoreinc: scoreinc.length,
+                    scoredec: scoredec.length,
+                });
+            } else {
+                const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
+                const dataByUser = data.filter((e: any) => (e[listType] === u && e.value === scoreTypeFilter));
+                const red = dataByUser.reduce((a: number, item) => {
+                    const value = (item.value === -1) ? 1 : 1;
+                    return a + value;
+                }, 0);
+                score.push({ _id: u, score: red });
+            }
+        });
+        return score;
     }
 
     /**
