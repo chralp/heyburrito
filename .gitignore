@@ -10,7 +10,6 @@ lib-cov
 pids
 logs
 results
-
 node_modules/
 npm-debug.log
 public
@@ -22,10 +21,7 @@ doc
 
 tmp
 data/*
-conf-prod.json
-conf-staging.json
-conf-localhost.json
 
-.filedb
+database.burrito
 .env
 .tern*

@@ -16,3 +16,4 @@ declare module 'chai';
 declare module 'sinon';
 declare module 'fs';
 declare module 'proxyquire';
+declare module 'mongodb-memory-server';

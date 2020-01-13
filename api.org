@@ -15,7 +15,7 @@
 Append to or from for different scoreboard
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/scoreboard/to
+GET http://heyburrito:3333/api/scoreboard/from/dec
 #+END_SRC
 
 #+RESULTS:
@@ -26,16 +26,28 @@ GET http://heyburrito:3333/api/scoreboard/to
   "message": "ok",
   "data": [
     {
-      "username": "UEHUXHG0G",
-      "name": "Stefan",
-      "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png",
-      "score": 4
+      "username": "USER4",
+      "name": "User4",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 2027
     },
     {
-      "username": "UEKN9GNAJ",
-      "name": "chralp",
-      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png",
-      "score": -1
+      "username": "USER2",
+      "name": "User2",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 2019
+    },
+    {
+      "username": "USER3",
+      "name": "User3",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 1997
+    },
+    {
+      "username": "USER1",
+      "name": "User1",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 1958
     }
   ]
 }
@@ -46,7 +58,7 @@ GET http://heyburrito:3333/api/scoreboard/to
 Append username of the user you want to get more stats from
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
+GET http://heyburrito:3333/api/userstats/USER2
 #+END_SRC
 
 #+RESULTS:
@@ -57,34 +69,106 @@ GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
   "message": "ok",
   "data": {
     "user": {
-      "username": "UEKN9GNAJ",
-      "name": "chralp",
-      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0006-48.png",
-      "receivedToday": 0,
-      "givedToday": 0,
-      "received": 3,
-      "gived": 4
+      "username": "USER2",
+      "name": "User2",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "receivedToday": 3840,
+      "givenToday": 3712,
+      "received": 3840,
+      "given": 3712
     },
-    "gived": [
+    "given": [
       {
-        "username": "UEHUXHG0G",
-        "name": "Stefan",
-        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png",
-        "scoreinc": 4,
-        "scoredec": 0
+        "username": "USER1",
+        "name": "User1",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 626,
+        "scoredec": 627
+      },
+      {
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 593,
+        "scoredec": 639
+      },
+      {
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 608,
+        "scoredec": 619
       }
     ],
     "received": [
       {
-        "username": "UEHUXHG0G",
-        "name": "Stefan",
-        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0016-48.png",
-        "scoreinc": 1,
-        "scoredec": 2
+        "username": "USER1",
+        "name": "User1",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 653,
+        "scoredec": 595
+      },
+      {
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 661,
+        "scoredec": 638
+      },
+      {
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 625,
+        "scoredec": 668
       }
     ],
-    "givedToday": [],
-    "receivedToday": []
+    "givenToday": [
+      {
+        "username": "USER1",
+        "name": "User1",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 626,
+        "scoredec": 627
+      },
+      {
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 593,
+        "scoredec": 639
+      },
+      {
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 608,
+        "scoredec": 619
+      }
+    ],
+    "receivedToday": [
+      {
+        "username": "USER1",
+        "name": "User1",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 653,
+        "scoredec": 595
+      },
+      {
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 661,
+        "scoredec": 638
+      },
+      {
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 625,
+        "scoredec": 668
+      }
+    ]
   }
 }
 #+end_example
@@ -101,7 +185,7 @@ GET http://heyburrito:3333/api/userstats/today/UEKN9GNAJ
 :   "code": 200,
 :   "message": "ok",
 :   "data": {
-:     "givedToday": 0,
+:     "givenToday": 0,
 :     "receivedToday": 0
 :   }
 : }
