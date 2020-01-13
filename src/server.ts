@@ -12,8 +12,10 @@ import slack from './slack';
 import APIHandler from './api';
 import WEBHandler from './web';
 import WSSHandler from './wss';
+import boot from './lib/boot';
 
-log.level(config.misc.log_level);
+boot();
+
 log.info('Staring heyburrito');
 
 // Configure BurritoStore
