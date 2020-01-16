@@ -6,7 +6,7 @@
     "start": "ts-node ./src/server.ts",
     "dev": "nodemon --watch '*.ts' --exec 'ts-node' ./src/server.ts",
     "mockDB": "ts-node ./test/lib/mockDatabase.ts",
-    "test": "NODE_ENV=testing mocha -r ts-node/register test/*-test.ts || exit 0",
+    "test": "NODE_ENV=testing mocha -r ts-node/register test/*-test.ts --exit",
     "lint": "eslint --ext .ts ./src/ || exit 0",
     "docker-build": "docker build -t chralp/heyburrito . && docker tag chralp/heyburrito chralp/heyburrito",
     "docker-push": "docker push chralp/heyburrito"
