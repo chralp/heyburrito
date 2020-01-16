@@ -1,6 +1,6 @@
 import { sort } from './lib/utils';
-import BurritoStore from './store/BurritoStore';
 import mapper from './lib/mapper';
+import BurritoStore from './store/BurritoStore';
 
 /**
  * Middleware for API and Websocket
@@ -47,8 +47,8 @@ const getUserStats = async (user: string) => {
  */
 const givenBurritosToday = async (user: string) => {
     const [
-        givenToday,
         receivedToday,
+        givenToday,
     ] = await Promise.all([
         BurritoStore.givenBurritosToday(user, 'to'),
         BurritoStore.givenBurritosToday(user, 'from'),
