@@ -39,18 +39,19 @@ class BurritoStore extends EventEmitter {
         this.database = database;
     }
 
-    async giveBurrito(to: string, from: string): Promise<string> {
+    async giveBurrito(to: string, from: string, date = new Date()): Promise<string> {
         log.info(`Burrito given to ${to} from ${from}`);
-        await this.database.give(to, from);
-        this.emit('GIVE', to);
+        await this.database.give(to, from, date);
+        this.emit('GIVE', to, from);
         return to;
     }
 
-    async takeAwayBurrito(to: string, from: string): Promise<string | []> {
+    async takeAwayBurrito(to: string, from: string, date = new Date()): Promise<string | []> {
         log.info(`Burrito taken away from ${to} by ${from}`);
         const score: number = await this.database.getScore(to, 'to', true);
         if (!score) return [];
-        await this.database.takeAway(to, from);
+        await this.database.takeAway(to, from, date);
+        this.emit('TAKE_AWAY', to, from);
         return to;
     }
 
@@ -78,6 +79,7 @@ class BurritoStore extends EventEmitter {
     async getScoreBoard({ ...args }: GetScoreBoard) {
         const { user, listType, scoreType } = args;
         const data = await this.database.getScoreBoard({ ...args });
+
         const score = [];
         const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
         uniqueUsername.forEach((u) => {
@@ -97,6 +99,7 @@ class BurritoStore extends EventEmitter {
                     const value = (item.value === -1) ? 1 : 1;
                     return a + value;
                 }, 0);
+
                 score.push({ _id: u, score: red });
             }
         });
@@ -107,7 +110,7 @@ class BurritoStore extends EventEmitter {
      * @param {string} user - userId
      * @param {string} listType - to / from defaults from
      */
-    async givenBurritosToday(user: string, listType: string = 'from'): Promise<number> {
+    async givenBurritosToday(user: string, listType: string): Promise<number> {
         const givenToday: Find[] = await this.database.findFromToday(user, listType);
         return givenToday.length;
     }
