@@ -48,7 +48,7 @@ export default () => {
     const handleBurritos = async (giver: string, updates) => {
 
         // Get given burritos today
-        const burritos = await BurritoStore.givenBurritosToday(giver);
+        const burritos = await BurritoStore.givenBurritosToday(giver, 'from');
         log.info(`${giver} has given ${burritos} burritos today`);
 
         const diff = dailyCap - burritos
