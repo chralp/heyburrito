@@ -17,7 +17,6 @@ interface Find {
     given_at: Date;
 }
 
-
 interface Sum {
     _id?: string; // Username
     score?: number;
@@ -28,25 +27,25 @@ class GenericDriver extends Store implements Driver {
         super(driver);
     }
 
-    async give(to: string, from: string): Promise<boolean> {
+    async give(to: string, from: string, date: any): Promise<boolean> {
         const score: Score = {
             _id: id(),
             to,
             from,
             value: 1,
-            given_at: new Date(),
+            given_at: date,
         };
         this.storeData(score);
         return true;
     }
 
-    async takeAway(to: string, from: string): Promise<boolean> {
+    async takeAway(to: string, from: string, date: any): Promise<boolean> {
         const score: Score = {
             _id: id(),
             to,
             from,
             value: -1,
-            given_at: new Date(),
+            given_at: date,
         };
         this.storeData(score);
         return true;
@@ -88,7 +87,6 @@ class GenericDriver extends Store implements Driver {
         } else {
             listTypeSwitch = listType;
         }
-
         const selected = data.filter((item: any) => {
             if (today) {
                 if (item.given_at.getTime() < time().end.getTime()

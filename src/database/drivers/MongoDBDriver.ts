@@ -43,27 +43,24 @@ class MongoDBDriver {
 
     async store(collection: string, data: Object) {
         await this.connect();
-        if (Array.isArray(data)) {
-            return this.db.collection(collection).insertMany(data);
-        }
         return this.db.collection(collection).insertOne(data);
     }
 
-    give(to: string, from: string) {
+    give(to: string, from: string, date: any) {
         return this.store('burritos', {
             to,
             from,
             value: 1,
-            given_at: new Date(),
+            given_at: date,
         });
     }
 
-    takeAway(to: string, from: string) {
+    takeAway(to: string, from: string, date: any) {
         return this.store('burritos', {
             to,
             from,
             value: -1,
-            given_at: new Date(),
+            given_at: date,
         });
     }
 

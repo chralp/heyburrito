@@ -13,7 +13,7 @@ export default class Store {
 
     constructor(public driver: string) {
         this.connected = false;
-        this.dbPath = path.resolve(`${config.db.db_path}burrito.database`);
+        this.dbPath = path.resolve(`${config.db.db_path}${config.db.db_fileName}`);
         this.dataSynced = false;
         this.data = [];
     }

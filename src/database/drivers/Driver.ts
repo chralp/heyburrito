@@ -16,9 +16,9 @@ interface Sum {
 
 export default abstract class Driver {
 
-    abstract async give(to: string, from: string): Promise<boolean>;
+    abstract async give(to: string, from: string, date): Promise<boolean>;
 
-    abstract async takeAway(to: string, from: string): Promise<boolean>;
+    abstract async takeAway(to: string, from: string, date): Promise<boolean>;
 
     abstract async getScore(user: string, listType: string): Promise<number | Find[]>;
 
