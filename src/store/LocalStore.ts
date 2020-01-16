@@ -12,22 +12,24 @@ class LocalStore {
     botName: string = config.slack.bot_name;
 
     async start() {
-        this.fetch();
+        await this.fetch();
+        // Run update of localstore every hour
+        setTimeout(() => this.start(), 60 * 60 * 1000);
+
     }
 
     async fetch() {
         log.info('Fetching slackUsers');
         const { users, bots } = await WBCHandler.fetchSlackUsers();
-
         this.storedUsers = [];
         this.storedBots = [];
         this.storedUsers = users;
         this.storedBots = bots;
 
         this.getBotUsername();
+        return true;
 
-        // Run update of localstore every hour
-        setTimeout(() => this.fetch(), 60 * 60 * 1000);
+
     }
 
     getSlackUsers() {
