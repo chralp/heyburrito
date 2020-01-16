@@ -9,6 +9,8 @@ import database from './database';
 import config from './config';
 import bot from './bot';
 import slack from './slack';
+import RTMHandler from './slack/Rtm';
+import WBCHandler from './slack/Wbc';
 import APIHandler from './api';
 import WEBHandler from './web';
 import WSSHandler from './wss';
@@ -22,7 +24,11 @@ log.info('Staring heyburrito');
 BurritoStore.setDatabase(database);
 
 // Set and start slack services
-slack();
+const { rtm, wbc } = slack;
+
+rtm.start();
+RTMHandler.register(rtm);
+WBCHandler.register(wbc);
 
 // Start bot instance
 bot();
