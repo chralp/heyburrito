@@ -15,7 +15,7 @@
 Append to or from for different scoreboard
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/scoreboard/from/dec
+GET http://heyburrito:3333/api/scoreboard/from/inc
 #+END_SRC
 
 #+RESULTS:
@@ -26,28 +26,28 @@ GET http://heyburrito:3333/api/scoreboard/from/dec
   "message": "ok",
   "data": [
     {
-      "username": "USER4",
-      "name": "User4",
+      "username": "USER1",
+      "name": "User1",
       "avatar": "https://link.to.avatar.48.burrito",
-      "score": 2027
-    },
-    {
-      "username": "USER2",
-      "name": "User2",
-      "avatar": "https://link.to.avatar.48.burrito",
-      "score": 2019
+      "score": 17
     },
     {
       "username": "USER3",
       "name": "User3",
       "avatar": "https://link.to.avatar.48.burrito",
-      "score": 1997
+      "score": 15
     },
     {
-      "username": "USER1",
-      "name": "User1",
+      "username": "USER4",
+      "name": "User4",
       "avatar": "https://link.to.avatar.48.burrito",
-      "score": 1958
+      "score": 14
+    },
+    {
+      "username": "USER2",
+      "name": "User2",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 9
     }
   ]
 }
