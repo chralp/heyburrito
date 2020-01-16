@@ -161,7 +161,7 @@ describe('middleware-test', async () => {
             describe('getUserStats', async () => {
 
                 it('Should return getUserStats for USER1', async () => {
-                    const res = await getUserStats('USER1', test.driver);
+                    const res = await getUserStats('USER1');
                     expect(res).to.deep.equal({
                         user: {
                             username: 'USER1',

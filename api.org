@@ -32,22 +32,22 @@ GET http://heyburrito:3333/api/scoreboard/from/inc
       "score": 17
     },
     {
-      "username": "USER3",
-      "name": "User3",
-      "avatar": "https://link.to.avatar.48.burrito",
-      "score": 15
-    },
-    {
       "username": "USER4",
       "name": "User4",
       "avatar": "https://link.to.avatar.48.burrito",
-      "score": 14
+      "score": 17
     },
     {
       "username": "USER2",
       "name": "User2",
       "avatar": "https://link.to.avatar.48.burrito",
-      "score": 9
+      "score": 16
+    },
+    {
+      "username": "USER3",
+      "name": "User3",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 14
     }
   ]
 }
@@ -72,32 +72,32 @@ GET http://heyburrito:3333/api/userstats/USER2
       "username": "USER2",
       "name": "User2",
       "avatar": "https://link.to.avatar.48.burrito",
-      "receivedToday": 3840,
-      "givenToday": 3712,
-      "received": 3840,
-      "given": 3712
+      "receivedToday": 2,
+      "givenToday": 3,
+      "received": 30,
+      "given": 25
     },
     "given": [
       {
         "username": "USER1",
         "name": "User1",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 626,
-        "scoredec": 627
+        "scoreinc": 5,
+        "scoredec": 3
       },
       {
         "username": "USER3",
         "name": "User3",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 593,
-        "scoredec": 639
+        "scoreinc": 6,
+        "scoredec": 4
       },
       {
         "username": "USER4",
         "name": "User4",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 608,
-        "scoredec": 619
+        "scoreinc": 5,
+        "scoredec": 2
       }
     ],
     "received": [
@@ -105,22 +105,22 @@ GET http://heyburrito:3333/api/userstats/USER2
         "username": "USER1",
         "name": "User1",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 653,
-        "scoredec": 595
+        "scoreinc": 6,
+        "scoredec": 4
       },
       {
         "username": "USER3",
         "name": "User3",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 661,
-        "scoredec": 638
+        "scoreinc": 3,
+        "scoredec": 5
       },
       {
         "username": "USER4",
         "name": "User4",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 625,
-        "scoredec": 668
+        "scoreinc": 7,
+        "scoredec": 5
       }
     ],
     "givenToday": [
@@ -128,22 +128,15 @@ GET http://heyburrito:3333/api/userstats/USER2
         "username": "USER1",
         "name": "User1",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 626,
-        "scoredec": 627
-      },
-      {
-        "username": "USER3",
-        "name": "User3",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 593,
-        "scoredec": 639
+        "scoreinc": 2,
+        "scoredec": 0
       },
       {
         "username": "USER4",
         "name": "User4",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 608,
-        "scoredec": 619
+        "scoreinc": 1,
+        "scoredec": 0
       }
     ],
     "receivedToday": [
@@ -151,22 +144,15 @@ GET http://heyburrito:3333/api/userstats/USER2
         "username": "USER1",
         "name": "User1",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 653,
-        "scoredec": 595
-      },
-      {
-        "username": "USER3",
-        "name": "User3",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 661,
-        "scoredec": 638
+        "scoreinc": 0,
+        "scoredec": 1
       },
       {
         "username": "USER4",
         "name": "User4",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 625,
-        "scoredec": 668
+        "scoreinc": 1,
+        "scoredec": 0
       }
     ]
   }
