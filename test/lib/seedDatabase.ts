@@ -14,7 +14,7 @@ import BurritoStore from '../../src/store/BurritoStore';
 import Localstore from '../../src/store/LocalStore';
 import WBCHandler from '../../src/slack/Wbc';
 import slack from '../../src/slack';
-
+import '../../src/lib/boot';
 const mockData = require('../data/mockData');
 
 const TYPES = ['give', 'takeaway'];
