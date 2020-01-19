@@ -13,9 +13,9 @@ class LocalStore {
 
     async start() {
         await this.fetch();
+
         // Run update of localstore every hour
         setTimeout(() => this.start(), 60 * 60 * 1000);
-
     }
 
     async fetch() {
@@ -28,8 +28,6 @@ class LocalStore {
 
         this.getBotUsername();
         return true;
-
-
     }
 
     getSlackUsers() {
