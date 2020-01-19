@@ -1,8 +1,16 @@
 import { wbcList } from '../data/slackUsers'
-class RTMMock {
+import { EventEmitter } from 'events';
 
-    start() { }
-    on() { }
+class RTMMock extends EventEmitter {
+
+    start() {
+        return Promise.resolve(true);
+    }
+
+    // Function to test emits
+    async publish(message: any) {
+        this.emit('message', message);
+    }
 }
 
 class WebMock {

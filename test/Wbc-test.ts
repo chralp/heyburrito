@@ -1,9 +1,9 @@
-import { WebMock } from './lib/slackMock'
-import { stub } from 'sinon';
 import { expect } from 'chai';
+import { WebMock } from './lib/slackMock'
 import WBCHandler from '../src/slack/Wbc';
 import { wbcListParsed } from './data/slackUsers';
-let wbc
+let wbc: any
+
 beforeEach(() => {
     wbc = new WebMock();
     WBCHandler.register(wbc);

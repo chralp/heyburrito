@@ -1,22 +1,15 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { stub } from 'sinon';
-import { expect } from 'chai';
-import { wbcListParsed } from './data/slackUsers';
 import log from 'bog';
-const proxyquire = require('proxyquire').noCallThru();
-
+import { expect } from 'chai';
+import { init } from './lib/seedDatabase';
+import { wbcListParsed } from './data/slackUsers';
+import mapper from '../src/lib/mapper';
 log.level("0")
-let LocalStore, mapper
-beforeEach(() => {
-    LocalStore = {
-        getSlackUsers: () => {
-            return wbcListParsed.users;
-        }
-    }
-    mapper = proxyquire('../src/lib/mapper', { '../store/LocalStore': LocalStore });
-    mapper = mapper.default;
-})
+
+before(async () => {
+    const dbinit: any = await init({ random: false, seedDB: false });
+});
 
 describe('mapper-test', async () => {
     it('Should map USER2 with data from LocalStore', async () => {
