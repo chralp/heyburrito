@@ -1,6 +1,5 @@
 import path from 'path';
 import * as log from 'bog';
-
 import { env, fixPath, mustHave } from '../lib/utils';
 
 const root: string = path.normalize(`${__dirname}/../../`);
