@@ -7,7 +7,7 @@ import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
 import database from './database';
 import config from './config';
-import bot from './bot';
+import { start } from './bot';
 import slack from './slack';
 import RTMHandler from './slack/Rtm';
 import WBCHandler from './slack/Wbc';
@@ -31,7 +31,7 @@ RTMHandler.register(rtm);
 WBCHandler.register(wbc);
 
 // Start bot instance
-bot();
+start();
 
 // Start localstore instance
 LocalStore.start();
