@@ -27,22 +27,6 @@ function sentToBot(message: any, allBots: any) {
 }
 
 function burritoToBot(message: any, emojis: any) {
-    /*
-        for (const x of bots) {
-            // Message is sent from bot
-            if (message.user.match(`${x.id}`)) return false;
-
-            // Message contains bot and emoji
-            if (message.text.match(`${x.id}`)) {
-                for (const e of emojis) {
-                    if (message.text.match(`${e.emoji}`)) {
-                        return false;
-                    }
-                }
-            }
-        }
-    */
-
     const burritoSentToBot = emojis.filter((x: any) => message.text.match(`${x.id}`));
     return !!burritoSentToBot.length;
 }
