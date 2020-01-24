@@ -35,6 +35,7 @@ start();
 
 // Start localstore instance
 LocalStore.start();
+
 /**
  * Httpserver request handler
  */
@@ -60,6 +61,7 @@ const requestHandler = (request: http.IncomingMessage, response: http.ServerResp
  * Start HTTP / WSS server
  */
 const httpserver = http.createServer(requestHandler);
+
 httpserver.listen(config.http.http_port, (err) => {
     if (err) throw new Error(`Could not start HTTP server, error => ${err}`);
     // Start WSS instance
