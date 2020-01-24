@@ -51,10 +51,7 @@ const handleBurritos = async (giver: string, updates: any) => {
             handleBurritos(giver, updates);
         }
     } else if (a.type === 'dec') {
-        if (config.slack.enable_decrement) {
-            await BurritoStore.takeAwayBurrito(a.username, giver);
-        }
-
+        await BurritoStore.takeAwayBurrito(a.username, giver);
         if (updates.length) {
             handleBurritos(giver, updates);
         }
