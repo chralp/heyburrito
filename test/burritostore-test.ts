@@ -39,7 +39,6 @@ describe('Burritostore-test', async () => {
                 }
             }
 
-
             before(async () => {
                 await connectDB()
 
@@ -62,6 +61,7 @@ describe('Burritostore-test', async () => {
                     expect(res4).to.equal('USER2');
                 });
             });
+
             describe('takeAwayBurrito', () => {
 
                 it('Should not takeaway burrito, lowset score is 0', async () => {
@@ -140,26 +140,26 @@ describe('Burritostore-test', async () => {
 
 
                     it('Should return scoreboard, user:USER1, listType: to', async () => {
-                        const res = await BurritoStore.getScoreBoard({ user: 'USER1', listType: 'to' });
+                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER1', listType: 'to' });
                         expect(res).to.deep.equal([
                             { _id: 'USER2', scoreinc: 2, scoredec: 2 },
                         ]);
                     });
 
                     it('Should return scoreboard, user:USER1, listType: from', async () => {
-                        const res = await BurritoStore.getScoreBoard({ user: 'USER1', listType: 'from' });
+                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER1', listType: 'from' });
                         expect(res).to.deep.equal([{ _id: 'USER2', scoreinc: 2, scoredec: 2 }]);
                     });
 
                     it('Should return scoreboard, user:USER2, listType: to', async () => {
-                        const res = await BurritoStore.getScoreBoard({ user: 'USER2', listType: 'to' });
+                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER2', listType: 'to' });
                         expect(res).to.deep.equal([
                             { _id: 'USER1', scoreinc: 2, scoredec: 2 },
                         ]);
                     });
 
                     it('Should return scoreboard, user:USER2, listType: from', async () => {
-                        const res = await BurritoStore.getScoreBoard({ user: 'USER2', listType: 'from' });
+                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER2', listType: 'from' });
                         expect(res).to.deep.equal([{ _id: 'USER1', scoreinc: 2, scoredec: 2 }]);
                     });
                 });
