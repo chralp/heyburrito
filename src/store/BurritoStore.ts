@@ -1,5 +1,6 @@
 import * as log from 'bog';
 import { EventEmitter } from 'events';
+import config from '../config';
 
 interface Find {
     _id: string;
@@ -77,34 +78,48 @@ class BurritoStore extends EventEmitter {
     }
 
     async getScoreBoard({ ...args }: GetScoreBoard) {
-        const { user, listType, scoreType } = args;
+        const { listType, scoreType } = args;
         const data = await this.database.getScoreBoard({ ...args });
-
         const score = [];
         const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
         uniqueUsername.forEach((u) => {
-            if (user) {
-                const dataByUser = data.filter((e: any) => e[listType] === u);
-                const scoreinc = dataByUser.filter((x: any) => x.value === 1);
-                const scoredec = dataByUser.filter((x: any) => x.value === -1);
-                score.push({
-                    _id: u,
-                    scoreinc: scoreinc.length,
-                    scoredec: scoredec.length,
-                });
-            } else {
-                const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
-                const dataByUser = data.filter((e: any) => (e[listType] === u && e.value === scoreTypeFilter));
-                const red = dataByUser.reduce((a: number, item) => {
-                    const value = (item.value === -1) ? 1 : 1;
-                    return a + value;
-                }, 0);
+            const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
+            const dataByUser = data.filter((e: any) => (e[listType] === u && e.value === scoreTypeFilter));
+            const red = dataByUser.reduce((a: number, item) => {
+                const value = (item.value === -1) ? 1 : 1;
+                return a + value;
+            }, 0);
+            score.push({ _id: u, score: red });
+        });
+        const gg = score.map(x => {
+            if (x.score != 0) return x
+            return undefined
+        }).filter(y => y)
+        return gg;
+    }
 
-                score.push({ _id: u, score: red });
-            }
+
+
+
+    async getUserScoreBoard({ ...args }: GetScoreBoard) {
+        const { listType } = args;
+        const data = await this.database.getScoreBoard({ ...args });
+        const score = [];
+        const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
+        uniqueUsername.forEach((u) => {
+            const dataByUser = data.filter((e: any) => e[listType] === u);
+            const scoreinc = dataByUser.filter((x: any) => x.value === 1);
+            const scoredec = dataByUser.filter((x: any) => x.value === -1);
+            score.push({
+                _id: u,
+                scoreinc: scoreinc.length,
+                scoredec: scoredec.length,
+            });
+
         });
         return score;
     }
+
 
     /**
      * @param {string} user - userId
