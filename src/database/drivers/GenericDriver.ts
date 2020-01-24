@@ -77,7 +77,7 @@ class GenericDriver extends Store implements Driver {
         return filteredData;
     }
 
-    async getScoreBoard({ user, listType, today }): Promise<Sum[]> {
+    async getScoreBoard({ user, listType, scoreType, today }): Promise<Sum[]> {
         this.syncData();
         const data: any = await this.getData();
 
