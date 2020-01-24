@@ -1,136 +1,180 @@
-* Heyburrito API
 
-* Endpoints
-** Scoreboard given
+* API endpoints
+** Return object
+#+BEGIN_SRC code
+{
+  "error": true || false,
+  "code": HTTP codes as number,
+  "message": String or null,
+  "data": Object or array
+}
+#+END_SRC
 
-Get scoreboard given
+** /api/scoreboard/
+
+Append to or from for different scoreboard
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/scoreboard/to
+GET http://heyburrito:3333/api/scoreboard/to/inc
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{
+  "error": false,
+  "code": 200,
+  "message": "ok",
+  "data": [
+    {
+      "username": "USER4",
+      "name": "User4",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 16
+    },
+    {
+      "username": "USER3",
+      "name": "User3",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 13
+    },
+    {
+      "username": "USER1",
+      "name": "User1",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 12
+    },
+    {
+      "username": "USER2",
+      "name": "User2",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "score": 12
+    }
+  ]
+}
+#+end_example
+
+** /api/userstats/
+
+Append username of the user you want to get more stats from
+
+#+BEGIN_SRC http :pretty
+GET http://heyburrito:3333/api/userstats/USER1
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{
+  "error": false,
+  "code": 200,
+  "message": "ok",
+  "data": {
+    "user": {
+      "username": "USER1",
+      "name": "User1",
+      "avatar": "https://link.to.avatar.48.burrito",
+      "receivedToday": 0,
+      "givenToday": 2,
+      "received": 22,
+      "given": 23
+    },
+    "given": [
+      {
+        "username": "USER2",
+        "name": "User2",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 3,
+        "scoredec": 4
+      },
+      {
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 2,
+        "scoredec": 2
+      },
+      {
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 5,
+        "scoredec": 7
+      }
+    ],
+    "received": [
+      {
+        "username": "USER2",
+        "name": "User2",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 4,
+        "scoredec": 3
+      },
+      {
+        "username": "USER3",
+        "name": "User3",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 3,
+        "scoredec": 4
+      },
+      {
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 5,
+        "scoredec": 3
+      }
+    ],
+    "givenToday": [
+      {
+        "username": "USER2",
+        "name": "User2",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 0,
+        "scoredec": 1
+      },
+      {
+        "username": "USER4",
+        "name": "User4",
+        "avatar": "https://link.to.avatar.48.burrito",
+        "scoreinc": 1,
+        "scoredec": 0
+      }
+    ],
+    "receivedToday": []
+  }
+}
+#+end_example
+** /api/userstats/today/
+Append username of the user you want to get more stats from
+
+#+BEGIN_SRC http :pretty
+GET http://heyburrito:3333/api/userstats/today/USER1
+#+END_SRC
+
+#+RESULTS:
+
+** /api/histogram/ PRE-ALPHA
+
+Be able to search with filters
+
+Should be able to take folling params
+| params                 | type   | required |
+|------------------------+--------+----------|
+| username               | string | no       |
+| startDate              | string | no       |
+| endDate                | string | no       |
+| type ( given / gived ) | string | no       |
+
+#+BEGIN_SRC http :pretty
+POST http://heyburrito:3333/api/histogram
+Content-Type: application/json
+
+
 #+END_SRC
 
 #+RESULTS:
 : {
 :   "error": false,
 :   "code": 200,
-:   "message": "ok",
-:   "data": []
-: }
-
-** Scoreboard givers
-
-Get scoreboard givers
-
-#+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/scoreboard/givers
-#+END_SRC
-
-#+RESULTS:
-#+begin_example
-{
-  "error": false,
-  "code": 200,
-  "message": null,
-  "data": [
-    {
-      "username": "UEKN9GNAJ",
-      "name": "chralp",
-      "score": 6,
-      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
-    }
-  ]
-}
-#+end_example
-
-** Get userstats
-
-Get userstats, append slackUserID
-
-#+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/userstats/UEKN9GNAJ
-#+END_SRC
-
-#+RESULTS:
-#+begin_example
-{
-  "error": false,
-  "code": 200,
-  "message": null,
-  "data": {
-    "user": {
-      "username": "UEKN9GNAJ",
-      "name": "chralp",
-      "score": 3,
-      "given": 6,
-      "today": 1,
-      "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
-    },
-    "gived": [
-      {
-        "username": "UEHUXHG0G",
-        "name": "Stefan",
-        "score": 3,
-        "avatar": "https://secure.gravatar.com/avatar/1d9ae0f0ee4c6e66ec367005b82b459b.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0016-48.png"
-      },
-      {
-        "username": "UEKN9GNAJ",
-        "name": "chralp",
-        "score": 3,
-        "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
-      }
-    ],
-    "givers": [
-      {
-        "username": "UEKN9GNAJ",
-        "name": "chralp",
-        "score": 3,
-        "avatar": "https://secure.gravatar.com/avatar/c8facda114a361db902d0cbf6481e819.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0006-48.png"
-      }
-    ]
-  }
-}
-#+end_example
-
-** Histogram
-
-Search in history
-
-*keys*
-
-userId: <slackuserid>, string
-
-startDate: <date>, string
-
-endDate: <date>, string
-
-list: given | givers
-
-none of the keys are requierd.
-
-
-Example:
-#+BEGIN_SRC json
-
-    {
-      "userId": "slackUserId",
-      "startDate":"2019-01-01",
-      "endDate": "2019-02-01",
-      "list": "given"
-    }
-
-
-#+END_SRC
-
-#+BEGIN_SRC http :pretty
-  POST http://heyburrito:3333/api/histogram
-  Content-Type: application/json
-
-  {
-          "userId": "test"
-  }
-#+END_SRC
-
-#+RESULTS:
-: {
-:   "error": true
+:   "message": null,
+:   "data": null
 : }

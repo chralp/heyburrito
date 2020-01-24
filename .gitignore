@@ -22,6 +22,5 @@ doc
 tmp
 data/*
 
-database.burrito
 .env
 .tern*

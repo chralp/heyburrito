@@ -10,7 +10,7 @@ export default () => {
 
     wss.broadcast = (data: any) => {
         wss.clients.forEach((client: any) => {
-            if (client.readyState === WebSocket.OPEN) {
+            if (client.readyState === ws.OPEN) {
                 client.send(data);
             }
         });
@@ -18,6 +18,7 @@ export default () => {
 
     BurritoStore.on('GIVE', async (user: string) => {
         const result = await getUserStats(user);
+        console.log(result)
         if (result) {
             wss.broadcast(JSON.stringify({ event: 'GIVE', data: result[0] }));
         }
