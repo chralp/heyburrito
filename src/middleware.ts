@@ -27,10 +27,10 @@ const getUserStats = async (user: string) => {
         receivedListToday,
     ] = await Promise.all([
         BurritoStore.getUserStats(user),
-        BurritoStore.getScoreBoard({ user, listType: 'to' }),
-        BurritoStore.getScoreBoard({ user, listType: 'from' }),
-        BurritoStore.getScoreBoard({ user, listType: 'to', today: true }),
-        BurritoStore.getScoreBoard({ user, listType: 'from', today: true }),
+        BurritoStore.getUserScoreBoard({ user, listType: 'to' }),
+        BurritoStore.getUserScoreBoard({ user, listType: 'from' }),
+        BurritoStore.getUserScoreBoard({ user, listType: 'to', today: true }),
+        BurritoStore.getUserScoreBoard({ user, listType: 'from', today: true }),
     ]);
 
     return {
