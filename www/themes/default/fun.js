@@ -236,7 +236,7 @@ function addStats(data) {
 
 function createElement(data, display) {
     const element = document.createElement('article');
-
+    console.log("data",data)
     element.className = 'scoreboard__user';
     element.id = `user:${data.username}`;
 
@@ -249,11 +249,12 @@ function createElement(data, display) {
 
     element.innerHTML = `
  <div class="scoreboard__user__row scoreboard__user__summary">
+<div><span data-element="score" class="score position mini">${data.position}.</span></div>
 
   <div>
     <img class="avatar" width="48" height="48" src="${data.avatar}" alt="">
   </div>
-  <div>${data.name}</div>
+  <div class="displayname">${data.name}</div>
   <div><span data-element="score" class="score">${data.score}</span></div>
 </div>
 

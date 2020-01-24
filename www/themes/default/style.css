@@ -21,6 +21,7 @@ time, mark, audio, video {
 
 html {
     box-sizing: border-box;
+
 }
 
 *, *:before, *:after {
@@ -34,9 +35,10 @@ body {
     font-family: Roboto, sans-serif;
 }
 
+
 #header {
     height: 60px;
-    background-color:  rgba(17, 17, 17  , 0.85);
+    background-color:  rgba(16, 16, 16  , 0.85);
 
     position: relative;
     display: flex;
@@ -44,11 +46,65 @@ body {
     justify-content: center;
 
 }
+
 #logo {
     position: absolute;
     top: 50%;
     left: 16px;
     transform: translateY(-50%);
+}
+#filter p{
+    display:inline;
+}
+
+#filter {
+        width: 400px;
+        float:right;
+}
+@media (max-width: 720px){
+    #header {
+        height: 130px;
+    }
+    #logo {
+        top:30%;
+        left:auto;
+    }
+    #filter p{
+        display:inline;
+    }
+    #filter {
+        width: 100%;
+        margin-top: 80px;
+        padding: 10px;;
+        float:right;
+        border-top:1px solid rgba(16, 16, 16  , 0.4);
+        background-color: rgba(16, 16, 16  , 0.4);
+    }
+}
+
+
+@media (min-width: 720px){
+    .scoreboard {
+        max-width: 720px;
+        margin: auto;
+        padding-top: 10px;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 1420px){
+    .scoreboard {
+        max-width: 1420px;
+        max-height: 95vh;
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        padding-bottom: 10px;
+        overflow: hidden;
+
+    }
 }
 
 .c-switch {
@@ -151,20 +207,12 @@ h1 {
     display: block;
 }
 
-.scoreboard {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: wrap;
 
-    width:100%;
-    heigh:100%;
-
-}
 
 .scoreboard__user {
     max-width: 700px;
-    margin-left: 10px;
+
+    margin:auto;
     background: white;
     border-radius: 5px;
     box-shadow: 0 7px 14px 0 rgba(50,50,93,.1), 0 3px 6px 0 rgba(0,0,0,.07);
@@ -194,6 +242,7 @@ h1 {
     padding: 16px 0;
 }
 
+
 .scoreboard__user__row div {
     padding: 0 24px;
     flex: 1;
@@ -203,6 +252,13 @@ h1 {
     padding-right: 0;
     flex-grow: 0;
 }
+
+.scoreboard__user__row div:nth-child(2) {
+    padding-right: 0;
+    flex-grow: 0;
+
+}
+
 
 .scoreboard__user__row div:last-child {
     flex-grow: 0;
@@ -285,4 +341,8 @@ h1 {
 
 .score.bad {
     color: #E08DAC;
+}
+
+.position {
+    color:#DEAE7E;
 }
