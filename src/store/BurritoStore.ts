@@ -82,24 +82,33 @@ class BurritoStore extends EventEmitter {
         const data = await this.database.getScoreBoard({ ...args });
         const score = [];
         const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
+        const ed = config.slack.enable_decrement;
+        const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
+
         uniqueUsername.forEach((u) => {
-            const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
-            const dataByUser = data.filter((e: any) => (e[listType] === u && e.value === scoreTypeFilter));
-            const red = dataByUser.reduce((a: number, item) => {
-                const value = (item.value === -1) ? 1 : 1;
-                return a + value;
+            const dataByUser = data.filter((e: any) => (e[listType] === u));
+            let filteredData: any;
+            let countSwitch: any;
+
+            if (listType === 'to' && ed && (scoreType === 'inc')) {
+                filteredData = dataByUser
+
+            } else {
+                filteredData = dataByUser.filter((e: any) => (e.value === scoreTypeFilter));
+                countSwitch = 1
+            }
+            const red = filteredData.reduce((a: number, item) => {
+                return a + (countSwitch || item.value);
             }, 0);
             score.push({ _id: u, score: red });
         });
-        const gg = score.map(x => {
+
+        const scoreList = score.map(x => {
             if (x.score != 0) return x
             return undefined
         }).filter(y => y)
-        return gg;
+        return scoreList;
     }
-
-
-
 
     async getUserScoreBoard({ ...args }: GetScoreBoard) {
         const { listType } = args;

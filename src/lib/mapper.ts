@@ -14,6 +14,7 @@ export default (data: User[]): User[] => {
                 username: _id,
                 name: x.name,
                 avatar: x.avatar,
+                memberType: x.memberType,
                 ...meta,
             };
         }

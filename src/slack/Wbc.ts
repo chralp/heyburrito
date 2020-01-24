@@ -5,6 +5,7 @@ interface WbcParsed {
     id: string;
     name: string;
     avatar: string;
+    memberType: string;
 }
 
 class Wbc {
@@ -20,13 +21,13 @@ class Wbc {
 
         log.info('Fetching slack users via wbc');
         const result = await this.wbc.users.list();
-
         result.members.forEach((x: any) => {
             // reassign correct array to arr
             const arr = x.is_bot ? bots : users;
             arr.push({
                 id: x.id,
                 name: x.real_name,
+                memberType: x.is_restricted ? 'guest' : 'member',
                 avatar: x.profile.image_48,
             });
         });

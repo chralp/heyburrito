@@ -3,8 +3,25 @@ const filter = document.getElementById('filter');
 
 let store = [];
 
-let listType = 'to';
-let scoreType = 'inc';
+const setLocalStorage = (key, value) => {
+    return localStorage.setItem(key, value);
+};
+
+const getLocalStorage = (key) => {
+    return localStorage.getItem(key);
+};
+
+let listType = getLocalStorage('listType') || 'to';
+let scoreType = getLocalStorage('scoreType') || 'inc';
+let userType = getLocalStorage('userType') || 'member';
+
+const filteraSwitch = document.getElementById('switchToFromInput');
+const filterbSwitch = document.getElementById('switchTypeInput');
+const filtercSwitch = document.getElementById('switchUserTypesInput');
+
+filteraSwitch.checked = (listType === 'to' ) ? true : false;;
+filterbSwitch.checked = (scoreType === 'inc' ) ? true : false;
+filtercSwitch.checked = (userType === 'member' ) ? true : false;
 
 async function fetcher (type, {username,listType, scoreType}) {
     switch (type) {
@@ -20,7 +37,6 @@ async function fetcher (type, {username,listType, scoreType}) {
         return json1.data;
         break;
     }
-
 };
 
 const getScoreBoard = async() => {
@@ -32,21 +48,30 @@ const getScoreBoard = async() => {
 getScoreBoard();
 
 
-const filterA = document.getElementById('switchToFrom');
-const filterb = document.getElementById('switchType');
 
-filterA.querySelector('.c-switch__input').addEventListener('click', async (ev) => {
+filteraSwitch.addEventListener('click', async (ev) => {
     const list = (listType === 'to') ? 'from' : 'to';
     listType = list;
+    setLocalStorage('listType',list);
+
     store = await fetcher('scoreboard',{listType, scoreType});
     sortUsers();
     render();
 });
 
-filterb.querySelector('.c-switch__input').addEventListener('click', async (ev) => {
-
+filterbSwitch.addEventListener('click', async (ev) => {
     const score = (scoreType === 'inc') ? 'dec' : 'inc';
     scoreType = score;
+    setLocalStorage('scoreType',score);
+    store = await fetcher('scoreboard',{listType, scoreType});
+    sortUsers();
+    render();
+});
+
+filtercSwitch.addEventListener('click', async (ev) => {
+    const memberType = (userType === 'member') ? 'all' : 'member';
+    userType = memberType;
+    setLocalStorage('userType',memberType);
     store = await fetcher('scoreboard',{listType, scoreType});
     sortUsers();
     render();
@@ -55,19 +80,25 @@ filterb.querySelector('.c-switch__input').addEventListener('click', async (ev) =
 
 
 function sortUsers() {
-    store.sort((a, b) => Math.sign(b.score - a.score));
-    console.log(store)
 
-    store = store.map((item, i) => {
-        const mappedItem = Object.assign({}, item);
-        const position = i + 1;
+    let data;
 
-        mappedItem.last_position = ('position' in mappedItem) ? mappedItem.position : 0;
-        mappedItem.position = position;
+    if(userType === 'member'){
+        data = store.filter(item => item.memberType === userType);
+    }else{
+        data = store;
+    }
 
-        return mappedItem;
-    });
-    console.log(store)
+    store = data.map((item, i) => {
+            const mappedItem = Object.assign({}, item);
+            const position = i + 1;
+
+            mappedItem.last_position = ('position' in mappedItem) ? mappedItem.position : 0;
+            mappedItem.position = position;
+
+            return mappedItem;
+    })
+    console.log("HEJ", store);
 }
 
 function displayItem(element, wait, rerender) {
@@ -218,6 +249,7 @@ function createElement(data, display) {
 
     element.innerHTML = `
  <div class="scoreboard__user__row scoreboard__user__summary">
+
   <div>
     <img class="avatar" width="48" height="48" src="${data.avatar}" alt="">
   </div>
@@ -234,15 +266,15 @@ function createElement(data, display) {
 
 
   <div class="scoreboard__user__stats__today">
+
     <div class="scoreboard__user__stats__column">
-      <strong class="scoreboard__user__stats__title">From</strong>
+      <strong class="scoreboard__user__stats__title">From ( Today )</strong>
       <ol class="scoreboard__user__stats__list" data-today-from>
       </ol>
     </div>
 
     <div class="scoreboard__user__stats__column">
-      <strong class="scoreboard__user__stats__title">To</strong>
-
+      <strong class="scoreboard__user__stats__title">To ( Today )</strong>
       <ol class="scoreboard__user__stats__list" data-today-to>
       </ol>
     </div>
@@ -266,7 +298,6 @@ function createElement(data, display) {
     `;
 
     element.querySelector('.scoreboard__user__summary').addEventListener('click', () => displayStats(data, element), false);
-
     return element;
 }
 
@@ -312,7 +343,7 @@ function appendUser(data) {
 }
 
 function updateUser(data, direction, item) {
-    const score = data.score;
+    const score = data.received;
     const scoreEl = item.querySelector('[data-element="score"]');
     const className = (direction === 'up') ? ' tada animated good' : ' shake animated bad';
 
@@ -324,9 +355,8 @@ function updateUser(data, direction, item) {
         const uppdatedUser = Object.assign({}, user);
 
         if (user.username === data.username) {
-            uppdatedUser.score = data.score;
+            uppdatedUser.score = data.received;
         }
-
         return uppdatedUser;
     });
 

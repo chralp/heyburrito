@@ -18,9 +18,8 @@ export default () => {
 
     BurritoStore.on('GIVE', async (user: string) => {
         const result = await getUserStats(user);
-        console.log(result)
         if (result) {
-            wss.broadcast(JSON.stringify({ event: 'GIVE', data: result[0] }));
+            wss.broadcast(JSON.stringify({ event: 'GIVE', data: result.user }));
         }
     });
 

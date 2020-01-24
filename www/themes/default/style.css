@@ -2,7 +2,7 @@ html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
+small, strike, sub, sup, tt, var,
 b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
@@ -44,7 +44,6 @@ body {
     justify-content: center;
 
 }
-
 #logo {
     position: absolute;
     top: 50%;
@@ -53,12 +52,12 @@ body {
 }
 
 .c-switch {
-  --switch-height: 50px;
+  --switch-height: 35px;
   --switch-handle-size: calc(var(--switch-height) - 6px);
 
   display: inline-block;
   position: relative;
-  min-width: 100px;
+  min-width: 50px;
   height: var(--switch-height);
   border: 1px solid #131314;
   background: #17191c;
@@ -137,9 +136,7 @@ body {
 
 
 .app {
-    max-width: 800px;
-    padding: 10px;
-    margin: 0 auto;
+
 }
 
 h1 {
@@ -155,11 +152,19 @@ h1 {
 }
 
 .scoreboard {
-    perspective: 800px;
-    margin-top: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    width:100%;
+    heigh:100%;
+
 }
 
 .scoreboard__user {
+    max-width: 700px;
+    margin-left: 10px;
     background: white;
     border-radius: 5px;
     box-shadow: 0 7px 14px 0 rgba(50,50,93,.1), 0 3px 6px 0 rgba(0,0,0,.07);
@@ -182,6 +187,7 @@ h1 {
 }
 
 .scoreboard__user__row {
+    max-width: 700px;
     display: flex;
     align-items: center;
     height: 55px;
@@ -217,13 +223,13 @@ h1 {
     border-top: 1px dashed #e6ebf1;
 }
 .scoreboard__user__stats__info {
-    width: 800px;
+    width: 700px;
     display: flex;
     border-bottom: 1px dashed #e6ebf1;
 }
 
 .scoreboard__user__stats__today {
-    width: 800px;
+    width: 700px;
     display: flex;
     border-bottom: 1px dashed #e6ebf1;
 }
