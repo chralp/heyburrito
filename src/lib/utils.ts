@@ -1,5 +1,6 @@
 import * as log from 'bog';
 import fs from 'fs';
+import path from 'path';
 
 import UserInterface from '../types/User.interface';
 
@@ -58,6 +59,23 @@ const mustHave = (key: string) => {
     return process.env[key];
 };
 
+
+const root: string = path.normalize(`${__dirname}/../../`);
+const themeRootPath: string = `${root}www/themes/`;
+const defaultTheme: string = 'https://github.com/chralp/heyburrito-theme'
+
+const getThemePath = () => {
+    if (process.env.THEME_PATH) {
+        const path = process.env.THEME_PATH;
+        if (path.endsWith('/')) return path
+        return `${path}/`
+    };
+
+    const theme = process.env.THEME_URL || defaultTheme;
+    const [themeName] = theme.split('/').slice(-1);
+    return `${themeRootPath}${themeName}/`
+}
+
 export {
     time,
     sort,
@@ -66,4 +84,8 @@ export {
     env,
     pathExists,
     createPath,
+    themeRootPath,
+    defaultTheme,
+    root,
+    getThemePath,
 };
