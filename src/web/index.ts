@@ -6,7 +6,7 @@ import config from '../config';
 
 // Defaults
 const defaultUrlPath: string = config.http.web_path;
-const publicPath: string = config.misc.theme;
+const publicPath: string = config.theme.themePath;
 const libPath: string = path.normalize('./www/lib/');
 
 export default (request: http.IncomingMessage, response: http.ServerResponse) => {
