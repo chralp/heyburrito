@@ -235,21 +235,25 @@ const wbcListParsed = {
     users: [
         {
             id: 'USER1',
+            memberType: 'member',
             name: 'User1',
             avatar: 'https://link.to.avatar.48.burrito'
         },
         {
             id: 'USER2',
+            memberType: 'member',
             name: 'User2',
             avatar: 'https://link.to.avatar.48.burrito'
         },
         {
             id: 'USER3',
+            memberType: 'member',
             name: 'User3',
             avatar: 'https://link.to.avatar.48.burrito'
         },
         {
             id: 'USER4',
+            memberType: 'member',
             name: 'User4',
             avatar: 'https://link.to.avatar.48.burrito'
         }
@@ -257,6 +261,7 @@ const wbcListParsed = {
     bots: [
         {
             id: 'BURRITOBOT',
+            memberType: 'member',
             name: 'heyburrito',
             avatar: 'https://link.to.avatar.48.burrito'
         }
