@@ -1,9 +1,13 @@
-import path from 'path';
 import * as log from 'bog';
-import { env, fixPath, mustHave } from '../lib/utils';
-
-const root: string = path.normalize(`${__dirname}/../../`);
-const themePath: string = `${root}www/themes/`;
+import {
+    env,
+    fixPath,
+    mustHave,
+    themeRootPath,
+    defaultTheme,
+    root,
+    getThemePath
+} from '../lib/utils';
 
 const config = {
     production: {
@@ -30,9 +34,8 @@ const config = {
             api_path: process.env.API_PATH ? fixPath(process.env.API_PATH) : '/api/',
         },
         misc: {
-            slackMock: false,
-            log_level: log.level(process.env.LOG_LEVEL || 'info'),
-            theme: process.env.THEME ? fixPath(process.env.THEME) : `${themePath}default/`,
+            slackMock: true,
+            log_level: log.level(process.env.LOG_LEVEL || 'info')
         },
     },
     development: {
@@ -49,8 +52,9 @@ const config = {
             api_token: process.env.SLACK_API_TOKEN || 'asdasd',
             emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
             emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
-            enable_decrement: !!process.env.ENABLE_DECREMENT || true,
-            daily_cap: process.env.SLACK_DAILY_CAP || 5,
+            daily_inc_cap: process.env.SLACK_DAILY_INC_CAP || 5,
+            daily_dec_cap: process.env.SLACK_DAILY_DEC_CAP || 5,
+            enable_decrement: !!process.env.ENABLE_DECREMENT || false,
         },
         http: {
             http_port: process.env.HTTP_PORT || 3333,
@@ -58,10 +62,17 @@ const config = {
             web_path: process.env.WEB_PATH ? fixPath(process.env.WEB_PATH) : '/heyburrito/',
             api_path: process.env.API_PATH ? fixPath(process.env.API_PATH) : '/api/',
         },
+        theme: {
+            root: themeRootPath,
+            defaultTheme,
+            url: process.env.THEME_URL,
+            path: process.env.THEME_PATH,
+            latest: process.env.THEME_LATEST || false,
+            themePath: getThemePath(),
+        },
         misc: {
             slackMock: true,
-            log_level: log.level(process.env.LOG_LEVEL || 'debug'),
-            theme: process.env.THEME ? fixPath(process.env.THEME) : `${themePath}default/`,
+            log_level: log.level('debug')
         },
     },
     testing: {
@@ -77,7 +88,7 @@ const config = {
             api_token: process.env.SLACK_API_TOKEN || 'asdasd',
             emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
             emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
-            enable_decrement: !!process.env.ENABLE_DECREMENT || true,
+            enable_decrement: !!process.env.ENABLE_DECREMENT || false,
             daily_cap: process.env.SLACK_DAILY_CAP || 5,
         },
         http: {
@@ -88,8 +99,7 @@ const config = {
         },
         misc: {
             slackMock: true,
-            log_level: log.level(process.env.LOG_LEVEL || 'debug'),
-            theme: process.env.THEME ? fixPath(process.env.THEME) : `${themePath}default/`,
+            log_level: log.level(process.env.LOG_LEVEL || 'debug')
         },
     },
 };
