@@ -1,7 +1,7 @@
 import * as log from 'bog';
 import ws from 'ws';
 import BurritoStore from '../store/BurritoStore';
-import { getUserStats } from '../middleware';
+import { getUserScore } from '../middleware';
 import config from '../config';
 
 export default () => {
@@ -16,17 +16,34 @@ export default () => {
         });
     };
 
-    BurritoStore.on('GIVE', async (user: string) => {
-        const result = await getUserStats(user);
-        if (result) {
-            wss.broadcast(JSON.stringify({ event: 'GIVE', data: result.user }));
-        }
+    BurritoStore.on('GIVE', async (to: string, from: string) => {
+        wss.broadcast(JSON.stringify({ event: 'GIVE', data: { to, from } }));
     });
 
-    BurritoStore.on('TAKE_AWAY', async (user) => {
-        const result = getUserStats(user);
-        if (user) {
-            wss.broadcast(JSON.stringify({ event: 'TAKE_AWAY', data: result[0] }));
+    BurritoStore.on('TAKE_AWAY', async (to: string, from: string) => {
+        wss.broadcast(JSON.stringify({ event: 'TAKE_AWAY', data: { to, from } }));
+    });
+
+    wss.on('connection', function connection(ws: any) {
+        ws.on('message', function incoming(message) {
+
+            message = JSON.parse(message);
+            if (message.event in messageHandlers) {
+                messageHandlers[message.event](message.data);
+            } else {
+                log.warn("Function", message.event, "not found")
+            }
+        });
+
+        const messageHandlers = {
+            async userScore(data) {
+                const { user, listType, scoreType } = data;
+                const result = await getUserScore(user, listType, scoreType);
+                ws.send(JSON.stringify({
+                    event: 'userScore',
+                    data: result,
+                }));
+            }
         }
     });
 };
