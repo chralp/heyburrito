@@ -10,6 +10,33 @@
 }
 #+END_SRC
 
+
+** /api/userscore/
+
+Append to or from for different scoreboard
+
+#+BEGIN_SRC http :pretty
+GET http://heyburrito:3333/api/userscore/USER4/to/inc
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+{
+  "error": false,
+  "code": 200,
+  "message": "ok",
+  "data": {
+    "username": "USER4",
+    "name": "User4",
+    "avatar": "https://link.to.avatar.48.burrito",
+    "memberType": "member",
+    "score": 2,
+    "scoreType": "inc"
+  }
+}
+#+end_example
+
+
 ** /api/scoreboard/
 
 Append to or from for different scoreboard
@@ -58,7 +85,7 @@ GET http://heyburrito:3333/api/scoreboard/to/inc
 Append username of the user you want to get more stats from
 
 #+BEGIN_SRC http :pretty
-GET http://heyburrito:3333/api/userstats/USER1
+GET http://heyburrito:3333/api/userstats/USER3
 #+END_SRC
 
 #+RESULTS:
@@ -69,72 +96,40 @@ GET http://heyburrito:3333/api/userstats/USER1
   "message": "ok",
   "data": {
     "user": {
-      "username": "USER1",
-      "name": "User1",
+      "username": "USER3",
+      "name": "User3",
       "avatar": "https://link.to.avatar.48.burrito",
+      "memberType": "member",
       "receivedToday": 0,
-      "givenToday": 2,
-      "received": 22,
-      "given": 23
+      "givenToday": 1,
+      "received": 0,
+      "given": 2
     },
     "given": [
       {
-        "username": "USER2",
-        "name": "User2",
+        "username": "USER25",
+        "name": "User1",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 3,
-        "scoredec": 4
+        "memberType": "member",
+        "scoreinc": 1,
+        "scoredec": 0
       },
       {
-        "username": "USER3",
-        "name": "User3",
+        "username": "USER45",
+        "name": "User1",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 2,
-        "scoredec": 2
-      },
-      {
-        "username": "USER4",
-        "name": "User4",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 5,
-        "scoredec": 7
+        "memberType": "member",
+        "scoreinc": 1,
+        "scoredec": 0
       }
     ],
-    "received": [
-      {
-        "username": "USER2",
-        "name": "User2",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 4,
-        "scoredec": 3
-      },
-      {
-        "username": "USER3",
-        "name": "User3",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 3,
-        "scoredec": 4
-      },
-      {
-        "username": "USER4",
-        "name": "User4",
-        "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 5,
-        "scoredec": 3
-      }
-    ],
+    "received": [],
     "givenToday": [
       {
-        "username": "USER2",
-        "name": "User2",
+        "username": "USER25",
+        "name": "User1",
         "avatar": "https://link.to.avatar.48.burrito",
-        "scoreinc": 0,
-        "scoredec": 1
-      },
-      {
-        "username": "USER4",
-        "name": "User4",
-        "avatar": "https://link.to.avatar.48.burrito",
+        "memberType": "member",
         "scoreinc": 1,
         "scoredec": 0
       }
@@ -151,6 +146,15 @@ GET http://heyburrito:3333/api/userstats/today/USER1
 #+END_SRC
 
 #+RESULTS:
+: {
+:   "error": false,
+:   "code": 200,
+:   "message": "ok",
+:   "data": {
+:     "givenToday": 1,
+:     "receivedToday": 0
+:   }
+: }
 
 ** /api/histogram/ PRE-ALPHA
 
