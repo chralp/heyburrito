@@ -82,7 +82,9 @@ class BurritoStore extends EventEmitter {
         const data = await this.database.getScoreBoard({ ...args });
         const score = [];
         const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
-        const ed = config.slack.enable_decrement;
+
+        const { enable_decrement } = config.slack
+
         const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
 
         uniqueUsername.forEach((u) => {
@@ -90,7 +92,7 @@ class BurritoStore extends EventEmitter {
             let filteredData: any;
             let countSwitch: any;
 
-            if (listType === 'to' && ed && (scoreType === 'inc')) {
+            if (listType === 'to' && enable_decrement && (scoreType === 'inc')) {
                 filteredData = dataByUser
 
             } else {
@@ -137,6 +139,13 @@ class BurritoStore extends EventEmitter {
     async givenBurritosToday(user: string, listType: string): Promise<number> {
         const givenToday: Find[] = await this.database.findFromToday(user, listType);
         return givenToday.length;
+    }
+
+    /**
+     * @param {string} user - userId
+     */
+    async getUserScore(user: string, listType: string, num): Promise<number> {
+        return this.database.getScore(user, listType, num);
     }
 }
 
