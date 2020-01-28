@@ -60,8 +60,24 @@ const givenBurritosToday = async (user: string) => {
     };
 };
 
+
+/**
+ * @param {string} user - Slack userId
+ */
+const getUserScore = async (user: string, listType: string, scoreType: string) => {
+    const scoreList = await BurritoStore.getScoreBoard({ listType, scoreType });
+    const userScore = scoreList.filter((x) => x._id === user);
+    console.log(user, listType, scoreType, scoreList, userScore)
+    const [res] = mapper(userScore);
+    return {
+        ...res,
+        scoreType
+    };
+};
+
 export {
     getScoreBoard,
     getUserStats,
     givenBurritosToday,
+    getUserScore,
 };
