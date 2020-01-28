@@ -44,24 +44,28 @@ describe('middleware-test', async () => {
                     expect(res).to.deep.equal([
                         {
                             username: 'USER2',
+                            memberType: "member",
                             name: 'User2',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 23
                         },
                         {
                             username: 'USER3',
+                            memberType: "member",
                             name: 'User3',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 21
                         },
                         {
                             username: 'USER1',
+                            memberType: "member",
                             name: 'User1',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 18
                         },
                         {
                             username: 'USER4',
+                            memberType: "member",
                             name: 'User4',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 16
@@ -74,24 +78,28 @@ describe('middleware-test', async () => {
                     expect(res).to.deep.equal([
                         {
                             username: 'USER1',
+                            memberType: "member",
                             name: 'User1',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 26
                         },
                         {
                             username: 'USER4',
+                            memberType: "member",
                             name: 'User4',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 19
                         },
                         {
                             username: 'USER3',
+                            memberType: "member",
                             name: 'User3',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 18
                         },
                         {
                             username: 'USER2',
+                            memberType: "member",
                             name: 'User2',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 15
@@ -103,24 +111,28 @@ describe('middleware-test', async () => {
                     expect(res).to.deep.equal([
                         {
                             username: 'USER3',
+                            memberType: "member",
                             name: 'User3',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 8
                         },
                         {
                             username: 'USER1',
+                            memberType: "member",
                             name: 'User1',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 6
                         },
                         {
                             username: 'USER4',
+                            memberType: "member",
                             name: 'User4',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 5
                         },
                         {
                             username: 'USER2',
+                            memberType: "member",
                             name: 'User2',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 3
@@ -133,24 +145,28 @@ describe('middleware-test', async () => {
                     expect(res).to.deep.equal([
                         {
                             username: 'USER1',
+                            memberType: "member",
                             name: 'User1',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 8
                         },
                         {
                             username: 'USER3',
+                            memberType: "member",
                             name: 'User3',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 6
                         },
                         {
                             username: 'USER2',
+                            memberType: "member",
                             name: 'User2',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 5
                         },
                         {
                             username: 'USER4',
+                            memberType: "member",
                             name: 'User4',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 3
@@ -168,6 +184,7 @@ describe('middleware-test', async () => {
                             username: 'USER1',
                             name: 'User1',
                             avatar: 'https://link.to.avatar.48.burrito',
+                            memberType: 'member',
                             receivedToday: 6,
                             givenToday: 9,
                             received: 24,
@@ -178,6 +195,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 8,
                                 scoredec: 2
                             },
@@ -185,6 +203,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 12,
                                 scoredec: 4
                             },
@@ -192,6 +211,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 6,
                                 scoredec: 2
                             }
@@ -201,6 +221,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 5,
                                 scoredec: 3
                             },
@@ -208,6 +229,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 5,
                                 scoredec: 2
                             },
@@ -215,6 +237,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 8,
                                 scoredec: 1
                             }
@@ -224,6 +247,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 0
                             },
@@ -231,6 +255,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 2,
                                 scoredec: 1
                             },
@@ -238,6 +263,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 2,
                                 scoredec: 0
                             }
@@ -247,6 +273,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 3,
                                 scoredec: 0
                             },
@@ -254,6 +281,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 3,
                                 scoredec: 0
                             }
@@ -267,6 +295,7 @@ describe('middleware-test', async () => {
                             username: 'USER2',
                             name: 'User2',
                             avatar: 'https://link.to.avatar.48.burrito',
+                            memberType: 'member',
                             receivedToday: 9,
                             givenToday: 8,
                             received: 26,
@@ -277,6 +306,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 5,
                                 scoredec: 3
                             },
@@ -284,6 +314,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 2
                             },
@@ -291,6 +322,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 6,
                                 scoredec: 0
                             }
@@ -300,6 +332,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 8,
                                 scoredec: 2
                             },
@@ -307,6 +340,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 9,
                                 scoredec: 1
                             },
@@ -314,6 +348,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 6,
                                 scoredec: 0
                             }
@@ -323,6 +358,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 3,
                                 scoredec: 0
                             },
@@ -330,6 +366,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 1,
                                 scoredec: 1
                             },
@@ -337,6 +374,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 3,
                                 scoredec: 0
                             }
@@ -346,6 +384,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 0
                             },
@@ -353,6 +392,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 0
                             },
@@ -360,6 +400,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 1,
                                 scoredec: 0
                             }
@@ -374,6 +415,7 @@ describe('middleware-test', async () => {
                             username: 'USER3',
                             name: 'User3',
                             avatar: 'https://link.to.avatar.48.burrito',
+                            memberType: 'member',
                             receivedToday: 6,
                             givenToday: 5,
                             received: 29,
@@ -384,6 +426,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 5,
                                 scoredec: 2
                             },
@@ -391,6 +434,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 9,
                                 scoredec: 1
                             },
@@ -398,6 +442,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 3
                             }
@@ -407,6 +452,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 12,
                                 scoredec: 4
                             },
@@ -414,6 +460,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 2
                             },
@@ -421,6 +468,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 5,
                                 scoredec: 2
                             }
@@ -430,6 +478,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 0
                             },
@@ -437,6 +486,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 0,
                                 scoredec: 1
                             }
@@ -446,6 +496,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 2,
                                 scoredec: 1
                             },
@@ -453,6 +504,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 1,
                                 scoredec: 1
                             },
@@ -460,6 +512,7 @@ describe('middleware-test', async () => {
                                 username: 'USER4',
                                 name: 'User4',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 0,
                                 scoredec: 1
                             }
@@ -475,6 +528,7 @@ describe('middleware-test', async () => {
                             username: 'USER4',
                             name: 'User4',
                             avatar: 'https://link.to.avatar.48.burrito',
+                            memberType: 'member',
                             receivedToday: 6,
                             givenToday: 5,
                             received: 21,
@@ -485,6 +539,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 8,
                                 scoredec: 1
                             },
@@ -492,6 +547,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 6,
                                 scoredec: 0
                             },
@@ -499,6 +555,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 5,
                                 scoredec: 2
                             }
@@ -508,6 +565,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 6,
                                 scoredec: 2
                             },
@@ -515,6 +573,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 6,
                                 scoredec: 0
                             },
@@ -522,6 +581,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 4,
                                 scoredec: 3
                             }
@@ -531,6 +591,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 3,
                                 scoredec: 0
                             },
@@ -538,6 +599,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 1,
                                 scoredec: 0
                             },
@@ -545,6 +607,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 0,
                                 scoredec: 1
                             }
@@ -554,6 +617,7 @@ describe('middleware-test', async () => {
                                 username: 'USER1',
                                 name: 'User1',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 2,
                                 scoredec: 0
                             },
@@ -561,6 +625,7 @@ describe('middleware-test', async () => {
                                 username: 'USER2',
                                 name: 'User2',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 3,
                                 scoredec: 0
                             },
@@ -568,6 +633,7 @@ describe('middleware-test', async () => {
                                 username: 'USER3',
                                 name: 'User3',
                                 avatar: 'https://link.to.avatar.48.burrito',
+                                memberType: 'member',
                                 scoreinc: 0,
                                 scoredec: 1
                             }

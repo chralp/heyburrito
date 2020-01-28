@@ -18,6 +18,7 @@ describe('mapper-test', async () => {
             {
                 username: 'USER2',
                 name: 'User2',
+                memberType: 'member',
                 avatar: 'https://link.to.avatar.48.burrito',
                 score: 10
             }
@@ -31,11 +32,13 @@ describe('mapper-test', async () => {
                 username: 'USER1',
                 name: 'User1',
                 avatar: 'https://link.to.avatar.48.burrito',
+                memberType: 'member',
                 score: 10
             },
             {
                 username: 'USER3',
                 name: 'User3',
+                memberType: 'member',
                 avatar: 'https://link.to.avatar.48.burrito',
                 score: 12
             }
@@ -43,7 +46,7 @@ describe('mapper-test', async () => {
     });
 
     it('Should return empty array, due to no user found in LocalStore', async () => {
-        const result = mapper([{ _id: 'USER10', score: 10 }, { _id: 'USER11', score: 12 }])
+        const result = mapper([{ _id: 'USER1111', score: 10 }, { _id: 'USER111111', score: 12 }])
         expect(result).to.deep.equal([]);
     });
 });
