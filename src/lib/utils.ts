@@ -2,6 +2,10 @@ import * as log from 'bog';
 import fs from 'fs';
 import path from 'path';
 
+const root: string = path.normalize(`${__dirname}/../../`);
+const themeRootPath: string = `${root}www/themes/`;
+const defaultTheme: string = 'https://github.com/chralp/heyburrito-theme'
+
 import UserInterface from '../types/User.interface';
 
 const time = () => {
@@ -60,21 +64,28 @@ const mustHave = (key: string) => {
 };
 
 
-const root: string = path.normalize(`${__dirname}/../../`);
-const themeRootPath: string = `${root}www/themes/`;
-const defaultTheme: string = 'https://github.com/chralp/heyburrito-theme'
+const getThemeName = () => {
+    if (process.env.THEME_PATH) {
+        const path = process.env.THEME_PATH;
+        const [themeName] = path.split('/').slice(-1);
+        return themeName;
+    };
+    const theme = process.env.THEME_URL || defaultTheme;
+    const [themeName] = theme.split('/').slice(-1);
+    return themeName;
+};
 
 const getThemePath = () => {
     if (process.env.THEME_PATH) {
+        console.log("HEJSAN")
         const path = process.env.THEME_PATH;
         if (path.endsWith('/')) return path
         return `${path}/`
     };
 
-    const theme = process.env.THEME_URL || defaultTheme;
-    const [themeName] = theme.split('/').slice(-1);
+    const themeName = getThemeName();
     return `${themeRootPath}${themeName}/`
-}
+};
 
 export {
     time,
@@ -88,4 +99,5 @@ export {
     defaultTheme,
     root,
     getThemePath,
+    getThemeName,
 };

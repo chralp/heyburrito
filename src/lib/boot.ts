@@ -5,13 +5,18 @@ import themeHandler from './themeHandler';
 
 export default async () => {
 
-
     log.debug('Loaded ENVs for boot:');
     log.debug('=====================');
     log.debug('db_driver:', config.db.db_driver);
-    log.debug('theme:', config.theme.themePath);
-    log.debug('=====================');
+    log.debug('themeName', config.theme.themeName)
 
+    if (config.theme.path) {
+        log.debug('themePath:', config.theme.themePath);
+    } else {
+        log.debug('themeUrl:', config.theme.url);
+    }
+    log.debug('=====================');
+    await themeHandler();
     // check if database is file
     if (config.db.db_driver === 'file') {
         log.info('Database driver is file');
@@ -31,6 +36,6 @@ export default async () => {
     }
 
 
-    await themeHandler();
+
     return true;
 };

@@ -60,7 +60,7 @@ export default async () => {
 
     checkThemePath()
 
-    const theme = config.theme.url || config.theme.defaultTheme;
+    const theme = config.theme.url;
     const [themeName] = theme.split('/').slice(-1);
     const [themeExists] = THEMES_AVAILABLE.filter((x) => x.name === themeName);
 
