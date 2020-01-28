@@ -1,12 +1,20 @@
 import * as log from 'bog';
 import config from '../config';
 import { pathExists, createPath } from './utils';
+import themeHandler from './themeHandler';
+
+export default async () => {
 
 
-export default () => {
+    log.debug('Loaded ENVs for boot:');
+    log.debug('=====================');
+    log.debug('db_driver:', config.db.db_driver);
+    log.debug('theme:', config.theme.themePath);
+    log.debug('=====================');
+
     // check if database is file
     if (config.db.db_driver === 'file') {
-        log.debug('Database driver is file');
+        log.info('Database driver is file');
 
         // Check if path exists
         if (!pathExists(config.db.db_path)) {
@@ -21,4 +29,8 @@ export default () => {
             }
         }
     }
+
+
+    await themeHandler();
+    return true;
 };
