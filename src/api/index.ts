@@ -1,6 +1,6 @@
 import log from 'bog';
 import Route from './Route';
-import { getScoreBoard, getUserStats, givenBurritosToday } from '../middleware';
+import { getScoreBoard, getUserStats, givenBurritosToday, getUserScore } from '../middleware';
 import config from '../config';
 
 // Types
@@ -111,6 +111,61 @@ Route.add({
         }
     },
 });
+
+/**
+ * Add route for userScore
+ */
+Route.add({
+    method: 'GET',
+    path: `${apiPath}userscore/{user}/{listType}/{scoreType}`,
+    handler: async (request: any, res: any) => {
+        try {
+            const { user: userId, listType, scoreType } = request.params;
+
+            if (!userId) {
+                throw ({
+                    message: 'You must provide slack userid',
+                    code: 500,
+                });
+            }
+
+            if (!ALLOWED_LISTTYPES.includes(listType)) {
+                throw ({
+                    message: 'Allowed listType is to or from',
+                    code: 400,
+                });
+            }
+
+            if (!ALLOWED_SCORETYPES.includes(scoreType)) {
+                throw ({
+                    message: 'Allowed scoreType is inc or dec',
+                    code: 400,
+                });
+            }
+
+            const { ...result } = await getUserScore(userId, listType, scoreType);
+
+            const data = {
+                error: false,
+                code: 200,
+                message: 'ok',
+                data: {
+                    ...result,
+                },
+            };
+            return response(data, res);
+        } catch (err) {
+            log.warn(err);
+            return response({
+                error: true,
+                code: err.code || 500,
+                message: err.message,
+                data: null,
+            }, res, err.code || 500);
+        }
+    },
+});
+
 
 /**
  * Add route for userstats
