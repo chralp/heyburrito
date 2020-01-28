@@ -6,7 +6,8 @@ import {
     themeRootPath,
     defaultTheme,
     root,
-    getThemePath
+    getThemePath,
+    getThemeName
 } from '../lib/utils';
 
 const config = {
@@ -33,8 +34,16 @@ const config = {
             web_path: process.env.WEB_PATH ? fixPath(process.env.WEB_PATH) : '/heyburrito/',
             api_path: process.env.API_PATH ? fixPath(process.env.API_PATH) : '/api/',
         },
+        theme: {
+            root: themeRootPath,
+            url: process.env.THEME_URL || defaultTheme,
+            path: process.env.THEME_PATH,
+            latest: process.env.THEME_LATEST || false,
+            themeName: getThemeName(),
+            themePath: getThemePath(),
+        },
         misc: {
-            slackMock: true,
+            slackMock: false,
             log_level: log.level(process.env.LOG_LEVEL || 'info')
         },
     },
@@ -49,7 +58,7 @@ const config = {
         },
         slack: {
             bot_name: process.env.BOT_NAME || 'heyburrito',
-            api_token: process.env.SLACK_API_TOKEN || 'asdasd',
+            api_token: process.env.SLACK_API_TOKEN || '',
             emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
             emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
             daily_inc_cap: process.env.SLACK_DAILY_INC_CAP || 5,
@@ -64,10 +73,10 @@ const config = {
         },
         theme: {
             root: themeRootPath,
-            defaultTheme,
-            url: process.env.THEME_URL,
+            url: process.env.THEME_URL || defaultTheme,
             path: process.env.THEME_PATH,
             latest: process.env.THEME_LATEST || false,
+            themeName: getThemeName(),
             themePath: getThemePath(),
         },
         misc: {
@@ -85,7 +94,7 @@ const config = {
         },
         slack: {
             bot_name: process.env.BOT_NAME || 'heyburrito',
-            api_token: process.env.SLACK_API_TOKEN || 'asdasd',
+            api_token: process.env.SLACK_API_TOKEN || '',
             emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
             emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
             enable_decrement: !!process.env.ENABLE_DECREMENT || false,
@@ -97,9 +106,16 @@ const config = {
             web_path: process.env.WEB_PATH ? fixPath(process.env.WEB_PATH) : '/heyburrito/',
             api_path: process.env.API_PATH ? fixPath(process.env.API_PATH) : '/api/',
         },
+        theme: {
+            root: themeRootPath,
+            url: process.env.THEME_URL || defaultTheme,
+            path: process.env.THEME_PATH,
+            latest: process.env.THEME_LATEST || false,
+            themeName: getThemeName(),
+            themePath: getThemePath(),
+        },
         misc: {
             slackMock: true,
-            log_level: log.level(process.env.LOG_LEVEL || 'debug')
         },
     },
 };
