@@ -1,6 +1,5 @@
 import * as log from 'bog';
 import { EventEmitter } from 'events';
-import config from '../config';
 
 interface Find {
     _id: string;
@@ -23,13 +22,12 @@ interface GetUserStats {
     givenToday: number;
 }
 
-interface GetScoreBoard {
-    listType: string;
-    scoreType?: string;
-    user?: string;
-    fromDate?: string;
-    toDate?: string;
-    today?: boolean;
+interface DatabasePost {
+    _id: string,
+    to: string,
+    from: string,
+    value: number,
+    given_at: Date
 }
 
 class BurritoStore extends EventEmitter {
@@ -77,60 +75,9 @@ class BurritoStore extends EventEmitter {
         };
     }
 
-    async getScoreBoard({ ...args }: GetScoreBoard) {
-        const { listType, scoreType } = args;
-        const data = await this.database.getScoreBoard({ ...args });
-        const score = [];
-        const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
-
-        const { enable_decrement } = config.slack
-
-        const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
-
-        uniqueUsername.forEach((u) => {
-            const dataByUser = data.filter((e: any) => (e[listType] === u));
-            let filteredData: any;
-            let countSwitch: any;
-
-            if (listType === 'to' && enable_decrement && (scoreType === 'inc')) {
-                filteredData = dataByUser
-
-            } else {
-                filteredData = dataByUser.filter((e: any) => (e.value === scoreTypeFilter));
-                countSwitch = 1
-            }
-            const red = filteredData.reduce((a: number, item) => {
-                return a + (countSwitch || item.value);
-            }, 0);
-            score.push({ _id: u, score: red });
-        });
-
-        const scoreList = score.map(x => {
-            if (x.score != 0) return x
-            return undefined
-        }).filter(y => y)
-        return scoreList;
+    async getScoreBoard({ ...args }): Promise<DatabasePost[]> {
+        return this.database.getScoreBoard({ ...args });
     }
-
-    async getUserScoreBoard({ ...args }: GetScoreBoard) {
-        const { listType } = args;
-        const data = await this.database.getScoreBoard({ ...args });
-        const score = [];
-        const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
-        uniqueUsername.forEach((u) => {
-            const dataByUser = data.filter((e: any) => e[listType] === u);
-            const scoreinc = dataByUser.filter((x: any) => x.value === 1);
-            const scoredec = dataByUser.filter((x: any) => x.value === -1);
-            score.push({
-                _id: u,
-                scoreinc: scoreinc.length,
-                scoredec: scoredec.length,
-            });
-
-        });
-        return score;
-    }
-
 
     /**
      * @param {string} user - userId
