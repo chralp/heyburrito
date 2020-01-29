@@ -1,12 +1,12 @@
 import * as log from 'bog';
 import fs from 'fs';
 import path from 'path';
+import UserInterface from '../types/User.interface';
 
 const root: string = path.normalize(`${__dirname}/../../`);
 const themeRootPath: string = `${root}www/themes/`;
-const defaultTheme: string = 'https://github.com/chralp/heyburrito-theme'
+const defaultTheme: string = 'https://github.com/chralp/heyburrito-theme';
 
-import UserInterface from '../types/User.interface';
 
 const time = () => {
     const start = new Date();
@@ -35,41 +35,40 @@ const fixPath = (p: string): string => {
     return p;
 };
 
-const pathExists = (path: string) => {
+const pathExists = (inPath: string) => {
     try {
-        log.debug('Checking if path exists', path);
-        return fs.lstatSync(path).isDirectory();
+        log.debug('Checking if path exists', inPath);
+        return fs.lstatSync(inPath).isDirectory();
     } catch (e) {
         return false;
     }
 };
 
-const createPath = (path: string) => {
+const createPath = (inPath: string) => {
     try {
-        log.debug(`Trying to create path ${path}`);
-        fs.mkdirSync(path);
-        const exists = pathExists(path);
+        log.debug(`Trying to create path ${inPath}`);
+        fs.mkdirSync(inPath);
+        const exists = pathExists(inPath);
         if (exists) return true;
         throw new Error('Neit');
     } catch (e) {
-        log.debug(`Could not create path ${path}`);
+        log.debug(`Could not create path ${inPath}`);
         return false;
     }
 };
 
 const mustHave = (key: string) => {
-    if (env === 'development' || 'testing') return process.env[key];
+    if (env === 'development' || env === 'testing') return process.env[key];
     if (!process.env[key]) throw new Error(`Missing ENV ${key}`);
     return process.env[key];
 };
 
-
 const getThemeName = () => {
     if (process.env.THEME_PATH) {
-        const path = process.env.THEME_PATH;
-        const [themeName] = path.split('/').slice(-1);
+        const themePath = process.env.THEME_PATH;
+        const [themeName] = themePath.split('/').slice(-1);
         return themeName;
-    };
+    }
     const theme = process.env.THEME_URL || defaultTheme;
     const [themeName] = theme.split('/').slice(-1);
     return themeName;
@@ -77,14 +76,13 @@ const getThemeName = () => {
 
 const getThemePath = () => {
     if (process.env.THEME_PATH) {
-        console.log("HEJSAN")
-        const path = process.env.THEME_PATH;
-        if (path.endsWith('/')) return path
-        return `${path}/`
-    };
+        const themePath = process.env.THEME_PATH;
+        if (themePath.endsWith('/')) return themePath;
+        return `${themePath}/`;
+    }
 
     const themeName = getThemeName();
-    return `${themeRootPath}${themeName}/`
+    return `${themeRootPath}${themeName}/`;
 };
 
 export {

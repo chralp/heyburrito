@@ -21,7 +21,6 @@ const init = async () => {
 };
 
 init().then(() => {
-
     log.info('Staring heyburrito');
 
     // Configure BurritoStore

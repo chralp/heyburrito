@@ -17,8 +17,6 @@ const getScoreBoard = async (scoreType: string, listType: string) => {
     const score = [];
     const uniqueUsername = [...new Set(data.map((x) => x[listType]))];
 
-    const { enable_decrement } = config.slack
-
     const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
 
     uniqueUsername.forEach((u) => {
@@ -26,23 +24,19 @@ const getScoreBoard = async (scoreType: string, listType: string) => {
         let filteredData: any;
         let countSwitch: any;
 
-        if (listType === 'to' && enable_decrement && (scoreType === 'inc')) {
-            filteredData = dataByUser
-
+        if (listType === 'to' && config.slack.enable_decrement && (scoreType === 'inc')) {
+            filteredData = dataByUser;
         } else {
             filteredData = dataByUser.filter((e: any) => (e.value === scoreTypeFilter));
-            countSwitch = 1
+            countSwitch = 1;
         }
-        const red = filteredData.reduce((a: number, item) => {
-            return a + (countSwitch || item.value);
-        }, 0);
+        const red = filteredData.reduce((a: number, item) => a + (countSwitch || item.value), 0);
         score.push({ _id: u, score: red });
     });
-    const scoreList = score.map(x => {
-        if (x.score != 0) return x
-        return undefined
-    }).filter(y => y)
-
+    const scoreList = score.map((x) => {
+        if (x.score !== 0) return x;
+        return undefined;
+    }).filter((y) => y);
     return sort(mapper(scoreList));
 };
 
@@ -61,10 +55,9 @@ const getUserScoreBoard = async ({ ...args }) => {
             scoreinc: scoreinc.length,
             scoredec: scoredec.length,
         });
-
     });
     return score;
-}
+};
 
 
 /**
@@ -112,7 +105,6 @@ const givenBurritosToday = async (user: string) => {
     };
 };
 
-
 /**
  * @param {string} user - Slack userId
  */
@@ -122,7 +114,7 @@ const getUserScore = async (user: string, listType: string, scoreType: string) =
     const [res] = mapper(userScore);
     return {
         ...res,
-        scoreType
+        scoreType,
     };
 };
 
