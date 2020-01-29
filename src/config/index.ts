@@ -97,7 +97,7 @@ const config = {
             api_token: process.env.SLACK_API_TOKEN || '',
             emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
             emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
-            enable_decrement: !!process.env.ENABLE_DECREMENT || false,
+            enable_decrement: true,
             daily_cap: process.env.SLACK_DAILY_CAP || 5,
         },
         http: {
