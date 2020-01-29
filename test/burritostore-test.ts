@@ -5,7 +5,6 @@ import { init } from './lib/seedDatabase';
 let mongod: any, mongoDriver: any;
 
 describe('Burritostore-test', async () => {
-
     [
         {
             describe: 'file Driver',
@@ -105,64 +104,6 @@ describe('Burritostore-test', async () => {
                     });
                 });
 
-                describe('getScoreBoard', () => {
-
-                    it('Should return scoreboard, listType: to, scoreType: inc', async () => {
-                        const res = await BurritoStore.getScoreBoard({ listType: 'to', scoreType: 'inc' });
-                        expect(res).to.deep.equal([
-                            { _id: 'USER1', score: 2 },
-                            { _id: 'USER2', score: 2 }
-                        ])
-                    });
-                    it('Should return scoreboard, listType: to, scoreType: dec', async () => {
-                        const res = await BurritoStore.getScoreBoard({ listType: 'to', scoreType: 'dec' });
-                        expect(res).to.deep.equal([
-                            { _id: 'USER1', score: 2 },
-                            { _id: 'USER2', score: 2 }
-                        ]);
-                    });
-
-                    it('Should return scoreboard, listType: from, scoreType: inc', async () => {
-                        const res = await BurritoStore.getScoreBoard({ listType: 'from', scoreType: 'inc' });
-                        expect(res).to.deep.equal([
-                            { _id: 'USER2', score: 2 },
-                            { _id: 'USER1', score: 2 }
-                        ]);
-                    });
-
-                    it('Should return scoreboard, listType: from, scoreType: dec', async () => {
-                        const res = await BurritoStore.getScoreBoard({ listType: 'from', scoreType: 'dec' });
-                        expect(res).to.deep.equal([
-                            { _id: 'USER2', score: 2 },
-                            { _id: 'USER1', score: 2 }
-                        ]);
-                    });
-
-
-                    it('Should return scoreboard, user:USER1, listType: to', async () => {
-                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER1', listType: 'to' });
-                        expect(res).to.deep.equal([
-                            { _id: 'USER2', scoreinc: 2, scoredec: 2 },
-                        ]);
-                    });
-
-                    it('Should return scoreboard, user:USER1, listType: from', async () => {
-                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER1', listType: 'from' });
-                        expect(res).to.deep.equal([{ _id: 'USER2', scoreinc: 2, scoredec: 2 }]);
-                    });
-
-                    it('Should return scoreboard, user:USER2, listType: to', async () => {
-                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER2', listType: 'to' });
-                        expect(res).to.deep.equal([
-                            { _id: 'USER1', scoreinc: 2, scoredec: 2 },
-                        ]);
-                    });
-
-                    it('Should return scoreboard, user:USER2, listType: from', async () => {
-                        const res = await BurritoStore.getUserScoreBoard({ user: 'USER2', listType: 'from' });
-                        expect(res).to.deep.equal([{ _id: 'USER1', scoreinc: 2, scoredec: 2 }]);
-                    });
-                });
 
                 describe('givenBurritosToday', () => {
                     it('Should return givenBurritosToday stats for USER1 lisyType: to', async () => {

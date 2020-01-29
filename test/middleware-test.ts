@@ -1,10 +1,29 @@
 import { expect } from 'chai';
-import { getScoreBoard, getUserStats, givenBurritosToday } from '../src/middleware';
 import { init } from './lib/seedDatabase';
-let mongod: any, mongoDriver: any;
+
+
+let mongod: any, mongoDriver: any
+const proxyquire = require('proxyquire').noCallThru();
+let getScoreBoard: any, getUserStats: any, givenBurritosToday: any
+
+const loadMiddleware = (proxyConf = false) => {
+    if (proxyConf) {
+        const funcs = proxyquire('../src/middleware', { './config': { slack: { enable_decrement: false } } });
+        getScoreBoard = funcs.getScoreBoard
+        getUserStats = funcs.getUserStats
+        givenBurritosToday = funcs.givenBurritosToday
+
+    } else {
+        const funcs = require('../src/middleware');
+        getScoreBoard = funcs.getScoreBoard
+        getUserStats = funcs.getUserStats
+        givenBurritosToday = funcs.givenBurritosToday
+    }
+
+}
+
 
 describe('middleware-test', async () => {
-
     [
         {
             describe: 'With file Driver as database',
@@ -29,6 +48,9 @@ describe('middleware-test', async () => {
                     mongod = dbinit.mongod
                     mongoDriver = dbinit.mongoDriver
                 }
+                loadMiddleware()
+
+
             });
 
             after(async () => {
@@ -39,8 +61,10 @@ describe('middleware-test', async () => {
             });
 
             describe('getScoreBoard', async () => {
-                it('Should return getScoreBoard, scoretype: inc, listType: to', async () => {
+                it('Should return getScoreBoard, scoretype: inc, listType: to ( enable_decrement: false )', async () => {
+                    loadMiddleware(true)
                     const res = await getScoreBoard('inc', 'to');
+                    loadMiddleware()
                     expect(res).to.deep.equal([
                         {
                             username: 'USER2',
@@ -69,6 +93,40 @@ describe('middleware-test', async () => {
                             name: 'User4',
                             avatar: 'https://link.to.avatar.48.burrito',
                             score: 16
+                        }
+                    ]);
+                });
+
+                it('Should return getScoreBoard, scoretype: inc, listType: to ( enable_decrement: true )', async () => {
+                    const res = await getScoreBoard('inc', 'to');
+                    expect(res).to.deep.equal([
+                        {
+                            username: 'USER2',
+                            memberType: "member",
+                            name: 'User2',
+                            avatar: 'https://link.to.avatar.48.burrito',
+                            score: 20
+                        },
+                        {
+                            username: 'USER3',
+                            memberType: "member",
+                            name: 'User3',
+                            avatar: 'https://link.to.avatar.48.burrito',
+                            score: 13
+                        },
+                        {
+                            username: 'USER1',
+                            memberType: "member",
+                            name: 'User1',
+                            avatar: 'https://link.to.avatar.48.burrito',
+                            score: 12
+                        },
+                        {
+                            username: 'USER4',
+                            memberType: "member",
+                            name: 'User4',
+                            avatar: 'https://link.to.avatar.48.burrito',
+                            score: 11
                         }
                     ]);
                 });
