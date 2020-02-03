@@ -10,6 +10,33 @@ import {
     getThemeName
 } from '../lib/utils';
 
+
+const isFalse = (input: string) => (input === 'false' || input === 'no' || input === '0');
+const isTrue = (input: string) => (input === 'true' || input === 'yes' || input === '1');
+
+export function fixEmoji(input) {
+    let inputFix = input
+    if (!input.startsWith(':')) inputFix = `:${inputFix}`;
+    if (!input.endsWith(':')) inputFix = `${inputFix}:`;
+    return inputFix;
+}
+
+
+export function getBool(inputKey: string, defaultValue: boolean) {
+    if (!inputKey) return defaultValue;
+    const key = inputKey.toLowerCase();
+
+    if (isFalse(key)) return false;
+    if (isTrue(key)) return true;
+    return defaultValue;
+};
+
+export function getNum(inputKey: string, defaultValue: number): number {
+    if (!inputKey) return defaultValue;
+    const integer = Number(inputKey);
+    return !!integer ? integer : defaultValue;
+};
+
 const config = {
     production: {
         db: {
@@ -25,7 +52,7 @@ const config = {
             api_token: mustHave('SLACK_API_TOKEN'),
             emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
             emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
-            enable_decrement: !!process.env.ENABLE_DECREMENT || true,
+            enable_decrement: getBool(process.env.ENABLE_DECREMENT, false),
             daily_cap: process.env.SLACK_DAILY_CAP || 5,
         },
         http: {
@@ -38,7 +65,7 @@ const config = {
             root: themeRootPath,
             url: process.env.THEME_URL || defaultTheme,
             path: process.env.THEME_PATH,
-            latest: process.env.THEME_LATEST || false,
+            latest: getBool(process.env.THEME_LATEST, true),
             themeName: getThemeName(),
             themePath: getThemePath(),
         },
@@ -59,15 +86,16 @@ const config = {
         slack: {
             bot_name: process.env.BOT_NAME || 'heyburrito',
             api_token: process.env.SLACK_API_TOKEN || '',
-            emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
-            emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
-            daily_inc_cap: process.env.SLACK_DAILY_INC_CAP || 5,
-            daily_dec_cap: process.env.SLACK_DAILY_DEC_CAP || 5,
-            enable_decrement: !!process.env.ENABLE_DECREMENT || false,
+            emoji_inc: fixEmoji(process.env.SLACK_EMOJI_INC || ':burrito:'),
+            emoji_dec: fixEmoji(process.env.SLACK_EMOJI_DEC || ':rottenburrito:'),
+            disable_emoji_dec: getBool(process.env.DISABLE_EMOJI_DEC, false),
+            daily_cap: getNum(process.env.SLACK_DAILY_CAP, 5000),
+            daily_dec_cap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5000),
+            enable_decrement: getBool(process.env.ENABLE_DECREMENT, true),
         },
         http: {
-            http_port: process.env.HTTP_PORT || 3333,
-            wss_port: process.env.WSS_PORT || 3334,
+            http_port: getNum(process.env.HTTP_PORT, 3333),
+            wss_port: getNum(process.env.WSS_PORT, 3334),
             web_path: process.env.WEB_PATH ? fixPath(process.env.WEB_PATH) : '/heyburrito/',
             api_path: process.env.API_PATH ? fixPath(process.env.API_PATH) : '/api/',
         },
@@ -75,12 +103,12 @@ const config = {
             root: themeRootPath,
             url: process.env.THEME_URL || defaultTheme,
             path: process.env.THEME_PATH,
-            latest: process.env.THEME_LATEST || false,
+            latest: getBool(process.env.THEME_LATEST, false),
             themeName: getThemeName(),
             themePath: getThemePath(),
         },
         misc: {
-            slackMock: true,
+            slackMock: false,
             log_level: log.level('debug')
         },
     },
@@ -110,7 +138,7 @@ const config = {
             root: themeRootPath,
             url: process.env.THEME_URL || defaultTheme,
             path: process.env.THEME_PATH,
-            latest: process.env.THEME_LATEST || false,
+            latest: getBool(process.env.THEME_LATEST, true),
             themeName: getThemeName(),
             themePath: getThemePath(),
         },
