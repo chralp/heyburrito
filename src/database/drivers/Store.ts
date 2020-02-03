@@ -68,7 +68,7 @@ export default class Store {
         }
 
         if (this.driver === 'file') {
-            fs.appendFileSync(this.dbPath, `\n${JSON.stringify(score)}`);
+            await fs.appendFileSync(this.dbPath, `\n${JSON.stringify(score)}`);
             return true;
         }
         return false;
