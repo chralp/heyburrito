@@ -90,6 +90,22 @@ class BurritoStore extends EventEmitter {
 
     /**
      * @param {string} user - userId
+     * @param {string} listType - to / from defaults from
+     */
+    async givenToday(user: string, listType: string, type: any = false): Promise<number> {
+        const givenToday: Find[] = await this.database.findFromToday(user, listType);
+        if (type) {
+            if (['inc', 'dec'].includes(type)) {
+                const valueFilter = (type === 'inc') ? 1 : -1;
+                const givenFilter = givenToday.filter(x => x.value === valueFilter);
+                return givenFilter.length;
+            }
+        }
+        return givenToday.length;
+    }
+
+    /**
+     * @param {string} user - userId
      */
     async getUserScore(user: string, listType: string, num): Promise<number> {
         return this.database.getScore(user, listType, num);
