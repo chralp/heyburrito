@@ -1,11 +1,8 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import * as fs from 'fs';
-import { expect } from 'chai';
-
-import log from 'bog';
 import config from '../../src/config';
-import { env } from '../../src/lib/utils';
+import { env, pathExists, createPath } from '../../src/lib/utils';
 
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
@@ -14,7 +11,6 @@ import BurritoStore from '../../src/store/BurritoStore';
 import Localstore from '../../src/store/LocalStore';
 import WBCHandler from '../../src/slack/Wbc';
 import slack from '../../src/slack';
-import '../../src/lib/boot';
 const mockData = require('../data/mockData');
 
 const TYPES = ['give', 'takeaway'];
@@ -55,6 +51,13 @@ async function init({ driver = config.db.db_driver, random, seedDB = true }) {
     const { wbc } = slack;
 
     SLACKUSERS = []
+
+    if (!pathExists(config.db.db_path)) {
+        if (createPath(config.db.db_path)) {
+        } else {
+            throw new Error('Could not create database path');
+        }
+    }
 
     await WBCHandler.register(wbc);
     await Localstore.fetch();

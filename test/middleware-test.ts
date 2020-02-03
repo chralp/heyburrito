@@ -1,27 +1,33 @@
 import { expect } from 'chai';
+
 import { init } from './lib/seedDatabase';
+import {
+    scoreBoardToIncFalse,
+    scoreBoardFromIncFalse,
+    scoreBoardToDecFalse,
+    scoreBoardFromDecFalse,
+    scoreBoardToIncTrue,
+    scoreBoardFromIncTrue,
+    scoreBoardToDecTrue,
+    scoreBoardFromDecTrue,
+    userStatsUser1,
+    userStatsUser2,
+    userStatsUser3,
+    userStatsUser4,
+} from './data/middleware-results';
 
 
 let mongod: any, mongoDriver: any
 const proxyquire = require('proxyquire').noCallThru();
-let getScoreBoard: any, getUserStats: any, givenBurritosToday: any
+let getScoreBoard: any, getUserStats: any, givenBurritosToday: any, getUserScore: any
 
-const loadMiddleware = (proxyConf = false) => {
-    if (proxyConf) {
-        const funcs = proxyquire('../src/middleware', { './config': { slack: { enable_decrement: false } } });
-        getScoreBoard = funcs.getScoreBoard
-        getUserStats = funcs.getUserStats
-        givenBurritosToday = funcs.givenBurritosToday
-
-    } else {
-        const funcs = require('../src/middleware');
-        getScoreBoard = funcs.getScoreBoard
-        getUserStats = funcs.getUserStats
-        givenBurritosToday = funcs.givenBurritosToday
-    }
-
+const loadMiddleware = ({ enable_decrement }) => {
+    const funcs = proxyquire('../src/middleware', { './config': { slack: { enable_decrement } } });
+    getScoreBoard = funcs.getScoreBoard
+    getUserStats = funcs.getUserStats
+    getUserScore = funcs.getUserScore
+    givenBurritosToday = funcs.givenBurritosToday
 }
-
 
 describe('middleware-test', async () => {
     [
@@ -48,9 +54,7 @@ describe('middleware-test', async () => {
                     mongod = dbinit.mongod
                     mongoDriver = dbinit.mongoDriver
                 }
-                loadMiddleware()
-
-
+                loadMiddleware({ enable_decrement: true })
             });
 
             after(async () => {
@@ -61,642 +65,128 @@ describe('middleware-test', async () => {
             });
 
             describe('getScoreBoard', async () => {
-                it('Should return getScoreBoard, scoretype: inc, listType: to ( enable_decrement: false )', async () => {
-                    loadMiddleware(true)
-                    const res = await getScoreBoard('inc', 'to');
-                    loadMiddleware()
-                    expect(res).to.deep.equal([
-                        {
-                            username: 'USER2',
-                            memberType: "member",
-                            name: 'User2',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 23
-                        },
-                        {
-                            username: 'USER3',
-                            memberType: "member",
-                            name: 'User3',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 21
-                        },
-                        {
-                            username: 'USER1',
-                            memberType: "member",
-                            name: 'User1',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 18
-                        },
-                        {
-                            username: 'USER4',
-                            memberType: "member",
-                            name: 'User4',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 16
-                        }
-                    ]);
+                it('Should return getScoreBoard, listType: to, scoretype: inc ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getScoreBoard('to', 'inc');
+                    expect(res).to.deep.equal(scoreBoardToIncFalse);
                 });
 
-                it('Should return getScoreBoard, scoretype: inc, listType: to ( enable_decrement: true )', async () => {
-                    const res = await getScoreBoard('inc', 'to');
-                    expect(res).to.deep.equal([
-                        {
-                            username: 'USER2',
-                            memberType: "member",
-                            name: 'User2',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 20
-                        },
-                        {
-                            username: 'USER3',
-                            memberType: "member",
-                            name: 'User3',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 13
-                        },
-                        {
-                            username: 'USER1',
-                            memberType: "member",
-                            name: 'User1',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 12
-                        },
-                        {
-                            username: 'USER4',
-                            memberType: "member",
-                            name: 'User4',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 11
-                        }
-                    ]);
+                it('Should return getScoreBoard, listType: from, scoretype: inc ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getScoreBoard('from', 'inc');
+                    expect(res).to.deep.equal(scoreBoardFromIncFalse);
                 });
 
-                it('Should return getScoreBoard, scoretype: inc, listType: from', async () => {
-                    const res = await getScoreBoard('inc', 'from');
-                    expect(res).to.deep.equal([
-                        {
-                            username: 'USER1',
-                            memberType: "member",
-                            name: 'User1',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 26
-                        },
-                        {
-                            username: 'USER4',
-                            memberType: "member",
-                            name: 'User4',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 19
-                        },
-                        {
-                            username: 'USER3',
-                            memberType: "member",
-                            name: 'User3',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 18
-                        },
-                        {
-                            username: 'USER2',
-                            memberType: "member",
-                            name: 'User2',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 15
-                        }
-                    ]);
-                });
-                it('Should return getScoreBoard, scoretype: dec, listType: to', async () => {
-                    const res = await getScoreBoard('dec', 'to');
-                    expect(res).to.deep.equal([
-                        {
-                            username: 'USER3',
-                            memberType: "member",
-                            name: 'User3',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 8
-                        },
-                        {
-                            username: 'USER1',
-                            memberType: "member",
-                            name: 'User1',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 6
-                        },
-                        {
-                            username: 'USER4',
-                            memberType: "member",
-                            name: 'User4',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 5
-                        },
-                        {
-                            username: 'USER2',
-                            memberType: "member",
-                            name: 'User2',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 3
-                        }
-                    ]);
+                it('Should return getScoreBoard, listType: to, scoretype: dec ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getScoreBoard('to', 'dec');
+                    expect(res).to.deep.equal(scoreBoardToDecFalse);
                 });
 
-                it('Should return getScoreBoard, scoretype: dec, listType: from', async () => {
-                    const res = await getScoreBoard('dec', 'from');
-                    expect(res).to.deep.equal([
-                        {
-                            username: 'USER1',
-                            memberType: "member",
-                            name: 'User1',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 8
-                        },
-                        {
-                            username: 'USER3',
-                            memberType: "member",
-                            name: 'User3',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 6
-                        },
-                        {
-                            username: 'USER2',
-                            memberType: "member",
-                            name: 'User2',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 5
-                        },
-                        {
-                            username: 'USER4',
-                            memberType: "member",
-                            name: 'User4',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            score: 3
-                        }
-                    ]);
+                it('Should return getScoreBoard, listType: from, scoretype: dec ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getScoreBoard('from', 'dec');
+                    expect(res).to.deep.equal(scoreBoardFromDecFalse);
                 });
+
+                it('Should return getScoreBoard, listType: to, scoretype: inc ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getScoreBoard('to', 'inc');
+                    expect(res).to.deep.equal(scoreBoardToIncTrue);
+                });
+
+                it('Should return getScoreBoard, listType: from, scoretype: inc ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getScoreBoard('from', 'inc');
+                    expect(res).to.deep.equal(scoreBoardFromIncTrue);
+                });
+
+                it('Should return getScoreBoard, listType: to, scoretype: dec ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getScoreBoard('to', 'dec');
+                    expect(res).to.deep.equal(scoreBoardToDecTrue);
+                });
+
+                it('Should return getScoreBoard, listType: from, scoretype: dec ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getScoreBoard('from', 'dec');
+                    expect(res).to.deep.equal(scoreBoardFromDecTrue);
+                });
+
+
             });
 
-            describe('getUserStats', async () => {
+            describe('getUserScore', async () => {
+                it('Should return getUserScore for USER1, listType: to, scoreType: inc ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getUserScore('USER1', 'to', 'inc');
+                    expect(res.score).to.equal(18)
 
+                });
+
+                it('Should return getUserScore for USER1, listType: to, scoreType: DEC ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getUserScore('USER1', 'to', 'dec');
+                    expect(res.score).to.equal(6)
+                });
+
+                it('Should return getUserScore for USER1, listType: from, scoreType: inc ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getUserScore('USER1', 'from', 'inc');
+                    expect(res.score).to.equal(26);
+
+                });
+
+                it('Should return getUserScore for USER1, listType: from, scoreType: DEC ( enable_decrement: false )', async () => {
+                    loadMiddleware({ enable_decrement: false })
+                    const res = await getUserScore('USER1', 'from', 'dec');
+                    expect(res.score).to.equal(8);
+                });
+
+                it('Should return getUserScore for USER1, listType: to, scoreType: inc ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getUserScore('USER1', 'to', 'inc');
+                    expect(res.score).to.equal(12);
+                });
+
+                it('Should return getUserScore for USER1, listType: to, scoreType: DEC ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getUserScore('USER1', 'to', 'dec');
+                    expect(res.score).to.equal(6);
+                });
+
+                it('Should return getUserScore for USER1, listType: from, scoreType: inc ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getUserScore('USER1', 'from', 'inc');
+                    expect(res.score).to.equal(26);
+                });
+
+                it('Should return getUserScore for USER1, listType: from, scoreType: DEC ( enable_decrement: true )', async () => {
+                    loadMiddleware({ enable_decrement: true })
+                    const res = await getUserScore('USER1', 'from', 'dec');
+                    expect(res.score).to.equal(8);
+                });
+            })
+
+            describe('getUserStats', async () => {
                 it('Should return getUserStats for USER1', async () => {
                     const res = await getUserStats('USER1');
-                    expect(res).to.deep.equal({
-                        user: {
-                            username: 'USER1',
-                            name: 'User1',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            memberType: 'member',
-                            receivedToday: 6,
-                            givenToday: 9,
-                            received: 24,
-                            given: 34
-                        },
-                        given: [
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 8,
-                                scoredec: 2
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 12,
-                                scoredec: 4
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 6,
-                                scoredec: 2
-                            }
-                        ],
-                        received: [
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 5,
-                                scoredec: 3
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 5,
-                                scoredec: 2
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 8,
-                                scoredec: 1
-                            }
-                        ],
-                        givenToday: [
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 2,
-                                scoredec: 1
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 2,
-                                scoredec: 0
-                            }
-                        ],
-                        receivedToday: [
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 3,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 3,
-                                scoredec: 0
-                            }
-                        ]
-                    });
+                    expect(res).to.deep.equal(userStatsUser1);
                 });
+
                 it('Should return getUserStats for USER2', async () => {
                     const res = await getUserStats('USER2');
-                    expect(res).to.deep.equal({
-                        user: {
-                            username: 'USER2',
-                            name: 'User2',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            memberType: 'member',
-                            receivedToday: 9,
-                            givenToday: 8,
-                            received: 26,
-                            given: 20
-                        },
-                        given: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 5,
-                                scoredec: 3
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 2
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 6,
-                                scoredec: 0
-                            }
-                        ],
-                        received: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 8,
-                                scoredec: 2
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 9,
-                                scoredec: 1
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 6,
-                                scoredec: 0
-                            }
-                        ],
-                        givenToday: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 3,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 1,
-                                scoredec: 1
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 3,
-                                scoredec: 0
-                            }
-                        ],
-                        receivedToday: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 1,
-                                scoredec: 0
-                            }
-                        ]
-                    });
+                    expect(res).to.deep.equal(userStatsUser2);
                 });
 
                 it('Should return getUserStats for USER3', async () => {
                     const res = await getUserStats('USER3');
-                    expect(res).to.deep.equal({
-                        user: {
-                            username: 'USER3',
-                            name: 'User3',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            memberType: 'member',
-                            receivedToday: 6,
-                            givenToday: 5,
-                            received: 29,
-                            given: 24
-                        },
-                        given: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 5,
-                                scoredec: 2
-                            },
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 9,
-                                scoredec: 1
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 3
-                            }
-                        ],
-                        received: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 12,
-                                scoredec: 4
-                            },
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 2
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 5,
-                                scoredec: 2
-                            }
-                        ],
-                        givenToday: [
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 0,
-                                scoredec: 1
-                            }
-                        ],
-                        receivedToday: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 2,
-                                scoredec: 1
-                            },
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 1,
-                                scoredec: 1
-                            },
-                            {
-                                username: 'USER4',
-                                name: 'User4',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 0,
-                                scoredec: 1
-                            }
-                        ]
-                    });
+                    expect(res).to.deep.equal(userStatsUser3);
                 });
 
                 it('Should return getUserStats for USER4', async () => {
                     const res = await getUserStats('USER4');
-
-                    expect(res).to.deep.equal({
-                        user: {
-                            username: 'USER4',
-                            name: 'User4',
-                            avatar: 'https://link.to.avatar.48.burrito',
-                            memberType: 'member',
-                            receivedToday: 6,
-                            givenToday: 5,
-                            received: 21,
-                            given: 22
-                        },
-                        given: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 8,
-                                scoredec: 1
-                            },
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 6,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 5,
-                                scoredec: 2
-                            }
-                        ],
-                        received: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 6,
-                                scoredec: 2
-                            },
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 6,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 4,
-                                scoredec: 3
-                            }
-                        ],
-                        givenToday: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 3,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 1,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 0,
-                                scoredec: 1
-                            }
-                        ],
-                        receivedToday: [
-                            {
-                                username: 'USER1',
-                                name: 'User1',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 2,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER2',
-                                name: 'User2',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 3,
-                                scoredec: 0
-                            },
-                            {
-                                username: 'USER3',
-                                name: 'User3',
-                                avatar: 'https://link.to.avatar.48.burrito',
-                                memberType: 'member',
-                                scoreinc: 0,
-                                scoredec: 1
-                            }
-                        ]
-                    });
+                    expect(res).to.deep.equal(userStatsUser4);
                 });
             });
 

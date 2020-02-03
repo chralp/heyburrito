@@ -3,7 +3,6 @@ dotenv.config();
 import log from 'bog';
 import { expect } from 'chai';
 import { init } from './lib/seedDatabase';
-import { wbcListParsed } from './data/slackUsers';
 import mapper from '../src/lib/mapper';
 log.level("0")
 
