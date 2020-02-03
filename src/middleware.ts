@@ -38,7 +38,6 @@ const getScoreBoard = async (listType: string, scoreType: string) => {
     return sort(mapper(scoreList));
 };
 
-
 const _getUserScoreBoard = async ({ ...args }) => {
     const { listType } = args;
     const data: any = await BurritoStore.getScoreBoard({ ...args });
@@ -56,7 +55,6 @@ const _getUserScoreBoard = async ({ ...args }) => {
     });
     return score;
 };
-
 
 /**
  * @param {string} user - Slack userId
@@ -107,24 +105,12 @@ const givenBurritosToday = async (user: string) => {
  * @param {string} user - Slack userId
  */
 const getUserScore = async (user: string, listType: string, scoreType: string) => {
-
     const scoreList = await BurritoStore.getScoreBoard({ listType, scoreType });
     const userScore = scoreList.filter((x) => x[listType] === user);
 
     const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
     let countSwitch: any;
     let filteredData: any;
-
-
-
-    /*
-      if (listType === 'to' && config.slack.enable_decrement && (scoreType === 'inc')) {
-            filteredData = dataByUser;
-        } else {
-            filteredData = dataByUser.filter((e: any) => (e.value === scoreTypeFilter));
-            countSwitch = 1;
-        }
-     */
 
     if (listType === 'to' && scoreType === 'inc') {
         if (config.slack.enable_decrement) {
@@ -134,21 +120,16 @@ const getUserScore = async (user: string, listType: string, scoreType: string) =
             countSwitch = 1;
         }
     } else {
-
         filteredData = userScore.filter((e: any) => (e.value === scoreTypeFilter));
         if (scoreType === 'dec') {
-            countSwitch = 1
-        };
+            countSwitch = 1;
+        }
     }
-
-    const gg = filteredData.reduce((acc, item) => acc + (countSwitch || item.value), 0);
-
-    const obj = {
+    const userScoreCounted = filteredData.reduce((acc, item) => acc + (countSwitch || item.value), 0);
+    const [res] = mapper([{
         _id: user,
-        score: gg
-    }
-    const [res] = mapper([obj]);
-
+        score: userScoreCounted,
+    }]);
     return {
         ...res,
         scoreType,

@@ -97,7 +97,7 @@ class BurritoStore extends EventEmitter {
         if (type) {
             if (['inc', 'dec'].includes(type)) {
                 const valueFilter = (type === 'inc') ? 1 : -1;
-                const givenFilter = givenToday.filter(x => x.value === valueFilter);
+                const givenFilter = givenToday.filter((x) => x.value === valueFilter);
                 return givenFilter.length;
             }
         }

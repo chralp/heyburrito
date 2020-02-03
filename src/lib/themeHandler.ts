@@ -5,7 +5,7 @@ import config from '../config';
 
 const THEMES_AVAILABLE: any = [];
 
-const gitFunc = async (args, cwd: string) => {
+async function gitFunc(args, cwd: string) {
     return new Promise((resolve, reject) => {
         const process = spawn('git', args, { cwd });
         process.on('close', (status: any) => {
@@ -16,17 +16,17 @@ const gitFunc = async (args, cwd: string) => {
             }
         });
     });
-};
+}
 
-const sleep = async () => {
+async function sleep() {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(true);
         }, 1000);
     });
-};
+}
 
-const git = async (args, cwd: string = config.theme.root) => {
+async function git(args, cwd: string = config.theme.root) {
     let times = 0;
 
     const recursive = async () => {
@@ -44,9 +44,9 @@ const git = async (args, cwd: string = config.theme.root) => {
         }
     };
     return recursive();
-};
+}
 
-const checkThemePath = () => {
+async function checkThemePath() {
     fs.readdirSync(config.theme.root).forEach((file: string) => {
         const isDir = fs.lstatSync(`${config.theme.root}${file}`).isDirectory();
         if (isDir) {
@@ -56,7 +56,7 @@ const checkThemePath = () => {
             });
         }
     });
-};
+}
 
 export default async () => {
     checkThemePath();

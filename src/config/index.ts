@@ -108,7 +108,7 @@ const config = {
             themePath: getThemePath(),
         },
         misc: {
-            slackMock: false,
+            slackMock: true,
             log_level: log.level('debug')
         },
     },
