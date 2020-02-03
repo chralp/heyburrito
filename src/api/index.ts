@@ -90,7 +90,7 @@ Route.add({
                 });
             }
 
-            const score = await getScoreBoard(scoreType, listType);
+            const score = await getScoreBoard(listType, scoreType);
 
             const data = {
                 error: false,
