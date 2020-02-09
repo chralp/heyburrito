@@ -21,7 +21,6 @@ export function fixEmoji(input) {
     return inputFix;
 }
 
-
 export function getBool(inputKey: string, defaultValue: boolean) {
     if (!inputKey) return defaultValue;
     const key = inputKey.toLowerCase();
@@ -45,15 +44,17 @@ const config = {
             db_path: process.env.DATABASE_PATH || `${root}data/`,
             db_url: (process.env.DATABASE_DRIVER === 'mongodb') ? mustHave('MONGODB_URL') : '',
             db_name: (process.env.DATABASE_DRIVER === 'mongodb') ? mustHave('MONGODB_DATABASE') : '',
-            db_uri: process.env.DATABASE_URI || `${this.db_path}/${this.db_name}`,
+            db_uri: process.env.DATABASE_URI || `${process.env.MONGODB_URL}/${process.env.MONGODB_DATABASE}`,
         },
         slack: {
             bot_name: process.env.BOT_NAME || 'heyburrito',
             api_token: mustHave('SLACK_API_TOKEN'),
-            emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
-            emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
-            enable_decrement: getBool(process.env.ENABLE_DECREMENT, false),
-            daily_cap: process.env.SLACK_DAILY_CAP || 5,
+            emojiInc: fixEmoji(process.env.SLACK_EMOJI_INC || ':burrito:'),
+            emojiDec: fixEmoji(process.env.SLACK_EMOJI_DEC || ':rottenburrito:'),
+            disableEmojiDec: getBool(process.env.DISABLE_EMOJI_DEC, false),
+            dailyCap: getNum(process.env.SLACK_DAILY_CAP, 5),
+            dailyDecCap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5),
+            enableDecrement: getBool(process.env.ENABLE_DECREMENT, true),
         },
         http: {
             http_port: process.env.HTTP_PORT || 3333,
@@ -65,13 +66,13 @@ const config = {
             root: themeRootPath,
             url: process.env.THEME_URL || defaultTheme,
             path: process.env.THEME_PATH,
-            latest: getBool(process.env.THEME_LATEST, true),
+            latest: getBool(process.env.THEME_LATEST, false),
             themeName: getThemeName(),
             themePath: getThemePath(),
         },
         misc: {
             slackMock: false,
-            log_level: log.level(process.env.LOG_LEVEL || 'info')
+            log_level: process.env.LOG_LEVEL || 'info'
         },
     },
     development: {
@@ -85,13 +86,13 @@ const config = {
         },
         slack: {
             bot_name: process.env.BOT_NAME || 'heyburrito',
-            api_token: process.env.SLACK_API_TOKEN || '',
-            emoji_inc: fixEmoji(process.env.SLACK_EMOJI_INC || ':burrito:'),
-            emoji_dec: fixEmoji(process.env.SLACK_EMOJI_DEC || ':rottenburrito:'),
-            disable_emoji_dec: getBool(process.env.DISABLE_EMOJI_DEC, false),
-            daily_cap: getNum(process.env.SLACK_DAILY_CAP, 5000),
-            daily_dec_cap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5000),
-            enable_decrement: getBool(process.env.ENABLE_DECREMENT, true),
+            api_token: mustHave('SLACK_API_TOKEN'),
+            emojiInc: fixEmoji(process.env.SLACK_EMOJI_INC || ':burrito:'),
+            emojiDec: fixEmoji(process.env.SLACK_EMOJI_DEC || ':rottenburrito:'),
+            disableEmojiDec: getBool(process.env.DISABLE_EMOJI_DEC, false),
+            dailyCap: getNum(process.env.SLACK_DAILY_CAP, 5000),
+            dailyDecCap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5000),
+            enableDecrement: getBool(process.env.ENABLE_DECREMENT, true),
         },
         http: {
             http_port: getNum(process.env.HTTP_PORT, 3333),
@@ -109,7 +110,7 @@ const config = {
         },
         misc: {
             slackMock: true,
-            log_level: log.level('debug')
+            log_level: process.env.LOG_LEVEL || 'debug'
         },
     },
     testing: {
@@ -123,10 +124,12 @@ const config = {
         slack: {
             bot_name: process.env.BOT_NAME || 'heyburrito',
             api_token: process.env.SLACK_API_TOKEN || '',
-            emoji_inc: process.env.SLACK_EMOJI_INC || ':burrito:',
-            emoji_dec: process.env.SLACK_EMOJI_DEC || ':rottenburrito:',
-            enable_decrement: true,
-            daily_cap: process.env.SLACK_DAILY_CAP || 5,
+            emojiInc: fixEmoji(process.env.SLACK_EMOJI_INC || ':burrito:'),
+            emojiDec: fixEmoji(process.env.SLACK_EMOJI_DEC || ':rottenburrito:'),
+            disableEmojiDec: getBool(process.env.DISABLE_EMOJI_DEC, false),
+            dailyCap: getNum(process.env.SLACK_DAILY_CAP, 5000),
+            dailyDecCap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5000),
+            enableDecrement: getBool(process.env.ENABLE_DECREMENT, true),
         },
         http: {
             http_port: process.env.HTTP_PORT || 3333,
