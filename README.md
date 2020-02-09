@@ -297,12 +297,22 @@ GET api/userstats/today/USER2
 ### Scoreboard
 Scoreboard is accessable via localhost or host on port `3333`.
 
+
 Showcase
 -----------
+From heyburrito-theme ( [https://github.com/chralp/heyburrito-theme](https://github.com/chralp/heyburrito-theme) ) 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/13852280/51863905-8fddc400-2342-11e9-8ace-c21c675264d2.png" width="75%" height="75%">
+    <img src="https://user-images.githubusercontent.com/13852280/74108695-3e832a00-4b7d-11ea-91ec-162a0ad46532.png" width="75%" height="75%">
 </p>    
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/13852280/51863890-82283e80-2342-11e9-95c6-a37d2d3aeac7.png" width="75%" height="75%">
+    <img src="https://user-images.githubusercontent.com/13852280/74108696-3f1bc080-4b7d-11ea-9a99-6bac9631e608.png" width="75%" height="75%">
+  </p>    
+
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/13852280/74108698-3fb45700-4b7d-11ea-893b-21d33238efa1.png" width="75%" height="75%">
+</p>    
+
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/13852280/74108699-3fb45700-4b7d-11ea-9e21-1da65a583a0d.png" width="75%" height="75%">
   </p>    
