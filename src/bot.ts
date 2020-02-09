@@ -1,4 +1,3 @@
-import log from 'bog';
 import config from './config';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
@@ -6,6 +5,15 @@ import { parseMessage } from './lib/parseMessage';
 import { validBotMention, validMessage } from './lib/validator';
 import Rtm from './slack/Rtm';
 import Wbc from './slack/Wbc';
+
+const {
+    enableDecrement,
+    dailyCap,
+    dailyDecCap,
+    emojiInc,
+    emojiDec,
+    disableEmojiDec,
+} = config.slack;
 
 interface Emojis {
     type: string;
@@ -18,17 +26,13 @@ interface Updates {
 }
 const emojis: Array<Emojis> = [];
 
-
-const { enable_decrement, daily_cap, daily_dec_cap, emoji_inc, emoji_dec, disable_emoji_dec } = config.slack
-
-const incEmojis = emoji_inc.split(',');
+const incEmojis = emojiInc.split(',');
 incEmojis.forEach((emoji: string) => emojis.push({ type: 'inc', emoji }));
 
-if (!disable_emoji_dec) {
-    const incEmojis = emoji_dec.split(',');
-    incEmojis.forEach((emoji: string) => emojis.push({ type: 'dec', emoji }));
-};
-
+if (!disableEmojiDec) {
+    const decEmojis = emojiDec.split(',');
+    decEmojis.forEach((emoji: string) => emojis.push({ type: 'dec', emoji }));
+}
 
 const giveBurritos = async (giver: string, updates: Updates[]) => {
     return updates.reduce(async (prev: any, burrito) => {
@@ -38,37 +42,34 @@ const giveBurritos = async (giver: string, updates: Updates[]) => {
             } else if (burrito.type === 'dec') {
                 await BurritoStore.takeAwayBurrito(burrito.username, giver);
             }
-        })
+        });
     }, Promise.resolve());
 };
 
-const notifyUser = (user: string, message: string) => {
-    return Wbc.sendDM(user, message);
-};
+const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
 
 
 const handleBurritos = async (giver: string, updates: Updates[]) => {
-    if (enable_decrement) {
+    if (enableDecrement) {
         const burritos = await BurritoStore.givenBurritosToday(giver, 'from');
-        const diff = daily_cap - burritos;
+        const diff = dailyCap - burritos;
         if (updates.length > diff) {
             notifyUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diff} burritos left today!`);
             return false;
         }
-        if (burritos >= daily_cap) {
+        if (burritos >= dailyCap) {
             return false;
         }
         await giveBurritos(giver, updates);
     } else {
         const givenBurritos = await BurritoStore.givenToday(giver, 'from', 'inc');
         const givenRottenBurritos = await BurritoStore.givenToday(giver, 'from', 'dec');
-        const incUpdates = updates.filter(x => x.type === 'inc');
-        const decUpdates = updates.filter(x => x.type === 'dec');
-        const diffInc = daily_cap - givenBurritos;
-        const diffDec = daily_dec_cap - givenRottenBurritos;
+        const incUpdates = updates.filter((x) => x.type === 'inc');
+        const decUpdates = updates.filter((x) => x.type === 'dec');
+        const diffInc = dailyCap - givenBurritos;
+        const diffDec = dailyDecCap - givenRottenBurritos;
         if (incUpdates.length) {
             if (incUpdates.length > diffInc) {
-
                 notifyUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diffInc} burritos left today!`);
             } else {
                 await giveBurritos(giver, incUpdates);
@@ -82,7 +83,7 @@ const handleBurritos = async (giver: string, updates: Updates[]) => {
             }
         }
     }
-    return true
+    return true;
 };
 
 const start = () => {
