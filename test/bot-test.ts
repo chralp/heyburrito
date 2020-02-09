@@ -12,12 +12,12 @@ const loadMiddleware = ({ enable_decrement }) => {
     const bot = proxyquire('../src/bot', {
         './config': {
             slack: {
-                enable_decrement,
-                daily_cap: 5,
-                daily_dec_cap: 5,
-                emoji_inc: ':burrito:',
-                emoji_dec: ':rottenburrito:',
-                disable_emoji_dec: false,
+                enableDecrement: enable_decrement,
+                dailyCap: 5,
+                dailyDecCap: 5,
+                emojiInc: ':burrito:',
+                emojiDec: ':rottenburrito:',
+                disableEmojiDec: false,
             }
 
         },
@@ -38,7 +38,7 @@ describe('bot-test', async () => {
             describe: 'With file Driver as database',
             driver: 'file'
         },
-        /*{
+        {
             describe: 'With Array Driver as database',
             driver: 'array'
         },
@@ -46,7 +46,6 @@ describe('bot-test', async () => {
             describe: 'With Mongodb Driver as database',
             driver: 'mongodb'
         },
-        */
     ].forEach((test) => {
 
         describe(test.describe, async () => {
