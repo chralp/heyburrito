@@ -4,11 +4,11 @@ import { pathExists, createPath } from './utils';
 import themeHandler from './themeHandler';
 
 export default async () => {
-
+    log.level(config.misc.log_level);
     log.debug('Loaded ENVs for boot:');
     log.debug('=====================');
     log.debug('db_driver:', config.db.db_driver);
-    log.debug('themeName', config.theme.themeName)
+    log.debug('themeName', config.theme.themeName);
 
     if (config.theme.path) {
         log.debug('themePath:', config.theme.themePath);
@@ -34,8 +34,5 @@ export default async () => {
             }
         }
     }
-
-
-
     return true;
 };
