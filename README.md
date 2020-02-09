@@ -1,4 +1,4 @@
-![Logo](resources/logo.png)
+﻿![Logo](resources/logo.png)
 
 [![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
@@ -15,7 +15,7 @@ And a rottenburrito will decrement "burrito" - points
 Give away burrito  to a colleague if they done something good.
 ...Or maybe a rottenburrito ( :rottenburrito: , emoji needed ) if they done something bad.. :)
 
-Ping one or several of your colleagues and give away a burrito ( ![Burrito](https://user-images.githubusercontent.com/13852280/74094443-a6843280-4ae1-11ea-97b6-d1d8d4416494.png =20x) ) if they deserv it. Otherwise rottenburrito ( ![Rottenburrito](https://user-images.githubusercontent.com/13852280/74094503-9f115900-4ae2-11ea-8088-b5860221719c.png =20x) ) if not ...
+Ping one or several of your colleagues and give away a burrito if they deserv it. Otherwise rottenburrito if not ...
 
 Example:  
 This will increase chralps "burrito" - points by 3
@@ -27,7 +27,7 @@ This will decrease chralps "burrito" - points by 2
 This will increase chralps and fagges "burrito" - points by 2 ( each )
 `@chralp @fagge :burrito::burrito: - awesome app!` 
 
-You can run heyburrito and disable rottenburrito ( ![Rottenburrito](https://user-images.githubusercontent.com/13852280/74094503-9f115900-4ae2-11ea-8088-b5860221719c.png =20x) ) by passing environment variables.
+You can run heyburrito and disable rottenburrito by passing environment variables.
 By disabling decrement you can send rottenburritos but it will not decrement the users score.
 
 In the default theme you will find filters to show diffrent leaderboards, burrito board and rottenburrito board. If env for disable decrement is passed the burrito board will not count rottenburritos. But you can see leaderboard for rottenburritos ( sent and received ).
@@ -68,26 +68,26 @@ Check environment variables section.
 | ENV Variables       | Default Value                              | Required | Note                                                              |
 | ----------------    | -------------                              | ------   | -----------                                                       |
 | BOT_NAME            |                                            | Yes      | Same botname as in Get started section                            |
-| DATABASE_DRIVER     | file                                       | no       | See database drivers section                                      |
-| DATABASE_PATH       | projectRoot/data/                          | no       | Only use if DATABASE_DRIVER is file and u want to change the path |
+| DATABASE_DRIVER     | file                                       | No       | See database drivers section                                      |
+| DATABASE_PATH       | projectRoot/data/                          | No       | Only use if DATABASE_DRIVER is file and u want to change the path |
 | MONGODB_URL         |                                            | Yes*     | Only requierd if DATABASE_DRIVER is mongodb                       |
 | MONGODB_DATABASE    |                                            | Yes*     | Only requierd if DATABASE_DRIVER is mongodb                       |
-| DATABASE_URI        | MONGODB_URL/MONGODB_DATABASE               | no       | Only in use when DATABASE_DRIVER is mongodb                       |
+| DATABASE_URI        | MONGODB_URL/MONGODB_DATABASE               | No       | Only in use when DATABASE_DRIVER is mongodb                       |
 | SLACK_API_TOKEN     |                                            | Yes      | See Get started section                                           |
 | SLACK_EMOJI_INC     | :burrito:                                  | No       | Emoji to increment points. ex:( :burrito: )                       |
 | SLACK_EMOJI_DEC     | :rottenburrito:                            | No       | Emoji to decrement points. ex:( :rottenburrito: )                 |
 | SLACK_DAILY_CAP     | 5                                          | No       | Defaults to 5/day .                                               |
-| SLACK_DAILY_DEC_CAP | 5                                          | no       | separate cap ONLY IF env ENABLE_DECREMENT is set to false.        |
-| DISABLE_EMOJI_DEC   | false                                      | no       | Disable rottenburrito completely, set true to disable             |
+| SLACK_DAILY_DEC_CAP | 5                                          | No       | separate cap ONLY IF env ENABLE_DECREMENT is set to false.        |
+| DISABLE_EMOJI_DEC   | false                                      | No       | Disable rottenburrito completely, set true to disable             |
 | ENABLE_DECREMENT    | true                                       | No       | Enable decrement of points, set false to disable                  |
 | API_PATH            | /api/                                      | No       | Must start and end with slash                                     |
 | WEB_PATH            | /heyburrito/                               | No       | Serving html from .                                               |
-| HTTP_PORT           | 3333                                       | no       | For API and website                                               |
-| WSS_PORT            | 3334                                       |          |                                                                   |
+| HTTP_PORT           | 3333                                       | No       | For API and website                                               |
+| WSS_PORT            | 3334                                       |  No        |                                                                   |
 | THEME_URL           | https://github.com/chralp/heyburrito-theme | No       | Pass git url to theme                                             |
-| THEME_LATEST        | false                                      | no       | Donwload latest from git repo on start                            |
-| THEME_PATH          |                                            | no       | Pass local path to theme                                          |
-| LOG_LEVEL           | prod = info, dev = debug                   | no       | levels = debug, log, warn                                         |
+| THEME_LATEST        | false                                      | No       | Donwload latest from git repo on start                            |
+| THEME_PATH          |                                            | No       | Pass local path to theme                                          |
+| LOG_LEVEL           | prod = info, dev = debug                   | No       | levels = debug, log, warn                                         |
 
   
 ### Database drivers
@@ -101,10 +101,9 @@ Check environment variables section.
 
 ### Theme
 Defaults to heyburrito-theme. [https://github.com/chralp/heyburrito-theme](https://github.com/chralp/heyburrito-theme)
-If you want link a theme from disk, check "Environment variables" THEME_PATH
+If you want link a theme from disk, check environment variables THEME_PATH .
   
 #### Available third party themes
----------------------------------
 | Name          | Author    | link                                       |
 |---------------|-----------|--------------------------------------------|
 | cardi-burrito | tbleckert | https://github.com/tbleckert/cardi-burrito |
