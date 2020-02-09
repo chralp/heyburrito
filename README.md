@@ -1,4 +1,4 @@
-﻿![Logo](resources/logo.png)
+![Logo](resources/logo.png)
 
 [![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
@@ -98,6 +98,20 @@ Check environment variables section.
 | file    | Yes        | Creates a fileDB under projectRoot/data/burrito-{ENV}.db |
 | array   | No         | Used when testing, "memmoryDB" |
 
+
+### Emojis
+Rottenburrito and burrito emoji can be found under resources ( Burrito.png and Rottenburrito.png ).
+You can add the emojis in slack via the emoji toolbox => Add emoji.
+Its not possible to overwrite the standard burrito emoji in slack, so if you want to use heyburritos burrito emoji you can set a new name for it.
+
+Note, set the ENV keys SLACK_EMOJI_INC and SLACK_EMOJI_DEC with the emojis that you want to use.
+If u want to use the standard burrito emoji and our burrito emoji you have to pass both emojis in SLACK_EMOJI_INC.
+ex:
+If you set our burrito with name :burre: .
+ENV SLACK_EMOJI_INC should look like this.
+```
+SLACK_EMOJI_INC :burrito:, :burre:
+```
 
 ### Theme
 Defaults to heyburrito-theme. [https://github.com/chralp/heyburrito-theme](https://github.com/chralp/heyburrito-theme)
