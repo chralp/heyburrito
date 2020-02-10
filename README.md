@@ -1,4 +1,4 @@
-![Logo](resources/logo.png)
+![Logo](resources/hey_burrito_github.png)
 
 [![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
