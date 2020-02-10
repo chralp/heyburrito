@@ -21,8 +21,13 @@ const time = () => {
 
 const sort = (input: UserInterface[], sortType: string = 'desc'): UserInterface[] => {
     const sorted = input.sort((a, b) => {
-        if (sortType === 'desc') return b.score - a.score;
-        return a.score - b.score;
+        if (a.score) {
+            if (sortType === 'desc') return b.score - a.score;
+            return a.score - b.score;
+        } else {
+            if (sortType === 'desc') return b.scoreinc - a.scoreinc;
+            return a.scoreinc - b.scoreinc;
+        }
     });
     return sorted;
 };
