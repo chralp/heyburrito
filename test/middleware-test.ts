@@ -22,7 +22,7 @@ const proxyquire = require('proxyquire').noCallThru();
 let getScoreBoard: any, getUserStats: any, givenBurritosToday: any, getUserScore: any
 
 const loadMiddleware = ({ enable_decrement }) => {
-    const funcs = proxyquire('../src/middleware', { './config': { slack: { enable_decrement } } });
+    const funcs = proxyquire('../src/middleware', { './config': { slack: { enableDecrement: enable_decrement } } });
     getScoreBoard = funcs.getScoreBoard
     getUserStats = funcs.getUserStats
     getUserScore = funcs.getUserScore
@@ -42,7 +42,7 @@ describe('middleware-test', async () => {
         {
             describe: 'With Mongodb Driver as database',
             driver: 'mongodb'
-        },
+        }
     ].forEach((test) => {
 
         describe(test.describe, async () => {

@@ -259,20 +259,20 @@ const userStatsUser1 = {
     },
     given: [
         {
-            username: 'USER2',
-            name: 'User2',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 8,
-            scoredec: 2
-        },
-        {
             username: 'USER3',
             name: 'User3',
             avatar: 'https://link.to.avatar.48.burrito',
             memberType: 'member',
             scoreinc: 12,
             scoredec: 4
+        },
+        {
+            username: 'USER2',
+            name: 'User2',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 8,
+            scoredec: 2
         },
         {
             username: 'USER4',
@@ -284,6 +284,14 @@ const userStatsUser1 = {
         }
     ],
     received: [
+        {
+            username: 'USER4',
+            name: 'User4',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 8,
+            scoredec: 1
+        },
         {
             username: 'USER2',
             name: 'User2',
@@ -299,14 +307,6 @@ const userStatsUser1 = {
             memberType: 'member',
             scoreinc: 5,
             scoredec: 2
-        },
-        {
-            username: 'USER4',
-            name: 'User4',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 8,
-            scoredec: 1
         }
     ],
     givenToday: [
@@ -367,6 +367,14 @@ const userStatsUser2 = {
     },
     given: [
         {
+            username: 'USER4',
+            name: 'User4',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 6,
+            scoredec: 0
+        },
+        {
             username: 'USER1',
             name: 'User1',
             avatar: 'https://link.to.avatar.48.burrito',
@@ -381,25 +389,9 @@ const userStatsUser2 = {
             memberType: 'member',
             scoreinc: 4,
             scoredec: 2
-        },
-        {
-            username: 'USER4',
-            name: 'User4',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 6,
-            scoredec: 0
         }
     ],
     received: [
-        {
-            username: 'USER1',
-            name: 'User1',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 8,
-            scoredec: 2
-        },
         {
             username: 'USER3',
             name: 'User3',
@@ -407,6 +399,14 @@ const userStatsUser2 = {
             memberType: 'member',
             scoreinc: 9,
             scoredec: 1
+        },
+        {
+            username: 'USER1',
+            name: 'User1',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 8,
+            scoredec: 2
         },
         {
             username: 'USER4',
@@ -427,20 +427,20 @@ const userStatsUser2 = {
             scoredec: 0
         },
         {
-            username: 'USER3',
-            name: 'User3',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 1,
-            scoredec: 1
-        },
-        {
             username: 'USER4',
             name: 'User4',
             avatar: 'https://link.to.avatar.48.burrito',
             memberType: 'member',
             scoreinc: 3,
             scoredec: 0
+        },
+        {
+            username: 'USER3',
+            name: 'User3',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 1,
+            scoredec: 1
         }
     ],
     receivedToday: [
@@ -485,20 +485,20 @@ const userStatsUser3 = {
     },
     given: [
         {
-            username: 'USER1',
-            name: 'User1',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 5,
-            scoredec: 2
-        },
-        {
             username: 'USER2',
             name: 'User2',
             avatar: 'https://link.to.avatar.48.burrito',
             memberType: 'member',
             scoreinc: 9,
             scoredec: 1
+        },
+        {
+            username: 'USER1',
+            name: 'User1',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 5,
+            scoredec: 2
         },
         {
             username: 'USER4',
@@ -519,19 +519,19 @@ const userStatsUser3 = {
             scoredec: 4
         },
         {
-            username: 'USER2',
-            name: 'User2',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 4,
-            scoredec: 2
-        },
-        {
             username: 'USER4',
             name: 'User4',
             avatar: 'https://link.to.avatar.48.burrito',
             memberType: 'member',
             scoreinc: 5,
+            scoredec: 2
+        },
+        {
+            username: 'USER2',
+            name: 'User2',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 4,
             scoredec: 2
         }
     ],
@@ -674,19 +674,19 @@ const userStatsUser4 = {
     ],
     receivedToday: [
         {
-            username: 'USER1',
-            name: 'User1',
-            avatar: 'https://link.to.avatar.48.burrito',
-            memberType: 'member',
-            scoreinc: 2,
-            scoredec: 0
-        },
-        {
             username: 'USER2',
             name: 'User2',
             avatar: 'https://link.to.avatar.48.burrito',
             memberType: 'member',
             scoreinc: 3,
+            scoredec: 0
+        },
+        {
+            username: 'USER1',
+            name: 'User1',
+            avatar: 'https://link.to.avatar.48.burrito',
+            memberType: 'member',
+            scoreinc: 2,
             scoredec: 0
         },
         {
