@@ -8,4 +8,6 @@ export default interface User {
     gived?: number;
     receivedToday?: number;
     givedToday?: number;
+    scoreinc?: number;
+    scoredec?: number;
 }
