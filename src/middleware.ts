@@ -22,7 +22,7 @@ const getScoreBoard = async (listType: string, scoreType: string) => {
         let filteredData: any;
         let countSwitch: any;
 
-        if (listType === 'to' && config.slack.enable_decrement && (scoreType === 'inc')) {
+        if (listType === 'to' && config.slack.enableDecrement && (scoreType === 'inc')) {
             filteredData = dataByUser;
         } else {
             filteredData = dataByUser.filter((e: any) => (e.value === scoreTypeFilter));
@@ -113,7 +113,7 @@ const getUserScore = async (user: string, listType: string, scoreType: string) =
     let filteredData: any;
 
     if (listType === 'to' && scoreType === 'inc') {
-        if (config.slack.enable_decrement) {
+        if (config.slack.enableDecrement) {
             filteredData = userScore;
         } else {
             filteredData = userScore.filter((e: any) => (e.value === scoreTypeFilter));
