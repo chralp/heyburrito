@@ -1,6 +1,6 @@
 {
   "name": "heyburrito",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": "github.com/chralp/heyburrito",
   "scripts": {
     "start": "NODE_ENV=production ts-node ./src/server.ts",
