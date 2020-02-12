@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { parseMessage, parseUsernames } from '../app/lib/parseMessage'
+import { parseMessage, parseUsernames } from '../src/lib/parseMessage'
 
 let msg, resultShouldBe, res, joinedChannel, pingUser, dmToBot, kicked, userJoinedChannel, emojis
 
@@ -95,7 +95,7 @@ before(() => {
 
 })
 
-describe('handleMessage-test', () => {
+describe('parseMessage-test', () => {
 
     describe('parseUsername', () => {
         it('should return 2 unique usernames', () => {
@@ -112,7 +112,7 @@ describe('handleMessage-test', () => {
                 text: '<@USER2 @USER2> <USER3>:burrito: :burrito: :rottenburrito: user2',
             }
             res = parseUsernames(msg.text)
-            expect(res).to.be.undefined
+            expect(res).to.deep.equal([])
         });
 
     })

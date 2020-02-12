@@ -1,87 +1,79 @@
-import { default as log } from 'bog'
-import { parseUsernames } from './parseMessage'
-import SlackMessageInterface from '../types/SlackMessage.interface';
+import * as log from 'bog';
+import { parseUsernames } from './parseMessage';
 
-function selfMention(message) {
-    const selfMention = message.text.match(`<@${message.user}>`) ? true : false
-    if (selfMention) log.warn('Not valid, sender mentioned in message')
-    return selfMention;
+function selfMention(message: any) {
+    const selfmention = message.text.match(`<@${message.user}>`);
+    if (selfmention) log.warn('Not valid, sender mentioned in message');
+    return !!selfmention;
 }
 
-function sentFromBot(message, allBots) {
-
-    const sentFromBot = allBots.filter(x => message.user.match(x.id))
-    return !!sentFromBot.length
-
+function sentFromBot(message: any, allBots: any) {
+    const fromBot = allBots.filter((x: any) => message.user.match(x.id));
+    return !!fromBot.length;
 }
 
-function sentToBot(message, allBots) {
-
+function sentToBot(message: any, allBots: any) {
     // Get all users from message.text
-    const usersArr = parseUsernames(message.text)
+    const usersArr = parseUsernames(message.text);
 
-    if (!usersArr) return false
+    if (!usersArr) return false;
 
-    const sentToBot = allBots.filter((v: any) => {
-        if (usersArr.includes(v.id)) return v
+    const toBot = allBots.filter((v: any) => {
+        if (usersArr.includes(v.id)) return v;
+        return undefined;
     });
 
-    return !!sentToBot.length
+    return !!toBot.length;
 }
 
-function burritoToBot(message, emojis) {
-    /*
-        for (const x of bots) {
-            // Message is sent from bot
-            if (message.user.match(`${x.id}`)) return false;
-
-            // Message contains bot and emoji
-            if (message.text.match(`${x.id}`)) {
-                for (const e of emojis) {
-                    if (message.text.match(`${e.emoji}`)) {
-                        return false;
-                    }
-                }
-            }
-        }
-    */
-
-    const burritoToBot = emojis.filter(x => message.text.match(`${x.id}`))
-    return !!burritoToBot.length
+function burritoToBot(message: any, emojis: any) {
+    const burritoSentToBot = emojis.filter((x: any) => message.text.match(`${x.id}`));
+    return !!burritoSentToBot.length;
 }
 
-
-function validMessage(message: SlackMessageInterface, emojis, allBots) {
-
+function validMessage(message: any, emojis: any, allBots: any): boolean {
     // We dont want messages with subtypes
-    if (message.subtype) return false
+    if (message.subtype) return false;
 
     // Check if sender is mentioned in message
-    if (selfMention(message)) return false
+    if (selfMention(message)) return false;
 
-    for (const x of allBots) {
-        // Message is sent from bot
-        if (message.user.match(`${x.id}`)) return false;
+    // Check if message.user is registerd Bot
+    const usrIsBot = allBots.filter((m: any) => {
+        if (message.user.match(`${m.id}`)) return m;
+        return undefined;
+    });
+    if (usrIsBot.length) return false;
 
-        // Message contains bot and emoji
-        if (message.text.match(`${x.id}`)) {
-            for (const e of emojis) {
-                if (message.text.match(`${e.emoji}`)) {
-                    return false;
-                }
-            }
-        }
+    // Check if message.text contains registerd Bot
+    const txtContainsBot = allBots.filter((m: any) => {
+        if (message.text.match(`${m.id}`)) return m;
+        return undefined;
+    });
+
+    if (txtContainsBot.length) {
+        // Check if message.text contains registerd emoji to bot
+        const txtContainsEmoji = emojis.filter((e) => {
+            if (message.text.match(`${e.emoji}`)) return e;
+            return undefined;
+        });
+        if (txtContainsEmoji.length) return false;
     }
-
     return true;
 }
 
-
-function validBotMention(message: SlackMessageInterface, botUserID) {
+function validBotMention(message: any, botUserID: any) {
     if ((message.text.match(`<@${botUserID}>`)) && (message.text.match('stats'))) {
         return true;
     }
     return false;
 }
 
-export { validBotMention, validMessage, selfMention, sentFromBot, sentToBot, burritoToBot };
+export {
+    validBotMention,
+    validMessage,
+    selfMention,
+    sentFromBot,
+    sentToBot,
+    burritoToBot,
+};

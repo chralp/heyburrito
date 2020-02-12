@@ -1,77 +1,115 @@
-import { default as log } from 'bog';
+import * as log from 'bog';
 import { EventEmitter } from 'events';
-import UserScoreInterface from '../types/UserScore.interface';
+
+interface Find {
+    _id: string;
+    to: string;
+    from: string;
+    value: number;
+    given_at: Date;
+}
+
+interface Sum {
+    _id?: string; // Username
+    score?: number;
+}
+
+interface GetUserStats {
+    _id: string;
+    received: number;
+    given: number;
+    receivedToday: number;
+    givenToday: number;
+}
+
+interface DatabasePost {
+    _id: string,
+    to: string,
+    from: string,
+    value: number,
+    given_at: Date
+}
 
 class BurritoStore extends EventEmitter {
-
     database: any = null;
 
-    setDatabase(database) {
+    // Set and Store database object
+    setDatabase(database: any) {
         this.database = database;
     }
 
-    givenBurritos(user: string) {
-        return this.database.findFrom(user);
-    }
-
-    givenBurritosToday(user: string) {
-        return this.database.findFromToday(user);
-    }
-
-    giveBurrito(to: string, from: string) {
+    async giveBurrito(to: string, from: string, date = new Date()): Promise<string> {
         log.info(`Burrito given to ${to} from ${from}`);
-        return this.database.give(to, from).then(() => this.emit('GIVE', to));
+        await this.database.give(to, from, date);
+        this.emit('GIVE', to, from);
+        return to;
     }
 
-    async takeAwayBurrito(to: string, from: string) {
+    async takeAwayBurrito(to: string, from: string, date = new Date()): Promise<string | []> {
         log.info(`Burrito taken away from ${to} by ${from}`);
-        const data = await this.getUserScore({ user: to });
-
-        // Loweset score possible should be 0 ( ZERO )
-        const score = data.map(x => x.score)[0]
-
-        if (!score) return []
-
-        if (score > 0) return this.database.takeAway(to, from).then(() => this.emit('TAKE_AWAY', to));
+        const score: number = await this.database.getScore(to, 'to', true);
+        if (!score) return [];
+        await this.database.takeAway(to, from, date);
+        this.emit('TAKE_AWAY', to, from);
+        return to;
     }
 
-    async getUserStats(user: string) {
-        const [score, given, givenTodayArr] = await Promise.all([
-            this.database.getScore({ user, scoreType: 'to' }),
-            this.database.getGiven(user),
-            this.database.findFromToday(user)
-        ])
-
-        // Always return something
-        const givenTotal = given.length ? given.reduce((acc, current) => ({ score: acc.score + current.score })) : { score: 0 }
-        score.push({
-            givenTotal: givenTotal.score,
-            givenToday: Object.keys(givenTodayArr).length
-        })
-
-        const merged = score.reduce((acc, current) => Object.assign({}, acc, current))
-        return [merged];
+    async getUserStats(user: string): Promise<GetUserStats> {
+        const [
+            received,
+            given,
+            receivedToday,
+            givenToday,
+        ]: [Sum[], Sum[], number, number] = await Promise.all([
+            this.database.getScore(user, 'to'),
+            this.database.getScore(user, 'from'),
+            this.givenBurritosToday(user, 'to'),
+            this.givenBurritosToday(user, 'from'),
+        ]);
+        return {
+            receivedToday,
+            givenToday,
+            _id: user,
+            received: received.length,
+            given: given.length,
+        };
     }
 
-    async getUserScore({ user = null, scoreType = null }): Promise<Array<UserScoreInterface>> {
-        const data = user ? this.getUserStats(user) : this.database.getScore({ user, scoreType });
-        return data;
+    async getScoreBoard({ ...args }): Promise<DatabasePost[]> {
+        return this.database.getScoreBoard({ ...args });
     }
 
-    getGiven(user: string): Promise<Array<UserScoreInterface>> {
-        return this.database.getGiven(user);
+    /**
+     * @param {string} user - userId
+     * @param {string} listType - to / from defaults from
+     */
+    async givenBurritosToday(user: string, listType: string): Promise<number> {
+        const givenToday: Find[] = await this.database.findFromToday(user, listType);
+        return givenToday.length;
     }
 
-
-    getGivers(user: string = null): Promise<Array<UserScoreInterface>> {
-        return this.database.getGivers(user);
+    /**
+     * @param {string} user - userId
+     * @param {string} listType - to / from defaults from
+     */
+    async givenToday(user: string, listType: string, type: any = false): Promise<number> {
+        const givenToday: Find[] = await this.database.findFromToday(user, listType);
+        if (type) {
+            if (['inc', 'dec'].includes(type)) {
+                const valueFilter = (type === 'inc') ? 1 : -1;
+                const givenFilter = givenToday.filter((x) => x.value === valueFilter);
+                return givenFilter.length;
+            }
+        }
+        return givenToday.length;
     }
 
-    getUserScoreList({ ...args }): Promise<Array<UserScoreInterface>> {
-        return this.database.getUserScoreList(args);
+    /**
+     * @param {string} user - userId
+     */
+    async getUserScore(user: string, listType: string, num): Promise<number> {
+        return this.database.getScore(user, listType, num);
     }
-
 }
 
-// Export as singleton
 export default new BurritoStore();
