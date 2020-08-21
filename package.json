@@ -11,11 +11,6 @@
     "docker-build": "docker build -t chralp/heyburrito . && docker tag chralp/heyburrito chralp/heyburrito",
     "docker-push": "docker push chralp/heyburrito"
   },
-  "config": {
-    "mongodbMemoryServer": {
-      "version": "latest"
-    }
-  },
   "license": "MIT",
   "dependencies": {
     "@slack/rtm-api": "^5.0.3",
