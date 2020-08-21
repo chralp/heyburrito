@@ -57,7 +57,7 @@ const config = {
             enableDecrement: getBool(process.env.ENABLE_DECREMENT, true),
         },
         http: {
-            http_port: process.env.HTTP_PORT || 3333,
+            http_port: process.env.PORT || process.env.HTTP_PORT || 3333,
             wss_port: process.env.WSS_PORT || 3334,
             web_path: process.env.WEB_PATH ? fixPath(process.env.WEB_PATH) : '/heyburrito/',
             api_path: process.env.API_PATH ? fixPath(process.env.API_PATH) : '/api/',
