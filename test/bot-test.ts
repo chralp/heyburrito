@@ -15,7 +15,7 @@ const loadMiddleware = ({ enable_decrement }) => {
                 enableDecrement: enable_decrement,
                 dailyCap: 5,
                 dailyDecCap: 5,
-                emojiInc: ':burrito:',
+                emojiInc: ' :burrito: ',
                 emojiDec: ':rottenburrito:',
                 disableEmojiDec: false,
             }
