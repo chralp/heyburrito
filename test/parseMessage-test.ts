@@ -157,6 +157,27 @@ describe('parseMessage-test', () => {
 
         });
 
+        it('should return 4 INC updates, two users, burrito before user', () => {
+
+            msg = {
+                user: 'USER1',
+                text: ':burrito: :burrito: <@USER2> <@USER3>',
+            }
+
+            resultShouldBe = {
+                giver: 'USER1',
+                updates:
+                    [{ username: 'USER2', type: 'inc' },
+                    { username: 'USER3', type: 'inc' },
+                    { username: 'USER2', type: 'inc' },
+                    { username: 'USER3', type: 'inc' }]
+            }
+            res = parseMessage(msg, emojis)
+            expect(res).to.deep.equal(resultShouldBe)
+
+        });
+
+
         it('should return 2 DEC updates, one user', () => {
             msg = {
                 user: 'USER1',

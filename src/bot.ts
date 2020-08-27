@@ -26,11 +26,11 @@ interface Updates {
 }
 const emojis: Array<Emojis> = [];
 
-const incEmojis = emojiInc.split(',');
+const incEmojis = emojiInc.split(',').map((emoji => emoji.trim()));
 incEmojis.forEach((emoji: string) => emojis.push({ type: 'inc', emoji }));
 
 if (!disableEmojiDec) {
-    const decEmojis = emojiDec.split(',');
+    const decEmojis = emojiDec.split(',').map((emoji => emoji.trim()));
     decEmojis.forEach((emoji: string) => emojis.push({ type: 'dec', emoji }));
 }
 
@@ -47,7 +47,6 @@ const giveBurritos = async (giver: string, updates: Updates[]) => {
 };
 
 const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
-
 
 const handleBurritos = async (giver: string, updates: Updates[]) => {
     if (enableDecrement) {
