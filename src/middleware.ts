@@ -35,6 +35,23 @@ const getScoreBoard = async (listType: string, scoreType: string) => {
         if (x.score !== 0) return x;
         return undefined;
     }).filter((y) => y);
+
+    if(config.level.enableLevel) {
+        const levelScoreList = scoreList.map(x => {
+            let score = x.score;
+            const threshold = 5;
+            const roundedScore = Math.floor( score / threshold ) * 5;
+            const level = Math.floor((score -1) / threshold)
+            const newScore = ((score - roundedScore) === 0 ? roundedScore - (score - threshold) : score - roundedScore);
+            return {
+                _id: x._id,
+                score: newScore,
+                level
+            }
+        });
+        return sort(mapper(levelScoreList));
+    };
+
     return sort(mapper(scoreList));
 };
 

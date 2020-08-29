@@ -108,6 +108,10 @@ const config = {
             themeName: getThemeName(),
             themePath: getThemePath(),
         },
+        level: {
+            enableLevel: getBool(process.env.ENABLE_LEVEL, true),
+            scoreRotation: getNum(process.env.SCORE_ROTATION, 500)
+        },
         misc: {
             slackMock: true,
             log_level: process.env.LOG_LEVEL || 'debug'
