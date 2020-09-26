@@ -3,6 +3,12 @@ import mapper from './lib/mapper';
 import { sort } from './lib/utils';
 import BurritoStore from './store/BurritoStore';
 
+
+const {
+    enableLevel,
+    scoreRotation,
+} = config.level;
+
 /**
  * Middleware for API and Websocket
  */
@@ -35,6 +41,22 @@ const getScoreBoard = async (listType: string, scoreType: string) => {
         if (x.score !== 0) return x;
         return undefined;
     }).filter((y) => y);
+
+    if(enableLevel) {
+        const levelScoreList = scoreList.map(x => {
+            let score = x.score;
+            const roundedScore = Math.floor( score / scoreRotation ) * scoreRotation;
+            const level = Math.floor((score -1) / scoreRotation);
+            const newScore = ((score - roundedScore) === 0 ? roundedScore - (score - scoreRotation) : score - roundedScore);
+            return {
+                _id: x._id,
+                score: newScore,
+                level,
+            }
+        });
+        return sort(mapper(levelScoreList));
+    };
+
     return sort(mapper(scoreList));
 };
 
