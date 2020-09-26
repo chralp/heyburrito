@@ -22,7 +22,10 @@ const proxyquire = require('proxyquire').noCallThru();
 let getScoreBoard: any, getUserStats: any, givenBurritosToday: any, getUserScore: any
 
 const loadMiddleware = ({ enable_decrement }) => {
-    const funcs = proxyquire('../src/middleware', { './config': { slack: { enableDecrement: enable_decrement } } });
+    const funcs = proxyquire('../src/middleware', { './config': {
+        slack: { enableDecrement: enable_decrement },
+        level: { enableLevel: false, scoreRotation: 500 }
+    } });
     getScoreBoard = funcs.getScoreBoard
     getUserStats = funcs.getUserStats
     getUserScore = funcs.getUserScore

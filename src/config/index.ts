@@ -70,6 +70,10 @@ const config = {
             themeName: getThemeName(),
             themePath: getThemePath(),
         },
+        level: {
+            enableLevel: getBool(process.env.ENABLE_LEVEL, false),
+            scoreRotation: getNum(process.env.SCORE_ROTATION, 500)
+        },
         misc: {
             slackMock: false,
             log_level: process.env.LOG_LEVEL || 'info'
@@ -148,6 +152,10 @@ const config = {
             latest: getBool(process.env.THEME_LATEST, true),
             themeName: getThemeName(),
             themePath: getThemePath(),
+        },
+        level: {
+            enableLevel: getBool(process.env.ENABLE_LEVEL, false),
+            scoreRotation: getNum(process.env.SCORE_ROTATION, 500)
         },
         misc: {
             slackMock: true,
