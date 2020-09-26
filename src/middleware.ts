@@ -45,14 +45,13 @@ const getScoreBoard = async (listType: string, scoreType: string) => {
     if(enableLevel) {
         const levelScoreList = scoreList.map(x => {
             let score = x.score;
-            const threshold: number = scoreRotation;
-            const roundedScore = Math.floor( score / threshold ) * threshold;
-            const level = Math.floor((score -1) / threshold)
-            const newScore = ((score - roundedScore) === 0 ? roundedScore - (score - threshold) : score - roundedScore);
+            const roundedScore = Math.floor( score / scoreRotation ) * scoreRotation;
+            const level = Math.floor((score -1) / scoreRotation);
+            const newScore = ((score - roundedScore) === 0 ? roundedScore - (score - scoreRotation) : score - roundedScore);
             return {
                 _id: x._id,
                 score: newScore,
-                level
+                level,
             }
         });
         return sort(mapper(levelScoreList));
