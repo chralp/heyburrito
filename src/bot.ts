@@ -76,7 +76,7 @@ const giveBurritos = async (
     });
 
     const leftBurritos = diff - updates.length;
-    msgForGiver += ` you have ${leftBurritos} waffle${
+    msgForGiver += ` and you have ${leftBurritos} waffle${
         leftBurritos > 1 ? "s" : ""
     } left to give out today.`;
     notifyUser(giver, msgForGiver);
@@ -89,7 +89,11 @@ const handleBurritos = async (giver: string, updates: Updates[]) => {
         if (updates.length > diff) {
             notifyUser(
                 giver,
-                `You are trying to give away ${updates.length} waffles, but you only have ${diff} waffles left today!`
+                `You are trying to give away ${updates.length} waffle${
+                    updates.length > 1 ? "s" : ""
+                }, but you only have ${diff} waffle${
+                    diff > 1 ? "s" : ""
+                } left today!`
             );
             return false;
         }
@@ -116,7 +120,11 @@ const handleBurritos = async (giver: string, updates: Updates[]) => {
             if (incUpdates.length > diffInc) {
                 notifyUser(
                     giver,
-                    `You are trying to give away ${updates.length} waffles, but you only have ${diffInc} waffles left today!`
+                    `You are trying to give away ${updates.length} waffle${
+                        updates.length > 1 ? "s" : ""
+                    }, but you only have ${diffInc} waffle${
+                        diffInc > 1 ? "s" : ""
+                    } left today!`
                 );
             } else {
                 await giveBurritos(giver, incUpdates, diffInc);
@@ -126,7 +134,13 @@ const handleBurritos = async (giver: string, updates: Updates[]) => {
             if (decUpdates.length > diffDec) {
                 notifyUser(
                     giver,
-                    `You are trying to give away ${updates.length} rottenwaffles, but you only have ${diffDec} rottenwaffles left today!`
+                    `You are trying to give away ${
+                        updates.length
+                    } rottenwaffle${
+                        updates.length > 1 ? "s" : ""
+                    }, but you only have ${diffDec} rottenwaffle${
+                        diffDec > 1 ? "s" : ""
+                    } left today!`
                 );
             } else {
                 await giveBurritos(giver, decUpdates, diffDec);
