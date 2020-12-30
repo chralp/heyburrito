@@ -34,12 +34,14 @@ if (!disableEmojiDec) {
     decEmojis.forEach((emoji: string) => emojis.push({ type: "dec", emoji }));
 }
 
+const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
+
 const giveBurritos = async (
     giver: string,
     updates: Updates[],
     diff: number
 ) => {
-    return updates.reduce(async (prev: any, burrito) => {
+    await updates.reduce(async (prev: any, burrito) => {
         return prev.then(async () => {
             if (burrito.type === "inc") {
                 await BurritoStore.giveBurrito(burrito.username, giver);
@@ -79,8 +81,6 @@ const giveBurritos = async (
     } left to give out today.`;
     notifyUser(giver, msgForGiver);
 };
-
-const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
 
 const handleBurritos = async (giver: string, updates: Updates[]) => {
     if (enableDecrement) {
