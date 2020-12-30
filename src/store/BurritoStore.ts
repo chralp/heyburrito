@@ -1,5 +1,5 @@
-import * as log from 'bog';
-import { EventEmitter } from 'events';
+import * as log from "bog";
+import { EventEmitter } from "events";
 
 interface Find {
     _id: string;
@@ -23,11 +23,11 @@ interface GetUserStats {
 }
 
 interface DatabasePost {
-    _id: string,
-    to: string,
-    from: string,
-    value: number,
-    given_at: Date
+    _id: string;
+    to: string;
+    from: string;
+    value: number;
+    given_at: Date;
 }
 
 class BurritoStore extends EventEmitter {
@@ -38,33 +38,41 @@ class BurritoStore extends EventEmitter {
         this.database = database;
     }
 
-    async giveBurrito(to: string, from: string, date = new Date()): Promise<string> {
-        log.info(`Burrito given to ${to} from ${from}`);
+    async giveBurrito(
+        to: string,
+        from: string,
+        date = new Date()
+    ): Promise<string> {
+        log.info(`Waffle given to ${to} from ${from}`);
         await this.database.give(to, from, date);
-        this.emit('GIVE', to, from);
+        this.emit("GIVE", to, from);
         return to;
     }
 
-    async takeAwayBurrito(to: string, from: string, date = new Date()): Promise<string | []> {
+    async takeAwayBurrito(
+        to: string,
+        from: string,
+        date = new Date()
+    ): Promise<string | []> {
         log.info(`Burrito taken away from ${to} by ${from}`);
-        const score: number = await this.database.getScore(to, 'to', true);
+        const score: number = await this.database.getScore(to, "to", true);
         if (!score) return [];
         await this.database.takeAway(to, from, date);
-        this.emit('TAKE_AWAY', to, from);
+        this.emit("TAKE_AWAY", to, from);
         return to;
     }
 
     async getUserStats(user: string): Promise<GetUserStats> {
-        const [
-            received,
-            given,
-            receivedToday,
-            givenToday,
-        ]: [Sum[], Sum[], number, number] = await Promise.all([
-            this.database.getScore(user, 'to'),
-            this.database.getScore(user, 'from'),
-            this.givenBurritosToday(user, 'to'),
-            this.givenBurritosToday(user, 'from'),
+        const [received, given, receivedToday, givenToday]: [
+            Sum[],
+            Sum[],
+            number,
+            number
+        ] = await Promise.all([
+            this.database.getScore(user, "to"),
+            this.database.getScore(user, "from"),
+            this.givenBurritosToday(user, "to"),
+            this.givenBurritosToday(user, "from"),
         ]);
         return {
             receivedToday,
@@ -84,7 +92,10 @@ class BurritoStore extends EventEmitter {
      * @param {string} listType - to / from defaults from
      */
     async givenBurritosToday(user: string, listType: string): Promise<number> {
-        const givenToday: Find[] = await this.database.findFromToday(user, listType);
+        const givenToday: Find[] = await this.database.findFromToday(
+            user,
+            listType
+        );
         return givenToday.length;
     }
 
@@ -92,12 +103,21 @@ class BurritoStore extends EventEmitter {
      * @param {string} user - userId
      * @param {string} listType - to / from defaults from
      */
-    async givenToday(user: string, listType: string, type: any = false): Promise<number> {
-        const givenToday: Find[] = await this.database.findFromToday(user, listType);
+    async givenToday(
+        user: string,
+        listType: string,
+        type: any = false
+    ): Promise<number> {
+        const givenToday: Find[] = await this.database.findFromToday(
+            user,
+            listType
+        );
         if (type) {
-            if (['inc', 'dec'].includes(type)) {
-                const valueFilter = (type === 'inc') ? 1 : -1;
-                const givenFilter = givenToday.filter((x) => x.value === valueFilter);
+            if (["inc", "dec"].includes(type)) {
+                const valueFilter = type === "inc" ? 1 : -1;
+                const givenFilter = givenToday.filter(
+                    (x) => x.value === valueFilter
+                );
                 return givenFilter.length;
             }
         }
