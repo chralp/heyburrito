@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   mongodb:
     image: mongo:3.4
@@ -7,19 +7,19 @@ services:
       - "27017:27017"
     volumes:
       - /data/mongodb:/data/db/
-  heyburrito:
-    image: chralp/heyburrito:latest
+  heywaffle:
+    build:
+      context: ./
     ports:
       - "3333:3333"
       - "8080:8080"
     environment:
-      - BOT_NAME=heyburrito
+      - BOT_NAME=heywaffle
       - DATABASE_DRIVER=mongodb
       - MONGODB_URL=mongodb://mongodb:27017
-      - MONGODB_DATABASE=heyburrito
+      - MONGODB_DATABASE=heywaffle
       - SLACK_API_TOKEN=SeeDocumentation
-      - "SLACK_EMOJI_INC=:burrito:"
-      - "SLACK_EMOJI_INC=:rottenburrito:"
+      - "SLACK_EMOJI_INC=:waffle:"
       - SLACK_DAILY_CAP=5
     links:
       - mongodb
