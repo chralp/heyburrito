@@ -1,4 +1,4 @@
-import { time } from '../../lib/utils';
+import moment from "moment-timezone";
 
 const mongoConf = {
     useNewUrlParser: true,
@@ -23,8 +23,8 @@ class MongoDBDriver {
         public MongoClient: any,
         public conf: any = {},
         public client = null,
-        public db = null,
-    ) { }
+        public db = null
+    ) {}
 
     async connect() {
         if (this.client && this.client.isConnected()) {
@@ -32,12 +32,15 @@ class MongoDBDriver {
         }
 
         try {
-            const client = await this.MongoClient.connect(`${this.conf.db_uri}`, mongoConf);
+            const client = await this.MongoClient.connect(
+                `${this.conf.db_uri}`,
+                mongoConf
+            );
             this.client = client;
             this.db = client.db(this.conf.db_database);
             return true;
         } catch (e) {
-            throw new Error('Could not connect to Mongodb server');
+            throw new Error("Could not connect to Mongodb server");
         }
     }
 
@@ -47,7 +50,7 @@ class MongoDBDriver {
     }
 
     give(to: string, from: string, date: any) {
-        return this.store('burritos', {
+        return this.store("burritos", {
             to,
             from,
             value: 1,
@@ -56,7 +59,7 @@ class MongoDBDriver {
     }
 
     takeAway(to: string, from: string, date: any) {
-        return this.store('burritos', {
+        return this.store("burritos", {
             to,
             from,
             value: -1,
@@ -80,13 +83,21 @@ class MongoDBDriver {
      * @param { string } listType - defaults to 'to'
      * @return { Object } sum[] - data
      */
-    async sum(collection: string, match: Object = null, listType: string): Promise<Sum[]> {
+    async sum(
+        collection: string,
+        match: Object = null,
+        listType: string
+    ): Promise<Sum[]> {
         await this.connect();
-        const aggregations: Array<Object> = [{ $match: { to: { $exists: true } } }];
+        const aggregations: Array<Object> = [
+            { $match: { to: { $exists: true } } },
+        ];
         if (match) {
             aggregations.push({ $match: match });
         }
-        aggregations.push({ $group: { _id: listType, score: { $sum: '$value' } } });
+        aggregations.push({
+            $group: { _id: listType, score: { $sum: "$value" } },
+        });
         aggregations.push({ $sort: { score: -1 } });
         return this.db.collection(collection).aggregate(aggregations).toArray();
     }
@@ -98,11 +109,13 @@ class MongoDBDriver {
      * @returns {Find[]}
      */
     findFromToday(user: string, listType: string): Promise<Find[]> {
-        return this.find('burritos', {
+        const current = moment().tz("Asia/Seoul");
+
+        return this.find("burritos", {
             [listType]: user,
             given_at: {
-                $gte: time().start,
-                $lt: time().end,
+                $gte: current.startOf("day").toDate(),
+                $lt: current.endOf("day").toDate(),
             },
         });
     }
@@ -117,10 +130,10 @@ class MongoDBDriver {
         const match = { [listType]: user };
 
         if (num) {
-            const data = await this.sum('burritos', match, listType);
+            const data = await this.sum("burritos", match, listType);
             return data.length ? data[0].score : 0;
         }
-        return this.find('burritos', match);
+        return this.find("burritos", match);
     }
 
     /**
@@ -132,12 +145,16 @@ class MongoDBDriver {
         let match: any = {};
 
         if (user) {
-            match = (listType === 'from') ? { to: user } : { from: user };
+            match = listType === "from" ? { to: user } : { from: user };
         }
         if (today) {
-            match.given_at = { $gte: time().start, $lt: time().end };
+            const current = moment().tz("Asia/Seoul");
+            match.given_at = {
+                $gte: current.startOf("day").toDate(),
+                $lt: current.endOf("day").toDate(),
+            };
         }
-        return this.find('burritos', match);
+        return this.find("burritos", match);
     }
 }
 
