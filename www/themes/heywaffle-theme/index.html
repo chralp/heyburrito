@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HeyWaffle dashboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/rain.css">
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+
+  </head>
+  <body>
+    <div id="header">
+
+      <div id="logo">
+      <p>
+          <svg width="50" height="50" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="155.294" y="155.294" width="64.7059" height="64.7059" fill="#ED8573"/>
+              <rect x="64.7059" y="155.294" width="64.7059" height="64.7059" fill="#F0975E"/>
+              <rect x="155.294" y="64.7059" width="64.7059" height="64.7059" fill="#F0975E"/>
+              <rect x="64.7059" y="64.7059" width="64.7059" height="64.7059" fill="#F0975E"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M64.7059 0H38.8236V38.8235H0V64.7059H38.8236V129.412H0V155.294H38.8236V220H64.7059V155.294H129.412V220H155.294V155.294H220V129.412H155.294V64.7059H220V38.8235H155.294V0H129.412V38.8235H64.7059V0ZM129.412 129.412V64.7059H64.7059V129.412H129.412Z" fill="#27181D"/>
+          </svg>
+      </p>
+      </div>
+
+
+      <div id="filter">
+
+        <p>
+          <label class="c-switch" id="switchToFrom">
+            <input class="c-switch__input" id="switchToFromInput" type="checkbox" checked>
+            <span class="c-switch__values">
+              <span class="c-switch__value c-switch__value--true">To</span>
+              <span class="c-switch__value c-switch__value--false">From</span>
+            </span>
+          </label>
+        </p>
+        <input class="c-switch__input" id="switchTypeInput" type="checkbox" checked>
+        <p>
+          <label class="c-switch" id="switchUserTypes">
+            <input class="c-switch__input" id="switchUserTypesInput" type="checkbox" checked>
+            <span class="c-switch__values">
+              <span class="c-switch__value c-switch__value--true">Users</span>
+              <span class="c-switch__value c-switch__value--false">All</span>
+            </span>
+          </label>
+        </p>
+      </div>
+    </div>
+
+
+
+    <div id="rain"></div>
+
+    <div class="app" id="app">
+      <div id="users" class="scoreboard"></div>
+    </div>
+    <script src="fun.js"></script>
+  </body>
+</html>

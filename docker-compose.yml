@@ -11,7 +11,7 @@ services:
     build:
       context: ./
     ports:
-      - "3333:3333"
+      - "3333:443"
       - "8080:8080"
     environment:
       - BOT_NAME=heywaffle
@@ -21,5 +21,7 @@ services:
       - SLACK_API_TOKEN=SeeDocumentation
       - "SLACK_EMOJI_INC=:waffle:"
       - SLACK_DAILY_CAP=5
+      - WEB_PATH=/leaderboard/
+      - THEME_URL=heywaffle-theme
     links:
       - mongodb
