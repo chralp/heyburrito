@@ -20,7 +20,7 @@
     "mongodb": "^3.4.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.7.4",
-    "ws": "^6.2.1"
+    "ws": "^7.4.5"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",
