@@ -1,0 +1,126 @@
+version: 2
+
+jobs:
+  build-image:
+    working_directory: ~/heyburrito-workspace
+    docker:
+      - image: enkici/cimg-node-awscli:12.19.0
+    steps:
+      - checkout
+      - run:
+          name: Build image
+          command: |
+            RELEASE_TAG="${ENV}-$(echo $CIRCLE_SHA1 | cut -c -8)"
+            IMAGE_TAG="heyburrit:${RELEASE_TAG}"
+            echo "Building Heyburrito Docker image with tag $IMAGE_TAG"
+            docker build .
+
+            AWS_ECR_URL="${AWS_ACCOUNT_NUMBER}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+
+            echo "Authenticating against ECR"
+            aws ecr \
+              get-login-password \
+              --region "${AWS_REGION}" \
+            | docker login \
+              --username AWS \
+              --password-stdin ${AWS_ECR_URL}
+
+            HEYBURRITO_DOCKER_IMAGE="${AWS_ECR_URL}/${IMAGE_TAG}"
+            echo "Tagging and pushing the image to ${HEYBURRITO_DOCKER_IMAGE}"
+            docker tag "${IMAGE_TAG}" "${HEYBURRITO_DOCKER_IMAGE}"
+            docker push "${HEYBURRITO_DOCKER_IMAGE}"
+
+            echo "Persisting env var HEYBURRITO_DOCKER_IMAGE=${HEYBURRITO_DOCKER_IMAGE}"
+            echo "export HEYBURRITO_DOCKER_IMAGE=${HEYBURRITO_DOCKER_IMAGE}" >> .env-ci;
+
+            echo "Persisting env var RELEASE_TAG=${RELEASE_TAG}"
+            echo "export RELEASE_TAG=${RELEASE_TAG}" >> .env-ci;
+      - persist_to_workspace:
+          root: ~/heyburrito-workspace
+          paths:
+            - .env-ci
+  deploy:
+    working_directory: ~/heyburrito-workspace
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/heyburrito-workspace
+      - deploy:
+          name: Deploy to ECS
+          command: |
+            # install ECS cli
+            sudo curl \
+              -Lo /usr/local/bin/ecs-cli \
+              https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
+            sudo chmod +x /usr/local/bin/ecs-cli
+            echo "Installed $(ecs-cli --version)"
+
+            # load ci env vars
+            source .env-ci
+
+            # replace "build ." with our image
+            echo "Adding heyburrito image into Dockerfile"
+            sed -i='' "s/build: ./${AWS_ECR_URL}\/heyburrit:${RELEASE_TAG}/" docker-compose.yml
+            echo $docker-compose.yml
+
+            # zip the EB bundle and deploy
+            echo "Deploying ${RELEASE_TAG} to ECS-${AWS_REGION}"
+            ./aws-ec2-cluster-deploy.sh
+  notify-on-slack:
+    working_directory: ~/heyburrito-workspace
+    machine:
+      image: ubuntu-2004:202010-01
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/heyburrito-workspace
+      - run:
+          name: Notify to Slack
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              export ENV="STAGING";
+            elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+              export ENV="PRODUCTION";
+            else
+              echo "Skipping slack notification for deploy on ${CIRCLE_BRANCH}";
+              exit 1;
+            fi
+
+            # load ci env vars
+            source .env-ci
+
+            ENKI_RELEASE_URL="https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/tag/${RELEASE_TAG}"
+            MESSAGE="[${CIRCLE_PROJECT_REPONAME}][${ENV} Deploy][<https://github.com/sagelabs/${CIRCLE_PROJECT_REPONAME}/commit/${CIRCLE_SHA1}|${CIRCLE_BRANCH}#$(echo $CIRCLE_SHA1 | cut -c2-8)]>, by <https://github.com/${CIRCLE_USERNAME}|${CIRCLE_USERNAME}>."
+
+            if [ -n "$CIRCLE_COMPARE_URL" ]; then
+              MESSAGE="${MESSAGE}\n\n<${CIRCLE_COMPARE_URL}|Click to see the changes>.";
+            fi
+            if [ -n "$CIRCLE_PULL_REQUESTS" ]; then
+              MESSAGE="${MESSAGE}\n\n<${CIRCLE_PULL_REQUESTS}|Click to see the PR>.";
+            fi
+
+            DATA="{\"text\":\"${MESSAGE}\"}"
+            curl \
+              --verbose \
+              -X POST \
+              -H "Content-type: application/json" \
+              --data "${DATA}" \
+              "${SLACK_WEBHOOK_URL}"
+
+workflows:
+  version: 2
+  HEYBURRITO:
+    jobs:
+      - build-image
+      - deploy:
+          requires:
+            - build-verify-push-image
+            - test
+            - lint
+          filters:
+            branches:
+              only:
+                - master
+      - notify-on-slack:
+          requires:
+            - deploy

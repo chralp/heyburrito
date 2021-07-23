@@ -40,6 +40,7 @@ class Wbc {
             channel: username,
             username: config.slack.bot_name,
             icon_emoji: ':burrito:',
+            as_user: true,
         });
         if (res.ok) {
             log.info(`Notified user ${username}`);

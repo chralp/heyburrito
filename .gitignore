@@ -24,3 +24,5 @@ data/*
 
 .env
 .tern*
+
+.env.aws

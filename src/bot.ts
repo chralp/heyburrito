@@ -1,3 +1,4 @@
+import * as log from 'bog';
 import config from './config';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
@@ -72,6 +73,15 @@ const handleBurritos = async (giver: string, updates: Updates[]) => {
                 notifyUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diffInc} burritos left today!`);
             } else {
                 await giveBurritos(giver, incUpdates);
+                const receivers = new Set();
+                incUpdates.forEach(({ username }) => {
+                    receivers.add(username);
+                });
+                const numOfBurritos = receivers.size / incUpdates.length;
+                notifyUser(giver, `Nice! Your friend${receivers.size > 1 ? 's' : ''} received your :burrito:${numOfBurritos > 1 ? 's' : ''}!`);
+                await Promise.all(
+                    [...receivers].map((receiver: string) => notifyUser(receiver, `<@${giver}> sent you ${numOfBurritos} :burrito:${numOfBurritos > 1 ? 's' : ''}`)),
+                );
             }
         }
         if (decUpdates.length) {
@@ -95,6 +105,7 @@ const start = () => {
                 if (result) {
                     const { giver, updates } = result;
                     if (updates.length) {
+                        log.info('test', enableDecrement)
                         await handleBurritos(giver, updates);
                     }
                 }

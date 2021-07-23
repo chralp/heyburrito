@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   mongodb:
     image: mongo:3.4
@@ -8,7 +8,7 @@ services:
     volumes:
       - /data/mongodb:/data/db/
   heyburrito:
-    image: chralp/heyburrito:latest
+    build: .
     ports:
       - "3333:3333"
       - "8080:8080"
@@ -17,9 +17,10 @@ services:
       - DATABASE_DRIVER=mongodb
       - MONGODB_URL=mongodb://mongodb:27017
       - MONGODB_DATABASE=heyburrito
-      - SLACK_API_TOKEN=SeeDocumentation
+      - "SLACK_API_TOKEN=redacted"
       - "SLACK_EMOJI_INC=:burrito:"
-      - "SLACK_EMOJI_INC=:rottenburrito:"
+      - "SLACK_EMOJI_DEC=:rottenburrito:"
       - SLACK_DAILY_CAP=5
+      - ENABLE_DECREMENT=false
     links:
       - mongodb
