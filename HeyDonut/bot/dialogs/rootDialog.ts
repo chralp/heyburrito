@@ -1,6 +1,9 @@
-import { ActionTypes, CardFactory, TurnContext, TextFormatTypes } from "botbuilder";
+import { ActionTypes, CardFactory, TurnContext, TextFormatTypes, TeamsInfo } from "botbuilder";
 import { ComponentDialog, DialogContext } from "botbuilder-dialogs";
+import { ScoreBoardRequest } from "../models/score";
+import { donutGivenConfirmationMesssage } from "./messageComposer/composer";
 import { isScoreboardRequest, parseNewScores, parseScoreboardRequest } from "./parser/messageParser";
+import { getAllMembers } from "./teamsApi/teams";
 
 export class RootDialog extends ComponentDialog {
   constructor(id: string) {
@@ -20,19 +23,55 @@ export class RootDialog extends ComponentDialog {
     return await super.onContinueDialog(innerDc);
   }
 
+  async processTeamScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
+      const members = await getAllMembers(innerDc.context);
+      console.log(members);
+  }
+
+  async processChatScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
+    const members = await getAllMembers(innerDc.context);
+    console.log(members);
+  }
+
+  async processChannelScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
+    // TODO: channel vs team membership difference? 
+    const members = await getAllMembers(innerDc.context);
+    console.log(members);
+  }
+
+  async processOrgTreeScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
+    throw "Not implemented"
+  }
+
+  async processGlobalScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
+    throw "Not implemented"
+  }
+
+  async processScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
+    switch (request.context.scope) {
+      case "team": return this.processChatScoreboardRequest(innerDc, request);
+      case "chat": return this.processTeamScoreboardRequest(innerDc, request);
+      case "channel": return this.processChannelScoreboardRequest(innerDc, request);
+      case "orgtree": return this.processOrgTreeScoreboardRequest(innerDc, request);
+      case "global": return this.processGlobalScoreboardRequest(innerDc, request);
+    }
+  }
+
   async triggerCommand(innerDc: DialogContext) {
 
     const activity = innerDc.context.activity;
 
     if (isScoreboardRequest(activity)) {
       const scoreBoardRequest = parseScoreboardRequest(activity);
+      await this.processScoreboardRequest(innerDc, scoreBoardRequest);
       await innerDc.context.sendActivity(JSON.stringify(scoreBoardRequest));
       return await innerDc.cancelAllDialogs();
     }
 
     try {
       const scoresFromTheMessage = parseNewScores(activity, true);
-      await innerDc.context.sendActivity(JSON.stringify(scoresFromTheMessage));
+      const response = await donutGivenConfirmationMesssage(innerDc.context, scoresFromTheMessage);
+      await innerDc.context.sendActivity(response);
       return await innerDc.cancelAllDialogs();
     } catch (e) {
       await innerDc.context.sendActivity(e);

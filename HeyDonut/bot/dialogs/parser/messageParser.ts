@@ -37,9 +37,9 @@ function getContext(activity: Activity): ScoreContext|undefined {
     }
     const context: ScoreContext = {
         scope: isGroupChat ? "Chat" : "Channel",
-        id: isGroupChat ? conversation.id : channel.teamsChannelId,
+        id: isGroupChat ? conversation.id : channel.team.id,
         tenantId: conversation.tenantId,
-        parentContextId: isGroupChat ? conversation.tenantId : channel.teamsTeamId
+        parentContextId: isGroupChat ? conversation.tenantId : channel.channel.id
     }
     return context;
 }
@@ -92,8 +92,8 @@ function getScoreboardRequestScope(activity: Activity): ScoreBoardRequestScope {
 function getScopeId(activity: Activity, scope: ScoreBoardRequestScope) {
     switch (scope) {
         case "chat": return activity.conversation.id;
-        case "channel": return activity.channelData.teamsChannelId;
-        case "team": return activity.channelData.teamsTeamId;
+        case "channel": return activity.channelData.team.id;
+        case "team": return activity.channelData.channel.id;
         case "global": return activity.conversation.tenantId;
         case "orgtree": {
             const mention = userMentions(activity)[0];
