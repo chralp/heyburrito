@@ -1,0 +1,19 @@
+{
+    "appName": "HeyDonut",
+    "projectId": "21b753ec-0293-4138-8012-e5bece42208b",
+    "currentEnv": "default",
+    "solutionSettings": {
+        "name": "fx-solution-azure",
+        "version": "1.0.0",
+        "hostType": "Azure",
+        "capabilities": [
+            "Bot"
+        ],
+        "azureResources": [],
+        "activeResourcePlugins": [
+            "fx-resource-local-debug",
+            "fx-resource-bot",
+            "fx-resource-aad-app-for-teams"
+        ]
+    }
+}
