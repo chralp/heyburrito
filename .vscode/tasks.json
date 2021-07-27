@@ -40,7 +40,7 @@
             "type": "shell",
             "command": "npm install",
             "options": {
-                "cwd": "${workspaceFolder}/src/teams/bot"
+                "cwd": "${workspaceFolder}/bot"
             }
         },
         {

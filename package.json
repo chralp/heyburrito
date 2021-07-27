@@ -20,15 +20,7 @@
     "mongodb": "^3.4.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.7.4",
-    "ws": "^6.2.1",
-    "@azure/msal-node": "^1.0.0-beta.3",
-    "@microsoft/microsoft-graph-client": "^2.2.1",
-    "botbuilder": "~4.14.0",
-    "botbuilder-dialogs": "~4.14.0",
-    "isomorphic-fetch": "^3.0.0",
-    "restify": "^8.5.1",
-    "@microsoft/teamsfx": "^0.2.0",
-    "uuid": "^8.3.2"
+    "ws": "^6.2.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",
