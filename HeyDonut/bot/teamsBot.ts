@@ -37,27 +37,6 @@ export class TeamsBot extends TeamsActivityHandler {
       // By calling next() you ensure that the next BotHandler is run.
       await next();
     });
-
-    this.onMembersAdded(async (context, next) => {
-      const membersAdded = context.activity.membersAdded;
-      for (let cnt = 0; cnt < membersAdded.length; cnt++) {
-        if (membersAdded[cnt].id) {
-          const cardButtons = [
-            {
-              type: ActionTypes.ImBack,
-              title: "Show introduction card",
-              value: "intro",
-            },
-          ];
-          const card = CardFactory.heroCard("Welcome", null, cardButtons, {
-            text: `Congratulations! Your hello world Bot template is running. This bot has default commands to help you modify it. <br>You can reply <strong>intro</strong> to see the introduction card. This bot is built with <a href=\"https://dev.botframework.com/\">Microsoft Bot Framework</a>`,
-          });
-          await context.sendActivity({ attachments: [card] });
-          break;
-        }
-      }
-      await next();
-    });
   }
 
   async run(context: TurnContext) {
