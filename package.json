@@ -8,8 +8,8 @@
     "mockDB": "ts-node ./test/lib/mockDatabase.ts",
     "test": "NODE_ENV=testing mocha -r ts-node/register test/*-test.ts --exit",
     "lint": "eslint --ext .ts ./src/ || exit 0",
-    "docker-build": "docker build -t chralp/heyburrito . && docker tag chralp/heyburrito chralp/heyburrito",
-    "docker-push": "docker push chralp/heyburrito"
+    "docker-build": "docker build -t anishchandwani/heyburrito . && docker tag anishchandwani/heyburrito heyburrito.azurecr.io/anishchandwani/heyburrito",
+    "docker-push": "docker push heyburrito.azurecr.io/anishchandwani/heyburrito"
   },
   "license": "MIT",
   "dependencies": {
@@ -20,7 +20,15 @@
     "mongodb": "^3.4.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.7.4",
-    "ws": "^6.2.1"
+    "ws": "^6.2.1",
+    "@azure/msal-node": "^1.0.0-beta.3",
+    "@microsoft/microsoft-graph-client": "^2.2.1",
+    "botbuilder": "~4.14.0",
+    "botbuilder-dialogs": "~4.14.0",
+    "isomorphic-fetch": "^3.0.0",
+    "restify": "^8.5.1",
+    "@microsoft/teamsfx": "^0.2.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",

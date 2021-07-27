@@ -24,3 +24,6 @@ data/*
 
 .env
 .tern*
+
+.fx/*.env
+.fx/*.userdata
