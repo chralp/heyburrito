@@ -1,5 +1,6 @@
 import { TeamsActivityHandler, CardFactory, TurnContext, SigninStateVerificationQuery, ActionTypes, BotState} from "botbuilder";
 import { MainDialog } from "./dialogs/mainDialog";
+import BurritoStore from "../src/store/BurritoStore";
 
 export class TeamsBot extends TeamsActivityHandler {
   conversationState: BotState;
@@ -30,6 +31,10 @@ export class TeamsBot extends TeamsActivityHandler {
 
     this.onMessage(async (context, next) => {
       console.log("Running dialog with Message Activity.");
+
+      // TODO: Make this real
+      // TODO: Fix error: MongoWriteConcernError: No write concern mode named 'majority/heyburrito' found in replica set configuration
+      await BurritoStore.giveBurrito('foo', 'bar');
 
       // Run the Dialog with the new message Activity.
       await this.dialog.run(context, this.dialogState);
