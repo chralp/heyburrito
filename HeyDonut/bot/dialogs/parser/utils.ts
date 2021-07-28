@@ -25,9 +25,9 @@ export function getContext(activity: Activity): ScoreContext|undefined {
     }
     const context: ScoreContext = {
         scope: isGroupChat ? "Chat" : "Channel",
-        id: isGroupChat ? conversation.id : channel.team.id,
+        id: isGroupChat ? conversation.id : channel.channel.id,
         tenantId: conversation.tenantId,
-        parentContextId: isGroupChat ? conversation.tenantId : channel.channel.id
+        parentContextId: isGroupChat ? conversation.tenantId : channel.team.id
     }
     return context;
 }
