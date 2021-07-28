@@ -1,8 +1,8 @@
-import { ActionTypes, CardFactory, TurnContext, TextFormatTypes, TeamsInfo } from "botbuilder";
 import { ComponentDialog, DialogContext } from "botbuilder-dialogs";
 import { ScoreBoardRequest } from "../models/score";
 import { donutGivenConfirmationMesssage } from "./messageComposer/composer";
-import { isScoreboardRequest, parseNewScores, parseScoreboardRequest } from "./parser/messageParser";
+import { parseScoreActions } from "./parser/actionParser";
+import { isScoreboardRequest, parseScoreboardRequest } from "./parser/scoreboardParser";
 import { getAllMembers } from "./teamsApi/teams";
 
 export class RootDialog extends ComponentDialog {
@@ -25,16 +25,19 @@ export class RootDialog extends ComponentDialog {
 
   async processTeamScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
       const members = await getAllMembers(innerDc.context);
+      // TODO: iterate over members and all scores with parentContextId==teamId
       console.log(members);
   }
 
   async processChatScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
     const members = await getAllMembers(innerDc.context);
+    // TODO: iterate over members and all scores with id==chatId
     console.log(members);
   }
 
   async processChannelScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
     // TODO: channel vs team membership difference? 
+    // TODO: iterate over members and all scores with id==channelId
     const members = await getAllMembers(innerDc.context);
     console.log(members);
   }
@@ -44,6 +47,7 @@ export class RootDialog extends ComponentDialog {
   }
 
   async processGlobalScoreboardRequest(innerDc: DialogContext, request: ScoreBoardRequest) {
+    // TODO: get score for user
     throw "Not implemented"
   }
 
@@ -69,47 +73,13 @@ export class RootDialog extends ComponentDialog {
     }
 
     try {
-      const scoresFromTheMessage = parseNewScores(activity, true);
-      const response = await donutGivenConfirmationMesssage(innerDc.context, scoresFromTheMessage);
+      const actions = parseScoreActions(activity, true);
+      const response = await donutGivenConfirmationMesssage(innerDc.context, actions);
       await innerDc.context.sendActivity(response);
       return await innerDc.cancelAllDialogs();
     } catch (e) {
       await innerDc.context.sendActivity(e);
       return await innerDc.cancelAllDialogs();
     }
-    
-    // switch (text) {
-    //   case "show": {
-    //     // if (innerDc.context.activity.conversation.isGroup) {
-    //     //   await innerDc.context.sendActivity(
-    //     //     `Sorry, currently TeamsFX SDK doesn't support Group/Team/Meeting Bot SSO. To try this command please install this app as Personal Bot and send "show".`
-    //     //   );
-    //     //   return await innerDc.cancelAllDialogs();
-    //     // }
-    //     break;
-    //   }
-    //   case "intro": {
-    //     // const cardButtons = [
-    //     //   {
-    //     //     type: ActionTypes.ImBack,
-    //     //     title: "Show profile",
-    //     //     value: "show",
-    //     //   },
-    //     // ];
-    //     // const card = CardFactory.heroCard("Introduction", null, cardButtons, {
-    //     //   text: `This Bot has implemented single sign-on (SSO) using the identity of the user signed into the Teams client. See the <a href="https://aka.ms/teamsfx-docs-auth">TeamsFx authentication document</a> and code in <pre>bot/dialogs/mainDialog.js</pre> to learn more about SSO.<br>Type <strong>show</strong> or click the button below to show your profile by calling Microsoft Graph API with SSO. To learn more about building Bot using Microsoft Teams Framework, please refer to the <a href="https://aka.ms/teamsfx-docs">TeamsFx documentation</a>.`,
-    //     // });
-
-    //     // await innerDc.context.sendActivity({ attachments: [card] });
-    //     // return await innerDc.cancelAllDialogs();
-    //   }
-    //   default: {
-    //     const card = CardFactory.heroCard("", null, [], {
-    //       text: `This is a donut bot. Try sending @mention to someone to give them a donut!`,
-    //     });
-    //     await innerDc.context.sendActivity({ attachments: [card] });
-    //     return await innerDc.cancelAllDialogs();
-    //   }
-    // }
   }
 }

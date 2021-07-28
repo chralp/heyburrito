@@ -3,12 +3,12 @@
  */
 
 import { TurnContext } from "botbuilder";
-import { ScoreInContext } from "../../models/score";
+import { ScoreAction, ScoreInContext } from "../../models/score";
 import { getDisplayName } from "../teamsApi/teams";
 
-export async function donutGivenConfirmationMesssage(context: TurnContext, scores: ScoreInContext[]) {
+export async function donutGivenConfirmationMesssage(context: TurnContext, scores: ScoreAction[]) {
     const sender = context.activity.from.id;
-    const recipients = scores.map(score => score.userScore.userId);
+    const recipients = scores.map(score => score.targetUserId);
 
     const [senderDisplayName, recipientDisplayNames] = await Promise.all([
         getDisplayName(context, sender), 
