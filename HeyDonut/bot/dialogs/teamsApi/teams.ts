@@ -3,7 +3,7 @@
  * Methods to fetch Teams stuff here
  */
 
-import { TeamsInfo, TurnContext } from "botbuilder";
+import { TeamsChannelAccount, TeamsInfo, TurnContext } from "botbuilder";
 
 
 /**
@@ -13,7 +13,7 @@ import { TeamsInfo, TurnContext } from "botbuilder";
  */
 export async function getAllMembers(context: TurnContext) {
     var continuationToken;
-    var members = [];
+    const members: TeamsChannelAccount[] = [];
     do {
         var pagedMembers = await TeamsInfo.getPagedMembers(context, 500, continuationToken);
         continuationToken = pagedMembers.continuationToken;
@@ -25,4 +25,19 @@ export async function getAllMembers(context: TurnContext) {
 
 export async function getDisplayName(context: TurnContext, userId: string) {
     return (await TeamsInfo.getMember(context, userId)).name
+}
+
+export async function getTeamName(context: TurnContext, teamId: string) {
+    const info = await TeamsInfo.getTeamDetails(context, teamId);
+    return info.name;
+}
+
+export async function getChannelName(context: TurnContext, teamId: string, channelId: string) {
+    const teamChannels = await TeamsInfo.getTeamChannels(context, teamId);
+    const channel = teamChannels.find(channel => channel.id === channelId)
+    return channel?.name ?? "General";
+}
+
+export async function getChatName(context: TurnContext, chat: string) {
+    return ""
 }

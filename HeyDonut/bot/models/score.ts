@@ -50,3 +50,8 @@ export interface ScoreBoardRequest {
     },
     userId?: string;
 }
+
+export interface ScoreBoardResult {
+    request: ScoreBoardRequest;
+    scores: UserScore[];
+}

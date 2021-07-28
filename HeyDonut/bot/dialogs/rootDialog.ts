@@ -1,6 +1,6 @@
 import { ComponentDialog, DialogContext } from "botbuilder-dialogs";
 import { ScoreBoardRequest } from "../models/score";
-import { donutGivenConfirmationMesssage } from "./messageComposer/composer";
+import { createCardFromScoreboardResults, donutGivenConfirmationMesssage } from "./messageComposer/composer";
 import { parseScoreActions } from "./parser/actionParser";
 import { isScoreboardRequest, parseScoreboardRequest } from "./parser/scoreboardParser";
 import { getAllMembers } from "./teamsApi/teams";
@@ -67,8 +67,14 @@ export class RootDialog extends ComponentDialog {
 
     if (isScoreboardRequest(activity)) {
       const scoreBoardRequest = parseScoreboardRequest(activity);
-      await this.processScoreboardRequest(innerDc, scoreBoardRequest);
-      await innerDc.context.sendActivity(JSON.stringify(scoreBoardRequest));
+      // await this.processScoreboardRequest(innerDc, scoreBoardRequest);
+      const card = await createCardFromScoreboardResults(innerDc.context, {
+        request: scoreBoardRequest,
+        scores: [
+          {score: 3, userId: activity.from.id},
+          {score: 2, userId: activity.from.id},
+        ]});
+      await innerDc.context.sendActivity({ attachments: [card] });
       return await innerDc.cancelAllDialogs();
     }
 

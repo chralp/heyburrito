@@ -2,9 +2,11 @@
  * This file contains methods for crafting nice bot answers
  */
 
-import { TurnContext } from "botbuilder";
-import { ScoreAction, ScoreInContext } from "../../models/score";
-import { getDisplayName } from "../teamsApi/teams";
+import { AdaptiveCard, CardElement } from "adaptivecards";
+import { CardFactory, TeamsChannelData, TurnContext } from "botbuilder";
+import { ScoreAction, ScoreBoardResult, ScoreInContext } from "../../models/score";
+import { getChannelName, getDisplayName, getTeamName } from "../teamsApi/teams";
+import { createScoreboardCard } from "./cardBuilder";
 
 export async function donutGivenConfirmationMesssage(context: TurnContext, scores: ScoreAction[]) {
     const sender = context.activity.from.id;
@@ -43,4 +45,48 @@ function getDonutPunsLong() {
         "What do donuts think about donut puns? They donut like them!",
         "(Why did the donut go to the dentist? It needed a filling!"
     ]   
+}
+
+function getTeamId(context: TurnContext): string {
+    if (!context) {
+        throw new Error('Missing context parameter');
+    }
+
+    if (!context.activity) {
+        throw new Error('Missing activity on context');
+    }
+
+    const channelData = context.activity.channelData as TeamsChannelData;
+    const team = channelData && channelData.team ? channelData.team : undefined;
+    const teamId = team && typeof team.id === 'string' ? team.id : undefined;
+    return teamId;
+}
+
+
+export async function createCardFromScoreboardResults(context: TurnContext, scoreboard: ScoreBoardResult) {
+    // TODO based on the #ppl on the scorecard do a full team members fetch instead of individual display names
+    const userScoreAndNamePromises = scoreboard.scores.map(score => 
+        getDisplayName(context, score.userId).then(displayName => ({
+            displayName,
+            ...score
+        }))
+    );
+
+    let contextType = "";
+    let contextDisplayName = "";
+    switch (scoreboard.request.context.scope) {
+        case "channel": 
+            contextType = "channel"
+            contextDisplayName = await getChannelName(context, getTeamId(context), scoreboard.request.context.id);
+            break;
+
+        case "team": 
+            contextType = "team"
+            contextDisplayName = await getTeamName(context, scoreboard.request.context.id);
+            break;
+    }
+
+    const userNamesAndScores = await Promise.all(userScoreAndNamePromises);
+    const card = createScoreboardCard(userNamesAndScores, contextType, contextDisplayName);
+    return CardFactory.adaptiveCard(card);
 }

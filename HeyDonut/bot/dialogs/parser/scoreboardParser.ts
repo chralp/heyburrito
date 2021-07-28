@@ -1,5 +1,5 @@
 /**
- * This file contains methods to parse stuff from user message
+ * This file contains methods to parse "scoreboard" requests from user message
  */
 
  import { Activity } from "botbuilder";
@@ -43,8 +43,8 @@
  function getScopeId(activity: Activity, scope: ScoreBoardRequestScope) {
      switch (scope) {
          case "chat": return activity.conversation.id;
-         case "channel": return activity.channelData.team.id;
-         case "team": return activity.channelData.channel.id;
+         case "channel": return activity.channelData.channel.id;
+         case "team": return activity.channelData.team.id;
          case "global": return activity.conversation.tenantId;
          case "orgtree": {
              const mention = userMentions(activity)[0];
