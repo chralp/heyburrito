@@ -20,9 +20,11 @@
     "@microsoft/microsoft-graph-client": "^2.2.1",
     "botbuilder": "~4.14.0",
     "botbuilder-dialogs": "~4.14.0",
+    "dotenv": "^6.0.0",
     "isomorphic-fetch": "^3.0.0",
     "restify": "^8.5.1",
     "@microsoft/teamsfx": "^0.2.0",
+    "mongodb": "^3.4.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
