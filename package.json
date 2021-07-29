@@ -15,6 +15,7 @@
   "dependencies": {
     "@slack/rtm-api": "^5.0.3",
     "@slack/web-api": "^5.6.0",
+    "adaptive-expressions": "^4.11.0",
     "bog": "^1.0.2",
     "dotenv": "^6.0.0",
     "mongodb": "^3.4.0",
