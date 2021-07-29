@@ -46,12 +46,14 @@ class MongoDBDriver {
         return this.db.collection(collection).insertOne(data);
     }
 
-    give(to: string, from: string, date: any) {
+    give(to: string, from: string, date: any, contextId?: string, parentContextId?: string) {
         return this.store('burritos', {
             to,
             from,
             value: 1,
             given_at: date,
+            contextId,
+            parentContextId,
         });
     }
 

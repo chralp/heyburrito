@@ -1,5 +1,11 @@
-import { ActionTypes, CardFactory, TurnContext, TextFormatTypes } from "botbuilder";
+import { Activity, TurnContext } from "botbuilder";
 import { ComponentDialog, DialogContext } from "botbuilder-dialogs";
+import { addScores, getScoreboard } from "../data/donutrepository";
+import { ScoreBoardRequest } from "../models/score";
+import { createCardFromScoreboardResults, donutGivenConfirmationMesssage, getDonutPunsLong, getInfo } from "./messageComposer/composer";
+import { parseScoreActions } from "./parser/actionParser";
+import { isScoreboardRequest, parseScoreboardRequest } from "./parser/scoreboardParser";
+import { getAllMembers } from "./teamsApi/teams";
 
 export class RootDialog extends ComponentDialog {
   constructor(id: string) {
@@ -19,53 +25,43 @@ export class RootDialog extends ComponentDialog {
     return await super.onContinueDialog(innerDc);
   }
 
+  isInfoRequest(innerDc: DialogContext) {
+    const text = innerDc.context.activity.text;
+    return text.includes("info") || text.includes("intro");
+  }
+
+  isJokeRequest(innerDc: DialogContext) {
+    const text = innerDc.context.activity.text;
+    return text.includes("joke")
+  }
+
+
   async triggerCommand(innerDc: DialogContext) {
-    const removedMentionText = TurnContext.removeRecipientMention(innerDc.context.activity);
-    const text = removedMentionText?.toLowerCase().replace(/\n|\r/g, "").trim(); // Remove the line break
 
-    if (innerDc.context.activity.textFormat !== TextFormatTypes.Plain) {
-      return await innerDc.cancelAllDialogs();
-    }
+    const activity = innerDc.context.activity;
 
-    switch (text) {
-      case "show": {
-        if (innerDc.context.activity.conversation.isGroup) {
-          await innerDc.context.sendActivity(
-            `Sorry, currently TeamsFX SDK doesn't support Group/Team/Meeting Bot SSO. To try this command please install this app as Personal Bot and send "show".`
-          );
-          return await innerDc.cancelAllDialogs();
-        }
-        break;
-      }
-      case "intro": {
-        const cardButtons = [
-          {
-            type: ActionTypes.ImBack,
-            title: "Show profile",
-            value: "show",
-          },
-        ];
-        const card = CardFactory.heroCard("Introduction", null, cardButtons, {
-          text: `This Bot has implemented single sign-on (SSO) using the identity of the user signed into the Teams client. See the <a href="https://aka.ms/teamsfx-docs-auth">TeamsFx authentication document</a> and code in <pre>bot/dialogs/mainDialog.js</pre> to learn more about SSO.<br>Type <strong>show</strong> or click the button below to show your profile by calling Microsoft Graph API with SSO. To learn more about building Bot using Microsoft Teams Framework, please refer to the <a href="https://aka.ms/teamsfx-docs">TeamsFx documentation</a>.`,
-        });
+    let commandResponse: Partial<Activity> | string;
 
-        await innerDc.context.sendActivity({ attachments: [card] });
-        return await innerDc.cancelAllDialogs();
+    if (isScoreboardRequest(activity)) {
+      const scoreBoardRequest = parseScoreboardRequest(activity);
+      const results = await getScoreboard(scoreBoardRequest);
+      const card = await createCardFromScoreboardResults(innerDc.context, results);
+      commandResponse = { attachments: [card] }
+    } else if (this.isInfoRequest(innerDc)) {
+      commandResponse = getInfo();
+    } else if (this.isJokeRequest(innerDc)) {
+      commandResponse = getDonutPunsLong();
+    } else {
+      try {
+        const actions = parseScoreActions(activity, true);
+        addScores(actions);
+        commandResponse = await donutGivenConfirmationMesssage(innerDc.context, actions);
+      } catch (e) {
+        commandResponse = e;
       }
-      default: {
-        const cardButtons = [
-          {
-            type: ActionTypes.ImBack,
-            title: "Show introduction card",
-            value: "intro",
-          },
-        ];
-        const card = CardFactory.heroCard("", null, cardButtons, {
-          text: `This is a hello world Bot built with Microsoft Teams Framework, which is designed for illustration purposes. This Bot by default will not handle any specific question or task.<br>Please type <strong>intro</strong> to see the introduction card.`,
-        });
-        await innerDc.context.sendActivity({ attachments: [card] });
-        return await innerDc.cancelAllDialogs();
-      }
-    }
+   }
+
+    await innerDc.context.sendActivity(commandResponse);
+    return await innerDc.cancelAllDialogs();
   }
 }
