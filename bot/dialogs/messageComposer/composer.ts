@@ -38,13 +38,19 @@ function getDonutPuns() {
     return randomTextList[rand];
 }
 
-function getDonutPunsLong() {
+export function getDonutPunsLong() {
     const randomTextList = [
         "What kind of donuts fly? Plain ones!",
         "How busy was the donuts day? It was jam packed!",
         "What do donuts think about donut puns? They donut like them!",
         "(Why did the donut go to the dentist? It needed a filling!"
     ]   
+    const rand = Math.floor(Math.random() * randomTextList.length)
+    return randomTextList[rand];
+}
+
+export function getInfo() {
+    return "Sorry, I donut understand! Try asking me for a scoreboard, or give someone a donut by sending a (donut) emoji and mentioning them!";
 }
 
 function getTeamId(context: TurnContext): string {

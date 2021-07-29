@@ -37,6 +37,6 @@ function applyRequestFilters(request: ScoreBoardRequest, scores: Score[]): Score
 
     return {
         request,
-        scores: Array.from(aggregatedUserScores.values())
+        scores: Array.from(aggregatedUserScores.values()).sort((a, b) => b.score - a.score)
     }
 }
