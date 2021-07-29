@@ -3,5 +3,7 @@ export default interface Score {
     to:string;
     from:string;
     value:number;
+    contextId?: string;
+    parentContextId?: string;
     given_at:Date;
 }

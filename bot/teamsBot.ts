@@ -34,7 +34,7 @@ export class TeamsBot extends TeamsActivityHandler {
 
       // TODO: Make this real
       // TODO: Fix error: MongoWriteConcernError: No write concern mode named 'majority/heyburrito' found in replica set configuration
-      await BurritoStore.giveBurrito('foo', 'bar');
+      // await BurritoStore.giveBurrito('foo', 'bar');
 
       // Run the Dialog with the new message Activity.
       await this.dialog.run(context, this.dialogState);

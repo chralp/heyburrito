@@ -76,12 +76,12 @@ export async function createCardFromScoreboardResults(context: TurnContext, scor
     let contextDisplayName = "";
     switch (scoreboard.request.context.scope) {
         case "channel": 
-            contextType = "channel"
+            contextType = "for channel"
             contextDisplayName = await getChannelName(context, getTeamId(context), scoreboard.request.context.id);
             break;
 
         case "team": 
-            contextType = "team"
+            contextType = "for team"
             contextDisplayName = await getTeamName(context, scoreboard.request.context.id);
             break;
     }

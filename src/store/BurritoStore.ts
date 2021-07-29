@@ -1,5 +1,6 @@
 import * as log from 'bog';
 import { EventEmitter } from 'events';
+import Score from '../types/Score.interface';
 
 interface Find {
     _id: string;
@@ -21,15 +22,6 @@ interface GetUserStats {
     receivedToday: number;
     givenToday: number;
 }
-
-interface DatabasePost {
-    _id: string,
-    to: string,
-    from: string,
-    value: number,
-    given_at: Date
-}
-
 class BurritoStore extends EventEmitter {
     database: any = null;
 
@@ -38,9 +30,9 @@ class BurritoStore extends EventEmitter {
         this.database = database;
     }
 
-    async giveBurrito(to: string, from: string, date = new Date()): Promise<string> {
-        log.info(`Burrito given to ${to} from ${from}`);
-        await this.database.give(to, from, date);
+    async giveBurrito(to: string, from: string, date = new Date(), contextId: string, parentContextId: string): Promise<string> {
+        log.info(`Burrito given to ${to} from ${from} in context ${contextId}, parentContextId: ${parentContextId}`);
+        await this.database.give(to, from, date, contextId, parentContextId);
         this.emit('GIVE', to, from);
         return to;
     }
@@ -75,7 +67,7 @@ class BurritoStore extends EventEmitter {
         };
     }
 
-    async getScoreBoard({ ...args }): Promise<DatabasePost[]> {
+    async getScoreBoard({ ...args }): Promise<Score[]> {
         return this.database.getScoreBoard({ ...args });
     }
 

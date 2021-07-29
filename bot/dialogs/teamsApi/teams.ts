@@ -24,7 +24,12 @@ export async function getAllMembers(context: TurnContext) {
 }
 
 export async function getDisplayName(context: TurnContext, userId: string) {
-    return (await TeamsInfo.getMember(context, userId)).name
+    try {
+        const user = await TeamsInfo.getMember(context, userId)
+        return user.name;
+    } catch (e) {
+        return `Unknown User ${userId}`;
+    }
 }
 
 export async function getTeamName(context: TurnContext, teamId: string) {

@@ -10,7 +10,7 @@ const SCOREBOARD_TEMPLATE =
     "body": [
         {
             "type": "TextBlock",
-            "text": "Donut leaderboards for ${contextType} ${contextDisplayName}!",
+            "text": "Donut leaderboards ${contextType} ${contextDisplayName}!",
             "size": "Large",
             "isSubtle": true,
             "wrap": true,

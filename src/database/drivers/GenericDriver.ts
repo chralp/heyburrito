@@ -27,13 +27,15 @@ class GenericDriver extends Store implements Driver {
         super(driver);
     }
 
-    async give(to: string, from: string, date: any): Promise<any> {
+    async give(to: string, from: string, date: any, contextId?: string, parentContextId?: string): Promise<any> {
         const score: Score = {
             _id: id(),
             to,
             from,
             value: 1,
             given_at: date,
+            contextId,
+            parentContextId,
         };
         await this.storeData(score);
         return Promise.resolve(true);
