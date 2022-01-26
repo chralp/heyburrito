@@ -1,4 +1,4 @@
-import * as log from 'bog';
+import log from 'loglevel';
 import { EventEmitter } from 'events';
 
 interface SlackEvent {

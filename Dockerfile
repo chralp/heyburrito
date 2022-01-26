@@ -1,5 +1,5 @@
 
-FROM node:erbium
+FROM node:gallium
 
 RUN apt-get update && apt-get install -y
 

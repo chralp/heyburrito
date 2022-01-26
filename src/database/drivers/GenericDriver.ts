@@ -1,6 +1,6 @@
 import Store from './Store';
-import Driver from './Driver';
-import Score from '../../types/Score.interface';
+import Driver, { GivePost } from './Driver';
+
 import { time } from '../../lib/utils';
 
 function id() {
@@ -9,102 +9,75 @@ function id() {
     return `_${str}`;
 }
 
-interface Find {
-    _id: string;
-    to: string;
-    from: string;
-    value: number;
-    given_at: Date;
-}
-
-interface Sum {
-    _id?: string; // Username
-    score?: number;
-}
-
 class GenericDriver extends Store implements Driver {
-    constructor(public driver: string) {
-        super(driver);
-    }
+  constructor(public driver: string) {
+    super(driver);
+  };
 
-    async give(to: string, from: string, date: any): Promise<any> {
-        const score: Score = {
-            _id: id(),
-            to,
-            from,
-            value: 1,
-            given_at: date,
-        };
-        await this.storeData(score);
-        return Promise.resolve(true);
-    }
+  async give({ ...score }: GivePost) {
+    //score._id = id();
+    const hej = {
+      _id: id(),
+      ...score
+    };
+    await this.storeData(hej);
+    return Promise.resolve(true);
+  }
 
-    async takeAway(to: string, from: string, date: any): Promise<any> {
-        const score: Score = {
-            _id: id(),
-            to,
-            from,
-            value: -1,
-            given_at: date,
-        };
-        await this.storeData(score);
-        return Promise.resolve(true);
-    }
+  async getScore(user: string, listType: string) {
+    this.syncData();
+    const data: any = await this.getData();
+    const filteredData = data.filter((item: any) => item[listType] === user);
+    // if (asNumber) {
+    //     const score: number = filteredData.reduce((a: number, item: any) => a + item.value, 0);
+    //     return Promise.resolve(score);
+    // }
+    return Promise.resolve(filteredData);
+  };
 
-    async getScore(user: string, listType: string, num = false): Promise<number | Find[]> {
-        this.syncData();
-        const data: any = await this.getData();
-        const filteredData = data.filter((item: any) => item[listType] === user);
-        if (num) {
-            const score: number = filteredData.reduce((a: number, item: any) => a + item.value, 0);
-            return Promise.resolve(score);
+  async findFromToday(user: string, listType: string) {
+    this.syncData();
+    const data: any = await this.getData();
+    const filteredData = data.filter((item) => {
+      if (item[listType] === user
+        && item.given_at.getTime() < time().end.getTime()
+        && item.given_at.getTime() > time().start.getTime()) {
+        return item;
+      }
+      return undefined;
+    }).filter((y) => y);
+    return filteredData;
+  };
+
+  async getScoreBoard({ user, listType, today }) {
+    this.syncData();
+    const data: any = await this.getData();
+    let listTypeSwitch: string;
+    if (user) {
+      listTypeSwitch = (listType === 'from') ? 'to' : 'from';
+    } else {
+      listTypeSwitch = listType;
+    }
+    const selected = data.filter((item: any) => {
+      if (today) {
+        if (item.given_at.getTime() < time().end.getTime()
+          && item.given_at.getTime() > time().start.getTime()) {
+          if (user) {
+            if (item[listTypeSwitch] === user) return item;
+          } else {
+            return item;
+          }
         }
-        return Promise.resolve(filteredData);
-    }
+      } else if (user) {
+        if (item[listTypeSwitch] === user) return item;
+      } else {
+        return item;
+      }
 
-    async findFromToday(user: string, listType: string): Promise<Find[]> {
-        this.syncData();
-        const data: any = await this.getData();
-        const filteredData = data.filter((item) => {
-            if (item[listType] === user
-                && item.given_at.getTime() < time().end.getTime()
-                && item.given_at.getTime() > time().start.getTime()) {
-                return item;
-            }
-            return undefined;
-        }).filter((y) => y);
-        return filteredData;
-    }
-
-    async getScoreBoard({ user, listType, today }): Promise<Sum[]> {
-        this.syncData();
-        const data: any = await this.getData();
-
-        let listTypeSwitch: string;
-        if (user) {
-            listTypeSwitch = (listType === 'from') ? 'to' : 'from';
-        } else {
-            listTypeSwitch = listType;
-        }
-        const selected = data.filter((item: any) => {
-            if (today) {
-                if (item.given_at.getTime() < time().end.getTime()
-                    && item.given_at.getTime() > time().start.getTime()) {
-                    if (user) {
-                        if (item[listTypeSwitch] === user) return item;
-                    } else {
-                        return item;
-                    }
-                }
-            } else if (user) {
-                if (item[listTypeSwitch] === user) return item;
-            } else {
-                return item;
-            }
-            return undefined;
-        }).filter((y: any) => y);
-        return selected;
-    }
-}
+      return undefined;
+    }).filter((y: any) => y);
+    return selected;
+  };
+};
 
 export default GenericDriver;

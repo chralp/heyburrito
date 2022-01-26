@@ -1,110 +1,26 @@
-import config from './config';
-import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
 import { parseMessage } from './lib/parseMessage';
+import { handleBurritos } from './handleBurritos';
 import { validBotMention, validMessage } from './lib/validator';
+import { emojis } from './lib/emojis';
 import Rtm from './slack/Rtm';
 import Wbc from './slack/Wbc';
 
-const {
-    enableDecrement,
-    dailyCap,
-    dailyDecCap,
-    emojiInc,
-    emojiDec,
-    disableEmojiDec,
-} = config.slack;
+export const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
 
-interface Emojis {
-    type: string;
-    emoji: string;
-}
+export const incomingMessage = async (message) => {
 
-interface Updates {
-    username: string;
-    type: string;
-}
-const emojis: Array<Emojis> = [];
+  // If message not valid then dont process it
+  if (!validMessage(message, emojis, LocalStore.getAllBots())) return false;
 
-const incEmojis = emojiInc.split(',').map((emoji => emoji.trim()));
-incEmojis.forEach((emoji: string) => emojis.push({ type: 'inc', emoji }));
+  // If botMention handle message seperate later on. No support today
+  if (validBotMention(message, LocalStore.botUserID())) return false;
 
-if (!disableEmojiDec) {
-    const decEmojis = emojiDec.split(',').map((emoji => emoji.trim()));
-    decEmojis.forEach((emoji: string) => emojis.push({ type: 'dec', emoji }));
-}
-
-const giveBurritos = async (giver: string, updates: Updates[]) => {
-    return updates.reduce(async (prev: any, burrito) => {
-        return prev.then(async () => {
-            if (burrito.type === 'inc') {
-                await BurritoStore.giveBurrito(burrito.username, giver);
-            } else if (burrito.type === 'dec') {
-                await BurritoStore.takeAwayBurrito(burrito.username, giver);
-            }
-        });
-    }, Promise.resolve());
+  const result = parseMessage(message, emojis);
+  if (result?.updates) {
+    const { giver, updates } = result;
+    await handleBurritos(giver, updates);
+  }
 };
 
-const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
-
-const handleBurritos = async (giver: string, updates: Updates[]) => {
-    if (enableDecrement) {
-        const burritos = await BurritoStore.givenBurritosToday(giver, 'from');
-        const diff = dailyCap - burritos;
-        if (updates.length > diff) {
-            notifyUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diff} burritos left today!`);
-            return false;
-        }
-        if (burritos >= dailyCap) {
-            return false;
-        }
-        await giveBurritos(giver, updates);
-    } else {
-        const givenBurritos = await BurritoStore.givenToday(giver, 'from', 'inc');
-        const givenRottenBurritos = await BurritoStore.givenToday(giver, 'from', 'dec');
-        const incUpdates = updates.filter((x) => x.type === 'inc');
-        const decUpdates = updates.filter((x) => x.type === 'dec');
-        const diffInc = dailyCap - givenBurritos;
-        const diffDec = dailyDecCap - givenRottenBurritos;
-        if (incUpdates.length) {
-            if (incUpdates.length > diffInc) {
-                notifyUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diffInc} burritos left today!`);
-            } else {
-                await giveBurritos(giver, incUpdates);
-            }
-        }
-        if (decUpdates.length) {
-            if (decUpdates.length > diffDec) {
-                notifyUser(giver, `You are trying to give away ${updates.length} rottenburritos, but you only have ${diffDec} rottenburritos left today!`);
-            } else {
-                await giveBurritos(giver, decUpdates);
-            }
-        }
-    }
-    return true;
-};
-
-const start = () => {
-    Rtm.on('slackMessage', async (event: any) => {
-        if (validMessage(event, emojis, LocalStore.getAllBots())) {
-            if (validBotMention(event, LocalStore.botUserID())) {
-                // Geather data and send back to user
-            } else {
-                const result = parseMessage(event, emojis);
-                if (result) {
-                    const { giver, updates } = result;
-                    if (updates.length) {
-                        await handleBurritos(giver, updates);
-                    }
-                }
-            }
-        }
-    });
-};
-
-export {
-    handleBurritos,
-    notifyUser,
-    start,
-};
+export const start = () => Rtm.on('slackMessage', (event: any) => incomingMessage(event));

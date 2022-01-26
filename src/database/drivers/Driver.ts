@@ -1,25 +1,43 @@
-import Score from '../../types/Score.interface';
+export interface Find {
+  _id: string;
+  to: string;
+  from: string;
+  value: number;
+  given_at: Date;
+  overdrawn?: boolean;
+};
 
-interface Find {
-    _id: string;
-    to: string;
-    from: string;
-    value: number;
-    given_at: Date;
-}
+export interface DatabasePost {
+  _id: string,
+  to: string,
+  from: string,
+  value: number,
+  given_at: Date;
+  overdrawn: boolean;
+};
 
+export interface GetScoreBoard {
+  user?: string;
+  listType?: string;
+  today?: boolean;
+};
 
-interface Sum {
-    _id?: string; // Username
-    score?: number;
-}
+export interface GivePost {
+  _id?: string;
+  to: string;
+  from: string;
+  value: number;
+  given_at: Date;
+  overdrawn: boolean;
+};
 
 export default abstract class Driver {
-    abstract async give(to: string, from: string, date): Promise<boolean>;
 
-    abstract async takeAway(to: string, from: string, date): Promise<boolean>;
+  abstract give(score: GivePost);
 
-    abstract async getScore(user: string, listType: string): Promise<number | Find[]>;
+  abstract getScore(user: string, listType: string): Promise<DatabasePost[]>;
 
-    abstract async findFromToday(user: string, listType: string): Promise<Array<Score>>;
+  abstract findFromToday(user: string, listType: string): Promise<DatabasePost[]>;
+
+  abstract getScoreBoard({ }: GetScoreBoard): Promise<DatabasePost[]>;
 }

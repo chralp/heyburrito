@@ -28,11 +28,11 @@ function pickRandomDate(start, end) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }
 
-async function give(to, from, date) {
-    await BurritoStore.giveBurrito(to, from, date)
+async function give(to, from, date, overdrawn = false) {
+    await BurritoStore.give({ to, from, type: 'inc', overdrawn })
 }
-async function takeaway(to, from, date) {
-    await BurritoStore.takeAwayBurrito(to, from, date)
+async function takeaway(to, from, date, overdrawn = false) {
+    await BurritoStore.give({ to, from, type: 'dec', overdrawn })
 
 }
 
@@ -79,7 +79,7 @@ async function init({ driver = config.db.db_driver, random, seedDB = true }) {
         mongoDriver = databaseDrivers[driver]({ db_uri: uri, db_name: database });
         BurritoStore.setDatabase(mongoDriver);
     } else {
-        BurritoStore.setDatabase(databaseDrivers[driver]())
+      BurritoStore.setDatabase(databaseDrivers[driver]())
     }
 
 

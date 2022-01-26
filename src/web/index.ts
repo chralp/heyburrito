@@ -1,4 +1,4 @@
-import * as log from 'bog';
+import log from 'loglevel';
 import fs from 'fs';
 import http from 'http';
 import path from 'path';

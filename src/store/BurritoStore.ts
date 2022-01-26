@@ -1,115 +1,236 @@
-import * as log from 'bog';
+import log from 'loglevel';
 import { EventEmitter } from 'events';
+import config from '../config';
+import { listTypeSwitch } from '../middleware';
 
-interface Find {
-    _id: string;
-    to: string;
-    from: string;
-    value: number;
-    given_at: Date;
-}
+import Driver, {
+  GetScoreBoard,
+  DatabasePost,
+} from '../database/drivers/Driver';
 
-interface Sum {
-    _id?: string; // Username
-    score?: number;
+const {
+  slack: {
+    enableOverDraw,
+    enableDecrement,
+  }
+} = config;
+
+interface CalucateUserScore {
+  listType?: string;
+  scoreType?: string;
+  user?: string;
 }
 
 interface GetUserStats {
-    _id: string;
-    received: number;
-    given: number;
-    receivedToday: number;
-    givenToday: number;
+  _id: string;
+  received: number;
+  given: number;
+  receivedToday: number;
+  givenToday: number;
 }
 
-interface DatabasePost {
-    _id: string,
-    to: string,
-    from: string,
-    value: number,
-    given_at: Date
+interface BurritoUpdate {
+  to: string;
+  from: string;
+  type: string;
+  overdrawn?: boolean;
 }
 
 class BurritoStore extends EventEmitter {
-    database: any = null;
 
-    // Set and Store database object
-    setDatabase(database: any) {
-        this.database = database;
-    }
+  database: Driver;
 
-    async giveBurrito(to: string, from: string, date = new Date()): Promise<string> {
-        log.info(`Burrito given to ${to} from ${from}`);
-        await this.database.give(to, from, date);
-        this.emit('GIVE', to, from);
-        return to;
-    }
+  // Set and Store database object
+  public setDatabase(database: Driver) {
+    this.database = database;
+  };
 
-    async takeAwayBurrito(to: string, from: string, date = new Date()): Promise<string | []> {
-        log.info(`Burrito taken away from ${to} by ${from}`);
-        const score: number = await this.database.getScore(to, 'to', true);
-        if (!score) return [];
-        await this.database.takeAway(to, from, date);
-        this.emit('TAKE_AWAY', to, from);
-        return to;
-    }
+  public async give({ to, from, type, overdrawn }: BurritoUpdate): Promise<string> {
+    const score = {
+      to,
+      from,
+      value: (type === 'inc') ? 1 : -1,
+      given_at: new Date(),
+      overdrawn,
+    };
 
-    async getUserStats(user: string): Promise<GetUserStats> {
-        const [
-            received,
-            given,
-            receivedToday,
-            givenToday,
-        ]: [Sum[], Sum[], number, number] = await Promise.all([
-            this.database.getScore(user, 'to'),
-            this.database.getScore(user, 'from'),
-            this.givenBurritosToday(user, 'to'),
-            this.givenBurritosToday(user, 'from'),
-        ]);
-        return {
-            receivedToday,
-            givenToday,
-            _id: user,
-            received: received.length,
-            given: given.length,
+    await this.database.give(score);
+
+    if (type === 'inc') {
+      log.info(`Burrito given to ${to} from ${from}`);
+      this.emit('GIVE', to, from);
+    };
+
+    if (type === 'dec') {
+      log.info(`Burrito taken away from ${to} by ${from}`);
+      this.emit('TAKE_AWAY', to, from);
+    };
+
+    if (overdrawn) this.emit('TAKE_AWAY', to, from);
+    return to;
+  };
+
+  public async getUserStats(user: string): Promise<GetUserStats> {
+    const [
+      received,
+      given,
+      receivedToday,
+      givenToday,
+    ] = await Promise.all([
+      this.database.getScore(user, 'to'),
+      this.database.getScore(user, 'from'),
+      this.givenToday(user, 'to'),
+      this.givenToday(user, 'from'),
+    ]);
+    return {
+      receivedToday,
+      givenToday,
+      _id: user,
+      received: this.calucateScore(received, {}),
+      given: this.calucateScore(given, {})
+    };
+  };
+
+  public getScoreBoard(args: GetScoreBoard) {
+    return this.database.getScoreBoard(args);
+  };
+
+  public async givenToday(user: string, listType: string, scoreType?: string, overdrawn: boolean = false): Promise<number> {
+
+    const givenToday = await this.database.findFromToday(user, listType);
+    if (scoreType && ['inc', 'dec'].includes(scoreType)) {
+      const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
+
+      const givenFilter = givenToday.filter((x) => {
+        if (x.value === scoreTypeFilter) {
+          if(overdrawn) return !!x.overdrawn
+          return !x.overdrawn
         };
-    }
+      });
+      return this.calucateScore(givenFilter, {});
+    };
+    return this.calucateScore(givenToday, {});
+  };
 
-    async getScoreBoard({ ...args }): Promise<DatabasePost[]> {
-        return this.database.getScoreBoard({ ...args });
-    }
 
-    /**
-     * @param {string} user - userId
-     * @param {string} listType - to / from defaults from
-     */
-    async givenBurritosToday(user: string, listType: string): Promise<number> {
-        const givenToday: Find[] = await this.database.findFromToday(user, listType);
-        return givenToday.length;
-    }
 
-    /**
-     * @param {string} user - userId
-     * @param {string} listType - to / from defaults from
-     */
-    async givenToday(user: string, listType: string, type: any = false): Promise<number> {
-        const givenToday: Find[] = await this.database.findFromToday(user, listType);
-        if (type) {
-            if (['inc', 'dec'].includes(type)) {
-                const valueFilter = (type === 'inc') ? 1 : -1;
-                const givenFilter = givenToday.filter((x) => x.value === valueFilter);
-                return givenFilter.length;
-            }
+
+  /**
+   * Get UserScore depending on listType and scoreType.
+   */
+  public async getUserScore(user: string, listType: string, scoreType: string): Promise<number> {
+
+    // Get users score from DB, ( Only all inc not calculated with dec or overdrwan)
+    const _data = await this.database.getScore(user, listType);
+    if (enableOverDraw) {
+      const _dataSwitched = await this.database.getScore(user, listTypeSwitch(listType));
+      const data = _dataSwitched.filter((entry) => (!!entry.overdrawn));
+      return _data.length - data.length;
+    }
+    return _data.length;
+
+  };
+
+
+
+  // countScore
+  public calucateScore(data: DatabasePost[], args: CalucateUserScore) {
+    const { listType, scoreType, user } = args;
+    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
+
+    const gg = data.reduce((total: number, current: any): number => {
+      if (listType) {
+        if (current[listType] === user) {
+          return total + (valueSwitch || current.value);
         }
-        return givenToday.length;
+        return total;
+      } else {
+        return total + 1;
+      }
+    }, 0);
+    return gg;
+  };
+
+
+  public _filterScoreData(data: DatabasePost[], scoreType: string) {
+    console.log("_filterScoreData => scoreType:", scoreType);
+    const scoreSwitch = (scoreType === 'inc') ? 1 : -1;
+    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
+
+    return data.filter((entry) => {
+
+      /* if enableDecrement return 1 AND -1
+       * check first if enableOverDraw, if so return only if enableOverDraw = true
+       */
+      if (enableDecrement) {
+
+        if (enableOverDraw) {
+          return valueSwitch
+            ? (entry.overdrawn !== true && entry.value === scoreSwitch)
+            : entry.overdrawn !== true;
+        } else {
+          return valueSwitch ? entry.value === scoreSwitch : entry;
+        }
+
+
+      } else {
+        if (entry.value == scoreSwitch) {
+          if (enableOverDraw) return entry;
+          return entry.overdrawn !== true;
+        }
+        return null;
+      }
+    });
+  };
+
+  public filterScoreData(data: DatabasePost[], scoreType: string) {
+
+    const scoreSwitch = (scoreType === 'inc') ? 1 : -1;
+    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
+
+    return data.filter((entry) => {
+      if (enableDecrement) {
+        if (!enableOverDraw) {
+          return valueSwitch
+            ? (entry.overdrawn !== true && entry.value === scoreSwitch)
+            : entry.overdrawn !== true;
+        } else {
+          return valueSwitch ? entry.value === scoreSwitch : entry;
+        }
+      } else {
+        if (entry.value == scoreSwitch) {
+          if (enableOverDraw) return entry;
+          return entry.overdrawn !== true;
+        }
+      }
+    });
+  };
+
+
+  public _getOverDrawn (user: string) {
+
+  }
+
+  public _calucateScore(data, user: string, { listType, scoreType }): number {
+    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
+
+    if (enableOverDraw) {
+      const scoreOverDrawn = data.reduce((total: number, entry) => {
+        if (!!entry.overdrawn && entry[listTypeSwitch(listType)] == user) {
+          return total + (valueSwitch || entry.value);
+        }
+        return total;
+      }, 0);
+      console.log("DJAHA", user, scoreOverDrawn)
+      const _score = this.calucateScore(data, { user, listType, scoreType });
+
+      console.log("_score", _score)
+      return scoreOverDrawn ? _score - scoreOverDrawn : _score;
+    } else {
+      return this.calucateScore(data, { user, listType, scoreType });
     }
 
-    /**
-     * @param {string} user - userId
-     */
-    async getUserScore(user: string, listType: string, num): Promise<number> {
-        return this.database.getScore(user, listType, num);
-    }
+  };
 }
 
 export default new BurritoStore();

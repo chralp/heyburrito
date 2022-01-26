@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 /* eslint-disable import/first */
 dotenv.config();
-import log from 'bog';
+import log from 'loglevel';
 import http from 'http';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
@@ -17,58 +17,63 @@ import WSSHandler from './wss';
 import boot from './lib/boot';
 
 const init = async () => {
-    await boot();
+  await boot();
 };
 
 init().then(() => {
-    log.info('Staring heyburrito');
 
-    // Configure BurritoStore
-    BurritoStore.setDatabase(database);
+  log.setLevel(config.misc.log_level);
+  log.info('Staring heyburrito');
 
-    // Set and start slack services
-    const { rtm, wbc } = slack;
+  // Configure BurritoStore
+  BurritoStore.setDatabase(database);
 
-    rtm.start();
-    RTMHandler.register(rtm);
-    WBCHandler.register(wbc);
+  // Set and start slack services
+  const { rtm, wbc } = slack;
 
-    // Start bot instance
-    start();
+  //BurritoStore.getUserScore("UEKN9GNAJ", 'to', 'dec');
+  //BurritoStore.getUserScore("UEHUXHG0G", 'to', 'inc');
 
-    // Start localstore instance
-    LocalStore.start();
+  rtm.start();
+  RTMHandler.register(rtm);
+  WBCHandler.register(wbc);
 
+  // Start bot instance
+  start();
+
+  // Start localstore instance
+  LocalStore.start();
+
+  /**
+   * Httpserver request handler
+   */
+  const requestHandler = (request: http.IncomingMessage, response: http.ServerResponse) => {
     /**
-     * Httpserver request handler
+     * Check if request url contains api path, then let APIHandler take care of it
      */
-    const requestHandler = (request: http.IncomingMessage, response: http.ServerResponse) => {
-        /**
-         * Check if request url contains api path, then let APIHandler take care of it
-         */
-        if (request.url.includes(config.http.api_path)) return APIHandler(request, response);
-        /**
-         * Check if request url contains webpath, then let WEBHandler take care of it
-         */
-        if (request.url.includes(config.http.web_path)) return WEBHandler(request, response);
-        /**
-         * redirect all other requests to webPath
-         */
-        response.writeHead(301, {
-            location: config.http.web_path,
-        });
-        return response.end();
-    };
-
+    if (request.url.includes(config.http.api_path)) return APIHandler(request, response);
     /**
-     * Start HTTP / WSS server
+     * Check if request url contains webpath, then let WEBHandler take care of it
      */
-    const httpserver = http.createServer(requestHandler);
-
-    httpserver.listen(config.http.http_port, (err) => {
-        if (err) throw new Error(`Could not start HTTP server, error => ${err}`);
-        // Start WSS instance
-        WSSHandler();
-        log.info(`HttpServer started on ${config.http.http_port}`);
+    if (request.url.includes(config.http.web_path)) return WEBHandler(request, response);
+    /**
+     * redirect all other requests to webPath
+     */
+    response.writeHead(301, {
+      location: config.http.web_path,
     });
+    return response.end();
+  };
+
+  /**
+   * Start HTTP / WSS server
+   */
+  const httpserver = http.createServer(requestHandler);
+
+  httpserver.listen(config.http.http_port, () => {
+    //if (err) throw new Error(`Could not start HTTP server, error => ${err}`);
+    // Start WSS instance
+    WSSHandler();
+    log.info(`HttpServer started on ${config.http.http_port}`);
+  });
 });
