@@ -2,6 +2,7 @@ import config from './config';
 import mapper from './lib/mapper';
 import { sort } from './lib/utils';
 import BurritoStore from './store/BurritoStore';
+import { levelScoreList, calculateScore } from './store/calc';
 
 const {
   level: {
@@ -16,21 +17,6 @@ const {
 
 
 
-export const listTypeSwitch = (listType: string) => listType === 'to' ? 'from' : 'to';
-
-
-const levelScoreList = (scoreList) => scoreList.map((x: any) => {
-  let score = x.score;
-  const roundedScore = Math.floor(score / scoreRotation) * scoreRotation;
-  const level = Math.floor((score - 1) / scoreRotation);
-  const newScore = ((score - roundedScore) === 0 ? roundedScore - (score - scoreRotation) : score - roundedScore);
-  return {
-    _id: x._id,
-    score: newScore,
-    level,
-  }
-});
-
 /**
  * Middleware for API and Websocket
  */
@@ -41,19 +27,20 @@ const levelScoreList = (scoreList) => scoreList.map((x: any) => {
  */
 const getScoreBoard = async (listType: string, scoreType: string) => {
 
-  const _data = await BurritoStore.getScoreBoard({ listType });
-
-  // We want to filter out data that we want first
-  const data = BurritoStore.filterScoreData(_data, scoreType);
+  const data = await BurritoStore.getScoreBoard({ listType });
 
   // Get unique Usernames
   const uniqueUsername: string[] = [...new Set(data.map((x) => x[listType]))];
-
+  console.log(uniqueUsername)
   const scoreList = uniqueUsername
-    .map((user) => ({ _id: user, score: BurritoStore._calucateScore(data, user, { listType, scoreType }) }))
+    .map((user) => ({ _id: user, score: calculateScore(data, data, { listType, scoreType, user}) }))
     .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);
 
-  return enableLevel ? sort(mapper(levelScoreList(scoreList))) : sort(mapper(scoreList));
+  console.log("scoreList", scoreList)
+  const handledScore = enableLevel ? sort(mapper(levelScoreList(scoreList))) : sort(mapper(scoreList));
+  console.log("enableLevel", enableLevel)
+  console.log("handledScore", handledScore)
+  return handledScore
 };
 
 const _getUserScoreBoard = async ({ ...args }) => {

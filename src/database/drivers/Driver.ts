@@ -8,12 +8,12 @@ export interface Find {
 };
 
 export interface DatabasePost {
-  _id: string,
-  to: string,
-  from: string,
-  value: number,
-  given_at: Date;
-  overdrawn: boolean;
+  _id?: string,
+  to?: string,
+  from?: string,
+  value?: number,
+  given_at?: Date;
+  overdrawn?: boolean;
 };
 
 export interface GetScoreBoard {

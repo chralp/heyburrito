@@ -90,6 +90,9 @@ const getThemePath = () => {
   return `${themeRootPath}${themeName}/`;
 };
 
+
+const listTypeSwitch = (listType: string) => listType === 'to' ? 'from' : 'to';
+
 export {
   time,
   sort,
@@ -103,4 +106,5 @@ export {
   root,
   getThemePath,
   getThemeName,
+  listTypeSwitch,
 };

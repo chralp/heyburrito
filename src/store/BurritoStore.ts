@@ -1,19 +1,13 @@
 import log from 'loglevel';
 import { EventEmitter } from 'events';
 import config from '../config';
-import { listTypeSwitch } from '../middleware';
-
+import { listTypeSwitch } from '../lib/utils';
+import {calculateScore} from './calc';
 import Driver, {
   GetScoreBoard,
   DatabasePost,
 } from '../database/drivers/Driver';
 
-const {
-  slack: {
-    enableOverDraw,
-    enableDecrement,
-  }
-} = config;
 
 interface CalucateUserScore {
   listType?: string;
@@ -35,6 +29,10 @@ interface BurritoUpdate {
   type: string;
   overdrawn?: boolean;
 }
+
+
+console.log("OUTSIDE", config.slack.enableOverDraw, config.slack.enableDecrement)
+
 
 class BurritoStore extends EventEmitter {
 
@@ -86,8 +84,8 @@ class BurritoStore extends EventEmitter {
       receivedToday,
       givenToday,
       _id: user,
-      received: this.calucateScore(received, {}),
-      given: this.calucateScore(given, {})
+      received: calculateScore(received, [],{}),
+      given: calculateScore(given, [],{})
     };
   };
 
@@ -107,9 +105,9 @@ class BurritoStore extends EventEmitter {
           return !x.overdrawn
         };
       });
-      return this.calucateScore(givenFilter, {});
+      return calculateScore(givenFilter, [], { listType, scoreType, user });
     };
-    return this.calucateScore(givenToday, {});
+    return calculateScore(givenToday, [], { listType, scoreType, user });
   };
 
 
@@ -120,68 +118,19 @@ class BurritoStore extends EventEmitter {
    */
   public async getUserScore(user: string, listType: string, scoreType: string): Promise<number> {
 
+    const { enableDecrement, enableOverDraw } = config.slack
+    console.log("INSIDE", enableOverDraw, enableDecrement)
     // Get users score from DB, ( Only all inc not calculated with dec or overdrwan)
     const _data = await this.database.getScore(user, listType);
     if (enableOverDraw) {
       const _dataSwitched = await this.database.getScore(user, listTypeSwitch(listType));
       const data = _dataSwitched.filter((entry) => (!!entry.overdrawn));
-      return _data.length - data.length;
+      return calculateScore(_data, [], { listType, scoreType, user });
     }
-    return _data.length;
+    return calculateScore(_data, [], { listType, scoreType, user });
 
   };
 
-
-
-  // countScore
-  public calucateScore(data: DatabasePost[], args: CalucateUserScore) {
-    const { listType, scoreType, user } = args;
-    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
-
-    const gg = data.reduce((total: number, current: any): number => {
-      if (listType) {
-        if (current[listType] === user) {
-          return total + (valueSwitch || current.value);
-        }
-        return total;
-      } else {
-        return total + 1;
-      }
-    }, 0);
-    return gg;
-  };
-
-
-  public _filterScoreData(data: DatabasePost[], scoreType: string) {
-    console.log("_filterScoreData => scoreType:", scoreType);
-    const scoreSwitch = (scoreType === 'inc') ? 1 : -1;
-    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
-
-    return data.filter((entry) => {
-
-      /* if enableDecrement return 1 AND -1
-       * check first if enableOverDraw, if so return only if enableOverDraw = true
-       */
-      if (enableDecrement) {
-
-        if (enableOverDraw) {
-          return valueSwitch
-            ? (entry.overdrawn !== true && entry.value === scoreSwitch)
-            : entry.overdrawn !== true;
-        } else {
-          return valueSwitch ? entry.value === scoreSwitch : entry;
-        }
-
-
-      } else {
-        if (entry.value == scoreSwitch) {
-          if (enableOverDraw) return entry;
-          return entry.overdrawn !== true;
-        }
-        return null;
-      }
-    });
-  };
 
   public filterScoreData(data: DatabasePost[], scoreType: string) {
 
@@ -189,8 +138,8 @@ class BurritoStore extends EventEmitter {
     const valueSwitch = (scoreType === 'dec') ? 1 : 0;
 
     return data.filter((entry) => {
-      if (enableDecrement) {
-        if (!enableOverDraw) {
+      if (config.slack.enableDecrement) {
+        if (!config.slack.enableOverDraw) {
           return valueSwitch
             ? (entry.overdrawn !== true && entry.value === scoreSwitch)
             : entry.overdrawn !== true;
@@ -199,37 +148,11 @@ class BurritoStore extends EventEmitter {
         }
       } else {
         if (entry.value == scoreSwitch) {
-          if (enableOverDraw) return entry;
+          if (config.slack.enableOverDraw) return entry;
           return entry.overdrawn !== true;
         }
       }
     });
-  };
-
-
-  public _getOverDrawn (user: string) {
-
-  }
-
-  public _calucateScore(data, user: string, { listType, scoreType }): number {
-    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
-
-    if (enableOverDraw) {
-      const scoreOverDrawn = data.reduce((total: number, entry) => {
-        if (!!entry.overdrawn && entry[listTypeSwitch(listType)] == user) {
-          return total + (valueSwitch || entry.value);
-        }
-        return total;
-      }, 0);
-      console.log("DJAHA", user, scoreOverDrawn)
-      const _score = this.calucateScore(data, { user, listType, scoreType });
-
-      console.log("_score", _score)
-      return scoreOverDrawn ? _score - scoreOverDrawn : _score;
-    } else {
-      return this.calucateScore(data, { user, listType, scoreType });
-    }
-
   };
 }
 
