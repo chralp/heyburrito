@@ -1,6 +1,6 @@
 import { calculateScore } from '../src/store/calc'
 import * as config from '../src/config';
-import { scoreBoard } from './data/calculatescore-data';
+import { scoreBoard, user1ScoreData, user2ScoreData, user3ScoreData, user4ScoreData } from './data/calculatescore-data';
 
 
 interface args {
@@ -21,183 +21,186 @@ const getScore = ({ listType, scoreType, user }:args) => {
 
 describe('calculateScore', () => {
 
-  // describe('userscore', () => {
-  //   it('User1 score should be 3 { enableOverDraw: false, enableDecrement: false }', () => {
-  //     config.default.slack = { enableOverDraw: false, enableDecrement: false }
-  //     const result = calculateScore(data, [], { listType: 'to', scoreType: 'inc', user: 'USER1' })
-  //     expect(result).toEqual(3)
-  //   });
+  describe('userscore', () => {
 
-  //   it('User1 score should be 4 { enableOverDraw: true, enableDecrement: false }', () => {
-  //     config.default.slack = { enableOverDraw: true, enableDecrement: false }
-  //     const result = calculateScore(data, [], { listType: 'to', scoreType: 'inc', user: 'USER1' })
-  //     expect(result).toEqual(4)
-  //   });
 
-  //   it('User1 score should be 3 with overdrawn data { enableOverDraw: true, enableDecrement: false }', () => {
-  //     config.default.slack = { enableOverDraw: true, enableDecrement: false }
-  //     const overdrawn = [
-  //       {
-  //         to: 'USER2',
-  //         from: 'USER1',
-  //         value: 1,
-  //         overdrawn: true
-  //       },
-  //       {
-  //         to: 'USER2',
-  //         from: 'USER3',
-  //         value: 1,
-  //         overdrawn: true
-  //       },
-  //     ]
-  //     const result = calculateScore(data, overdrawn, { listType: 'to', scoreType: 'inc', user: 'USER1' })
-  //     expect(result).toEqual(3)
-  //   });
 
-  //   it('User1 score should be 2 with overdrawn data { enableOverDraw: true, enableDecrement: false }', () => {
-  //     config.default.slack = { enableOverDraw: true, enableDecrement: false }
-  //     const overdrawn = [
-  //       {
-  //         to: 'USER2',
-  //         from: 'USER1',
-  //         value: 1,
-  //         overdrawn: true
-  //       },
-  //       {
-  //         to: 'USER2',
-  //         from: 'USER1',
-  //         value: 1,
-  //         overdrawn: true
-  //       },
-  //       {
-  //         to: 'USER2',
-  //         from: 'USER3',
-  //         value: 1,
-  //         overdrawn: true
-  //       },
-  //     ]
-  //     const result = calculateScore(data, overdrawn, { listType: 'to', scoreType: 'inc', user: 'USER1' })
-  //     expect(result).toEqual(2)
-  //   });
+    it('User1 score should be 14 => to & inc => { enableOverDraw: false, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: false }
+      const result = calculateScore(user1ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER1' })
+      expect(result).toEqual(14)
+    });
 
-  //   it('User1 score should be 2 { enableOverDraw: false, enableDecrement: true }', async () => {
-  //     config.default.slack = { enableOverDraw: false, enableDecrement: true }
-  //     const result = calculateScore(data, [], { listType: 'to', scoreType: 'inc', user: 'USER1' })
-  //     expect(result).toEqual(2)
-  //   });
+    it('User1 score should be 11 => to & inc => { enableOverDraw: false, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: true }
+      const result = calculateScore(user1ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER1' })
+      expect(result).toEqual(11)
+    });
 
-  // });
+    it('User1 score should be 14 => to & inc => { enableOverDraw: true, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: false }
+      const result = calculateScore(user1ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER1' })
+      expect(result).toEqual(14)
+    });
+
+
+    it('User1 score should be 11 => to & inc => { enableOverDraw: true, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: true }
+      const result = calculateScore(user1ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER1' })
+      expect(result).toEqual(11)
+    });
+
+
+
+
+
+
+
+
+
+    it('User2 score should be 9 => to & inc => { enableOverDraw: false, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: false }
+      const result = calculateScore(user2ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER2' })
+      expect(result).toEqual(9)
+    });
+
+    it('User2 score should be 5 => to & inc => { enableOverDraw: false, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: true }
+      const result = calculateScore(user2ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER2' })
+      expect(result).toEqual(5)
+    });
+
+    it('User2 score should be 12 => to & inc => { enableOverDraw: true, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: false }
+      const result = calculateScore(user2ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER2' })
+      expect(result).toEqual(12)
+    });
+
+
+    it('User2 score should be 8 => to & inc => { enableOverDraw: true, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: true }
+      const result = calculateScore(user2ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER2' })
+      expect(result).toEqual(8)
+    });
+
+
+
+
+
+
+    it('User3 score should be 13 => to & inc => { enableOverDraw: false, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: false }
+      const result = calculateScore(user3ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER3' })
+      expect(result).toEqual(13)
+    });
+
+    it('User3 score should be 9 => to & inc => { enableOverDraw: false, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: true }
+      const result = calculateScore(user3ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER3' })
+      expect(result).toEqual(9)
+    });
+
+    it('User3 score should be 12 => to & inc => { enableOverDraw: true, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: false }
+      const result = calculateScore(user3ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER3' })
+      expect(result).toEqual(12)
+    });
+
+
+    it('User3 score should be 8 => to & inc => { enableOverDraw: true, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: true }
+      const result = calculateScore(user3ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER3' })
+      expect(result).toEqual(8)
+    });
+
+
+
+
+    it('User4 score should be 10 => to & inc => { enableOverDraw: false, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: false }
+      const result = calculateScore(user4ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER4' })
+      expect(result).toEqual(10)
+    });
+
+    it('User4 score should be 10 => to & inc => { enableOverDraw: false, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: false, enableDecrement: true }
+      const result = calculateScore(user4ScoreData, [], { listType: 'to', scoreType: 'inc', user: 'USER4' })
+      expect(result).toEqual(9)
+    });
+
+    it('User4 score should be 8 => to & inc => { enableOverDraw: true, enableDecrement: false }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: false }
+      const result = calculateScore(user4ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER4' })
+      expect(result).toEqual(8)
+    });
+
+
+    it('User4 score should be 7 => to & inc => { enableOverDraw: true, enableDecrement: true }', () => {
+      config.default.slack = { enableOverDraw: true, enableDecrement: true }
+      const result = calculateScore(user4ScoreData, scoreBoard, { listType: 'to', scoreType: 'inc', user: 'USER4' })
+      expect(result).toEqual(7)
+    });
+
+
+
+  });
 
   describe('scoreboard', () => {
 
-    it('Should calc scoreboard => to & inc => { enableOverDraw: false, enableDecrement: false }', async () => {
-      config.default.slack = { enableOverDraw: false, enableDecrement: false }
-      const listType = 'to';
-      const scoreType = 'inc'
-      const scoreList = getScore({ listType, scoreType })
-      expect(scoreList).toEqual([{ _id: 'USER1', score: 9 }, { _id: 'USER2', score: 5 }])
-    });
+    // it('Should calculate scoreboard => to & inc => { enableOverDraw: false, enableDecrement: false }', async () => {
+    //   config.default.slack = { enableOverDraw: false, enableDecrement: false }
+    //   const listType = 'to';
+    //   const scoreType = 'inc'
+    //   const scoreList = getScore({ listType, scoreType })
+    //   expect(scoreList).toEqual([
+    //     { _id: 'USER1', score: 14 },
+    //     { _id: 'USER2', score: 9 },
+    //     { _id: 'USER3', score: 13 },
+    //     { _id: 'USER4', score: 10 }
+    //   ]);
+    // });
 
 
-    it('Should calc scoreboard => to & inc => { enableOverDraw: true, enableDecrement: false }', async () => {
-      config.default.slack = { enableOverDraw: true, enableDecrement: false }
-      const listType = 'to';
-      const scoreType = 'inc'
-      const scoreList = getScore({ listType, scoreType })
-      expect(scoreList).toEqual([{ _id: 'USER1', score: 4 }, { _id: 'USER2', score: 10 }])
-    });
+    // it('Should calculate scoreboard => to & inc => { enableOverDraw: false, enableDecrement: true }', async () => {
+    //   config.default.slack = { enableOverDraw: false, enableDecrement: true }
+    //   const listType = 'to';
+    //   const scoreType = 'inc'
+    //   const scoreList = getScore({ listType, scoreType })
+    //     expect(scoreList).toEqual([
+    //     { _id: 'USER1', score: 11 },
+    //     { _id: 'USER2', score: 5 },
+    //     { _id: 'USER3', score: 9 },
+    //     { _id: 'USER4', score: 9 }
+    //   ]);
+    // });
 
 
-    it('Should calc scoreboard => to & inc => { enableOverDraw: false, enableDecrement: true }', async () => {
-      config.default.slack = { enableOverDraw: false, enableDecrement: true }
-      const listType = 'to';
-      const scoreType = 'inc'
-      const scoreList = getScore({ listType, scoreType })
-      expect(scoreList).toEqual([{ _id: 'USER1', score: 8 }, { _id: 'USER2', score: 8 }])
-    });
+    // it('Should calculate scoreboard => to & inc => { enableOverDraw: true, enableDecrement: false }', async () => {
+    //   config.default.slack = { enableOverDraw: true, enableDecrement: false }
+    //   const listType = 'to';
+    //   const scoreType = 'inc'
+    //   const scoreList = getScore({ listType, scoreType })
+    //   expect(scoreList).toEqual([
+    //     { _id: 'USER1', score: 14 },
+    //     { _id: 'USER2', score: 12 },
+    //     { _id: 'USER3', score: 12 },
+    //     { _id: 'USER4', score: 8 }
+    //   ]);
+    // });
 
 
-    it('Should calc scoreboard => to & dec => { enableOverDraw: false, enableDecrement: false }', async () => {
-      config.default.slack = { enableOverDraw: false, enableDecrement: false }
-      const listType = 'to';
-      const scoreType = 'dec'
-
-      const scoreList = getScore({ listType, scoreType })
-      expect(scoreList).toEqual([{ _id: 'USER1', score: 1 }, { _id: 'USER2', score: 2 }])
-    });
-
-
-    it('Should calc scoreboard => to & dec => { enableOverDraw: true, enableDecrement: false }', async () => {
-      config.default.slack = { enableOverDraw: false, enableDecrement: false }
-      const listType = 'to';
-      const scoreType = 'dec'
-      const scoreList = getScore({ listType, scoreType })
-      console.log("scoreBoard", scoreBoard)
-      console.log("List", scoreList)
-      expect(scoreList).toEqual([{ _id: 'USER1', score: 1 }, { _id: 'USER2', score: 2 }])
-    });
-
-
-
-    // test listType from
-    // test scoreType dec
-
-  //   it('Should calc scoreboard => from & inc => { enableOverDraw: false, enableDecrement: false }', async () => {
-  //     config.default.slack = { enableOverDraw: false, enableDecrement: false }
-  //     const listType = 'from';
-  //     const scoreType = 'inc'
-  //     const uniqueUsername: string[] = [...new Set(scoreBoard.map((x) => x[listType]))];
-
-  //     const scoreList = uniqueUsername
-  //       .map((user) => ({ _id: user, score: calculateScore(scoreBoard, scoreBoard, { listType, scoreType, user }) }))
-  //       .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);
-
-  //     expect(scoreList).toEqual([{ _id: 'USER2', score: 9 }, { _id: 'USER1', score: 5 }])
-  //   });
-
-  //   it('Should calc scoreboard => from & inc => { enableOverDraw: true, enableDecrement: false }', async () => {
-  //     config.default.slack = { enableOverDraw: true, enableDecrement: false }
-  //     const listType = 'from';
-  //     const scoreType = 'inc'
-  //     const uniqueUsername: string[] = [...new Set(scoreBoard.map((x) => x[listType]))];
-
-  //     const scoreList = uniqueUsername
-  //       .map((user) => ({ _id: user, score: calculateScore(scoreBoard, scoreBoard, { listType, scoreType, user }) }))
-  //       .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);
-  //     expect(scoreList).toEqual([{ _id: 'USER2', score: 9 }, { _id: 'USER1', score: 10 }])
-  //   });
-
-
-  //   it('Should calc scoreboard => from & inc => { enableOverDraw: false, enableDecrement: true }', async () => {
-  //     config.default.slack = { enableOverDraw: false, enableDecrement: true }
-  //     const listType = 'from';
-  //     const scoreType = 'inc'
-  //     const uniqueUsername: string[] = [...new Set(scoreBoard.map((x) => x[listType]))];
-
-  //     const scoreList = uniqueUsername
-  //       .map((user) => ({ _id: user, score: calculateScore(scoreBoard, scoreBoard, { listType, scoreType, user }) }))
-  //       .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);
-
-  //     console.log("scoreBoard", scoreBoard)
-  //     console.log("scoreList", scoreList)
-  //     expect(scoreList).toEqual([{ _id: 'USER2', score: 9 }, { _id: 'USER1', score: 10 }])
-  //   });
-
-
-  //   it('Should calc scoreboard => from & dec => { enableOverDraw: false, enableDecrement: false }', async () => {
-  //     config.default.slack = { enableOverDraw: true, enableDecrement: false }
-  //     const listType = 'from';
-  //     const scoreType = 'inc'
-  //     const uniqueUsername: string[] = [...new Set(scoreBoard.map((x) => x[listType]))];
-
-  //     const scoreList = uniqueUsername
-  //       .map((user) => ({ _id: user, score: calculateScore(scoreBoard, scoreBoard, { listType, scoreType, user }) }))
-  //       .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);
-  //     console.log("scoreBoard", scoreBoard)
-  //     console.log("scoreList", scoreList)
-  //     expect(scoreList).toEqual([{ _id: 'USER2', score: 9 }, { _id: 'USER1', score: 10 }])
-  //   });
-
+    // it('Should calculate scoreboard => to & inc => { enableOverDraw: true, enableDecrement: true }', async () => {
+    //   config.default.slack = { enableOverDraw: true, enableDecrement: true }
+    //   const listType = 'to';
+    //   const scoreType = 'inc'
+    //   const scoreList = getScore({ listType, scoreType })
+    //   expect(scoreList).toEqual([
+    //     { _id: 'USER1', score: 11 },
+    //     { _id: 'USER2', score: 8 },
+    //     { _id: 'USER3', score: 8 },
+    //     { _id: 'USER4', score: 7 }
+    //   ]);
+    // });
 
   });
 

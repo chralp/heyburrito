@@ -1,5 +1,5 @@
 import config from '../config';
-import { listTypeSwitch } from '../lib/utils';
+import { listTypeSwitch, sort } from '../lib/utils';
 import { DatabasePost } from '../database/drivers/Driver';
 
 interface CalculateScoreArgs {
@@ -20,12 +20,9 @@ interface CalculateScoreArgs {
 export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePost[], args?: CalculateScoreArgs): number => {
   const { listType, scoreType, user } = args;
   const valueSwitch = (scoreType === 'dec') ? 1 : 0;
-  console.log("aaa", data)
-  console.log("valueSwitch", valueSwitch)
   console.log(listType, scoreType, user)
 
-  const { enableOverDraw } = config.slack;
-
+  const { enableOverDraw, enableDecrement} = config.slack;
 
   const _dataOverDrawn = overDrawnData.filter((entry: DatabasePost) => {
 
@@ -46,87 +43,69 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
     return total + current.value;
   }, 0);
 
-  console.log("_scoreOverdrawn", _scoreOverdrawn)
+
+  if(user === 'USER3') console.log("_scoreOverdrawn", _scoreOverdrawn)
+
   const _score = data.reduce((total: number, current: DatabasePost): number => {
 
-    /**
-     * enableDecrement = true
-     * calc:
-     * all values beside overdrawn?
-     */
-
-    if (config.slack.enableDecrement) {
-
-      if (listType && user && current[listType] === user) {
-
-        if (enableOverDraw) {
-          if (current.overdrawn) {
-            return total + current.value;
-          }
-          return total;
-        }
-
-
-        if(listType === 'from' && scoreType === 'inc' && current.value === 1) {
-          return total + current.value
-
-        }else if(listType === 'to' && scoreType === 'inc') {
-          return total + current.value
-
-        }else {
-          return total;
-        }
-
-
-        // THIS SEAMS TO WORK
-        if (!current.overdrawn) return total + current.value;
-      }
-      return total;
-    }
+    // We only want to handle the correct user data depending on listTypeon current[listType] === USER
+    if(!(current[listType] === user)) return total;
 
     /**
-     * enableDecrement = false
-     * calc:
-     * only postive number
+     * We want to calculate the score differently
+     * depending on listType and scoreType.
+     * Main scoreBoard: listType === 'to' && scoreType === 'inc'
+     * This scoreBoard should take into account if decrement or overdrawn is enabled or not.
      */
-    if (!config.slack.enableDecrement) {
-
-      if (listType && user && current[listType] === user) {
+    if (listType === 'to' && scoreType === 'inc') {
 
 
-        if(listType === 'to' && scoreType === 'dec') {
-          if(current.value === -1){
-            return total + 1;
-          } else {
-            return total;
-          }
-        }
-
-
-        if (enableOverDraw && current.overdrawn) {
-          // Is this right??
-          return total + current.value;
-        }
+      // Just count everything
+      if (enableOverDraw && enableDecrement) return total + current.value;
 
 
 
-        if (current.value === 1 && !current.overdrawn) return total + current.value;
+      if (enableOverDraw) {
+        if (current.value !== -1) return total + current.value;
         return total;
       }
+
+      if (enableDecrement) {
+        if (!current.overdrawn) return total + current.value;
+        return total;
+      }
+
+      // Ensure we only return positive value and that current.overdrawn is false
+      if (current.value === 1 && !current.overdrawn) return total + current.value;
       return total;
     }
+
+    // We only want to return a list of received dec
+    if (listType === 'to' && scoreType === 'dec') {
+      if (current.value === -1) return total + 1;
+      // Add support for overdrawn?
+      return total;
+    }
+
+    if (listType === 'from' && scoreType === 'inc') {
+
+
+    }
+
+
+
+
+
+
+    return total;
   }, 0);
-  console.log("_score", _score)
+
+
+  console.log("---------------\n", _score, _scoreOverdrawn)
+
+
   return _score - _scoreOverdrawn;
 };
-
-
-
-
-
-
-
-
 
 
 
