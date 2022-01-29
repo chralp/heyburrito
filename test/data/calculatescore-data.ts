@@ -14,8 +14,11 @@
  * listType: to, scoreType: inc, enableOverDraw: true, enableDecrement: true
  * Res = 7
  * --------------------------
- * listType: to, scoreType: dec, enableOverDraw: false, enableDecrement: false
- * Res = 3
+ * listType: from, scoreType: inc, enableOverDraw: false, enableDecrement: false
+ * Res = 14
+ * --------------------------
+ * listType: from, scoreType: inc, enableOverDraw: false, enableDecrement: true
+ * Res = 14
  * --------------------------
  */
 
@@ -175,6 +178,8 @@ export const user4ScoreData = [
   { to: 'USER4', from: 'USER1', value: 1, overdrawn: false },
   { to: 'USER4', from: 'USER2', value: 1, overdrawn: false },
 ]
+
+
 
 export const scoreBoard = [
   ...user1ScoreData,

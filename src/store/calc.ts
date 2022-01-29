@@ -59,7 +59,6 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
      */
     if (listType === 'to' && scoreType === 'inc') {
 
-
       // Just count everything
       if (enableOverDraw && enableDecrement) return total + current.value;
 
@@ -87,8 +86,57 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
       return total;
     }
 
+
+
+
+
+
+
+
     if (listType === 'from' && scoreType === 'inc') {
 
+      if (enableOverDraw && enableDecrement) {
+        if (current.value !== -1) return total + current.value;
+        return total;
+      }
+
+      if (enableOverDraw) {
+        if (current.value !== -1) return total + current.value;
+        return total;
+      }
+
+      if (enableDecrement) {
+        if (current.value === 1 && !current.overdrawn) return total + current.value;
+        return total;
+      }
+
+      // Ensure we only return positive value and that current.overdrawn is false
+      if (current.value === 1 && !current.overdrawn) return total + current.value;
+      return total;
+
+    }
+
+
+    if (listType === 'from' && scoreType === 'dec') {
+      if (current.value == -1) return total + 1;
+      return total;
+      if (enableOverDraw && enableDecrement) {
+        if (current.value !== -1) return total + current.value;
+        return total;
+      }
+
+      if (enableOverDraw) {
+        if (current.value == -1) return total + current.value;
+        return total;
+      }
+
+      if (enableDecrement) {
+        if (current.value == -1 && !current.overdrawn) return total + 1;
+        return total;
+      }
+
+      if (current.value === -1 && !current.overdrawn) return total + 1;
+      return total;
 
     }
 
