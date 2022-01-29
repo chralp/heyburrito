@@ -20,7 +20,6 @@ interface CalculateScoreArgs {
 export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePost[], args?: CalculateScoreArgs): number => {
   const { listType, scoreType, user } = args;
   const valueSwitch = (scoreType === 'dec') ? 1 : 0;
-  console.log(listType, scoreType, user)
 
   const { enableOverDraw, enableDecrement} = config.slack;
 
@@ -43,13 +42,13 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
     return total + current.value;
   }, 0);
 
-
-  if(user === 'USER3') console.log("_scoreOverdrawn", _scoreOverdrawn)
-
   const _score = data.reduce((total: number, current: DatabasePost): number => {
 
     // We only want to handle the correct user data depending on listTypeon current[listType] === USER
-    if(!(current[listType] === user)) return total;
+    if(!(current[listType] === user)) {
+      //console.log("VAD I HELVETE")
+      return total;
+    }
 
     /**
      * We want to calculate the score differently
@@ -147,11 +146,6 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
 
     return total;
   }, 0);
-
-
-  console.log("---------------\n", _score, _scoreOverdrawn)
-
-
   return _score - _scoreOverdrawn;
 };
 
