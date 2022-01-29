@@ -685,60 +685,63 @@ describe('calculateScore', () => {
 
   describe('scoreboard', () => {
 
-    it('Should calculate scoreboard => to & inc => { enableOverDraw: false, enableDecrement: false }', async () => {
-      config.default.slack = { enableOverDraw: false, enableDecrement: false }
+    describe('with args { listType: to, scoreType: from }', () => {
       const listType = 'to';
-      const scoreType = 'inc'
-      const scoreList = getScore({ listType, scoreType })
-      expect(scoreList).toEqual([
-        { _id: 'USER1', score: 14 },
-        { _id: 'USER2', score: 9 },
-        { _id: 'USER3', score: 13 },
-        { _id: 'USER4', score: 10 }
-      ]);
-    });
-
-
-    it('Should calculate scoreboard => to & inc => { enableOverDraw: false, enableDecrement: true }', async () => {
-      config.default.slack = { enableOverDraw: false, enableDecrement: true }
-      const listType = 'to';
-      const scoreType = 'inc'
-      const scoreList = getScore({ listType, scoreType })
+      const scoreType = 'inc';
+      it('with ENVS: { enableOverDraw: false, enableDecrement: false }', async () => {
+        config.default.slack = { enableOverDraw: false, enableDecrement: false }
+        const scoreList = getScore({ listType, scoreType })
         expect(scoreList).toEqual([
-        { _id: 'USER1', score: 11 },
-        { _id: 'USER2', score: 5 },
-        { _id: 'USER3', score: 9 },
-        { _id: 'USER4', score: 9 }
-      ]);
+          { _id: 'USER1', score: 14 },
+          { _id: 'USER2', score: 9 },
+          { _id: 'USER3', score: 13 },
+          { _id: 'USER4', score: 10 }
+        ]);
+      });
+
+
+      it('with ENVS: { enableOverDraw: false, enableDecrement: true }', async () => {
+        config.default.slack = { enableOverDraw: false, enableDecrement: true }
+        const scoreList = getScore({ listType, scoreType })
+        expect(scoreList).toEqual([
+          { _id: 'USER1', score: 11 },
+          { _id: 'USER2', score: 5 },
+          { _id: 'USER3', score: 9 },
+          { _id: 'USER4', score: 9 }
+        ]);
+      });
+
+
+      it('with ENVS: { enableOverDraw: true, enableDecrement: false }', async () => {
+        config.default.slack = { enableOverDraw: true, enableDecrement: false }
+        const scoreList = getScore({ listType, scoreType })
+        expect(scoreList).toEqual([
+          { _id: 'USER1', score: 14 },
+          { _id: 'USER2', score: 12 },
+          { _id: 'USER3', score: 12 },
+          { _id: 'USER4', score: 8 }
+        ]);
+      });
+
+
+      it('with ENVS: { enableOverDraw: true, enableDecrement: true }', async () => {
+        config.default.slack = { enableOverDraw: true, enableDecrement: true }
+        const scoreList = getScore({ listType, scoreType })
+        expect(scoreList).toEqual([
+          { _id: 'USER1', score: 11 },
+          { _id: 'USER2', score: 8 },
+          { _id: 'USER3', score: 8 },
+          { _id: 'USER4', score: 7 }
+        ]);
+      });
+
+
     });
+    // describe('with args { listType: from, scoreType: dec }', () => {});
+    // describe('with args { listType: from, scoreType: dec }', () => {});
+    // describe('with args { listType: from, scoreType: dec }', () => {});
 
 
-    it('Should calculate scoreboard => to & inc => { enableOverDraw: true, enableDecrement: false }', async () => {
-      config.default.slack = { enableOverDraw: true, enableDecrement: false }
-      const listType = 'to';
-      const scoreType = 'inc'
-      const scoreList = getScore({ listType, scoreType })
-      expect(scoreList).toEqual([
-        { _id: 'USER1', score: 14 },
-        { _id: 'USER2', score: 12 },
-        { _id: 'USER3', score: 12 },
-        { _id: 'USER4', score: 8 }
-      ]);
-    });
-
-
-    it('Should calculate scoreboard => to & inc => { enableOverDraw: true, enableDecrement: true }', async () => {
-      config.default.slack = { enableOverDraw: true, enableDecrement: true }
-      const listType = 'to';
-      const scoreType = 'inc'
-      const scoreList = getScore({ listType, scoreType })
-      expect(scoreList).toEqual([
-        { _id: 'USER1', score: 11 },
-        { _id: 'USER2', score: 8 },
-        { _id: 'USER3', score: 8 },
-        { _id: 'USER4', score: 7 }
-      ]);
-    });
 
   });
 
