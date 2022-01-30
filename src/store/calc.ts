@@ -1,5 +1,5 @@
 import config from '../config';
-import { listTypeSwitch, sort } from '../lib/utils';
+import { listTypeSwitch } from '../lib/utils';
 import { DatabasePost } from '../database/drivers/Driver';
 
 interface CalculateScoreArgs {
@@ -15,26 +15,16 @@ interface CalculateScoreArgs {
  * makes everything harder.
  * Trying to add add dumb calculations in this file
  */
-
-
 export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePost[], args?: CalculateScoreArgs): number => {
   const { listType, scoreType, user } = args;
-  const valueSwitch = (scoreType === 'dec') ? 1 : 0;
-
-  const { enableOverDraw, enableDecrement} = config.slack;
+  const { enableOverDraw, enableDecrement } = config.slack;
 
   const _dataOverDrawn = overDrawnData.filter((entry: DatabasePost) => {
 
-    if (enableOverDraw) {
-      /**
-       * Just ensure that we filter out correct user data if user is present
-       */
-      const list = listType === 'to' ? listTypeSwitch(listType) : listType;
-      if (listType !== 'from') {
-        if (user && entry[list] === user && !!entry.overdrawn) {
-          return entry;
-        }
-      }
+    // Just ensure that we filter out correct user data if user is present
+    const list = listType === 'to' ? listTypeSwitch(listType) : listType;
+    if (listType !== 'from' && user && enableOverDraw && entry[list] === user && !!entry.overdrawn) {
+      return entry;
     }
   });
 
@@ -44,11 +34,8 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
 
   const _score = data.reduce((total: number, current: DatabasePost): number => {
 
-    // We only want to handle the correct user data depending on listTypeon current[listType] === USER
-    if(!(current[listType] === user)) {
-      //console.log("VAD I HELVETE")
-      return total;
-    }
+    // We only want to handle the correct user data depending on current[listType] === USER
+    if (!(current[listType] === user)) return total;
 
     /**
      * We want to calculate the score differently
@@ -62,95 +49,50 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
       if (enableOverDraw && enableDecrement) return total + current.value;
 
 
-
       if (enableOverDraw) {
         if (current.value !== -1) return total + current.value;
         return total;
-      }
+      };
 
       if (enableDecrement) {
         if (!current.overdrawn) return total + current.value;
         return total;
-      }
+      };
 
       // Ensure we only return positive value and that current.overdrawn is false
       if (current.value === 1 && !current.overdrawn) return total + current.value;
       return total;
-    }
-
-    // We only want to return a list of received dec
-    if (listType === 'to' && scoreType === 'dec') {
-      if (current.value === -1) return total + 1;
-      // Add support for overdrawn?
-      return total;
-    }
+    };
 
 
-
-
-
-
-
-
+    /**
+     * scoreBoard: listType === 'from' && scoreType === 'inc'
+     * This scoreBoard should not count -1 values. Only return postive values
+     */
     if (listType === 'from' && scoreType === 'inc') {
 
-      if (enableOverDraw && enableDecrement) {
+      if (enableOverDraw && enableDecrement || enableOverDraw) {
         if (current.value !== -1) return total + current.value;
         return total;
       }
 
-      if (enableOverDraw) {
-        if (current.value !== -1) return total + current.value;
-        return total;
-      }
-
-      if (enableDecrement) {
-        if (current.value === 1 && !current.overdrawn) return total + current.value;
-        return total;
-      }
-
-      // Ensure we only return positive value and that current.overdrawn is false
       if (current.value === 1 && !current.overdrawn) return total + current.value;
       return total;
+    };
 
-    }
-
-
-    if (listType === 'from' && scoreType === 'dec') {
+    /**
+     * Only match -1 values and return 1 instead
+     */
+    if (listType === 'from' || listType === 'to' && scoreType === 'dec') {
       if (current.value == -1) return total + 1;
       return total;
-      if (enableOverDraw && enableDecrement) {
-        if (current.value !== -1) return total + current.value;
-        return total;
-      }
-
-      if (enableOverDraw) {
-        if (current.value == -1) return total + current.value;
-        return total;
-      }
-
-      if (enableDecrement) {
-        if (current.value == -1 && !current.overdrawn) return total + 1;
-        return total;
-      }
-
-      if (current.value === -1 && !current.overdrawn) return total + 1;
-      return total;
-
-    }
-
-
-
-
-
+    };
 
     return total;
   }, 0);
+
   return _score - _scoreOverdrawn;
 };
-
-
-
 
 
 export const levelScoreList = (scoreList: any) => {
@@ -167,6 +109,4 @@ export const levelScoreList = (scoreList: any) => {
     }
   });
   return data;
-
-
-}
+};
