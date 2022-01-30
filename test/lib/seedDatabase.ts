@@ -2,7 +2,8 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import * as fs from 'fs';
 import config from '../../src/config';
-import { env, pathExists, createPath } from '../../src/lib/utils';
+import { env } from '../../src/lib/utils/env';
+import {pathExists, createPath } from '../../src/lib/utils/path';
 
 import { MongoMemoryServer } from 'mongodb-memory-server';
 

@@ -1,4 +1,4 @@
-import { sort } from '../src/lib/utils';
+import { sort } from '../src/lib/utils/sort';
 let data;
 beforeEach(() => {
   data = [
