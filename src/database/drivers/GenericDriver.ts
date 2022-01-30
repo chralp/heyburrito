@@ -1,7 +1,7 @@
 import Store from './Store';
 import Driver, { GivePost } from './Driver';
 
-import { time } from '../../lib/utils';
+import { time } from '../../lib/utils/time';
 
 function id() {
     // Cred => https://gist.github.com/gordonbrander/2230317

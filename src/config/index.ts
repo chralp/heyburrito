@@ -1,14 +1,7 @@
 import log from 'loglevel';
-import {
-  env,
-  fixPath,
-  mustHave,
-  themeRootPath,
-  defaultTheme,
-  root,
-  getThemePath,
-  getThemeName
-} from '../lib/utils';
+import { env, mustHave } from '../lib/utils/env';
+import { getThemePath, getThemeName, themeRootPath, defaultTheme} from '../lib/utils/theme';
+import { fixPath, root} from '../lib/utils/path';
 
 
 const isFalse = (input: string) => (input === 'false' || input === 'no' || input === '0');

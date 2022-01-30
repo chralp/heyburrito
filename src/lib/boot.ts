@@ -1,6 +1,6 @@
 import log from 'loglevel';
 import config from '../config';
-import { pathExists, createPath } from './utils';
+import { pathExists, createPath } from './utils/path';
 import themeHandler from './themeHandler';
 
 export default async () => {

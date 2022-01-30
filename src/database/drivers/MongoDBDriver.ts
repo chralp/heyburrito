@@ -1,4 +1,4 @@
-import { time } from '../../lib/utils';
+import { time } from '../../lib/utils/time';
 
 const mongoConf = {
     useNewUrlParser: true,

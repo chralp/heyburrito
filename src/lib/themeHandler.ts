@@ -8,13 +8,14 @@ let times = 0;
 
 async function gitFunc(args, cwd: string) {
   const [option, url] = args;
-
+  console.log(args,cwd)
   if (option === 'clone') log.info('Cloning theme:', url);
   if (option === 'pull') log.info('Pulling latest theme:', url);
 
   return new Promise((resolve, reject) => {
     const process = spawn('git', args, { cwd });
     process.on('close', (status: any) => {
+      console.log(status)
       if (status === 0) {
         resolve(true);
       } else {

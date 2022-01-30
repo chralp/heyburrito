@@ -1,5 +1,5 @@
 import config from '../config';
-import { listTypeSwitch } from '../lib/utils';
+import { listTypeSwitch } from '../lib/utils/switch';
 import { DatabasePost } from '../database/drivers/Driver';
 
 interface CalculateScoreArgs {

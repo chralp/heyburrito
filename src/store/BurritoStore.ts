@@ -1,7 +1,7 @@
 import log from 'loglevel';
 import { EventEmitter } from 'events';
 import config from '../config';
-import { listTypeSwitch } from '../lib/utils';
+import { listTypeSwitch } from '../lib/utils/switch';
 import {calculateScore} from './calc';
 import Driver, {
   GetScoreBoard,
@@ -29,10 +29,6 @@ interface BurritoUpdate {
   type: string;
   overdrawn?: boolean;
 }
-
-
-console.log("OUTSIDE", config.slack.enableOverDraw, config.slack.enableDecrement)
-
 
 class BurritoStore extends EventEmitter {
 

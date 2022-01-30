@@ -1,6 +1,6 @@
 import config from './config';
 import mapper from './lib/mapper';
-import { sort } from './lib/utils';
+import { sort } from './lib/utils/sort';
 import BurritoStore from './store/BurritoStore';
 import { levelScoreList, calculateScore } from './store/calc';
 
