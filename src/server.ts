@@ -24,15 +24,12 @@ init().then(() => {
 
   log.setLevel(config.misc.log_level);
   log.info('Staring heyburrito');
-
+  console.log(config)
   // Configure BurritoStore
   BurritoStore.setDatabase(database);
 
   // Set and start slack services
   const { rtm, wbc } = slack;
-
-  //BurritoStore.getUserScore("UEKN9GNAJ", 'to', 'dec');
-  //BurritoStore.getUserScore("UEHUXHG0G", 'to', 'inc');
 
   rtm.start();
   RTMHandler.register(rtm);

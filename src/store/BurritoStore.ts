@@ -107,8 +107,6 @@ class BurritoStore extends EventEmitter {
   };
 
 
-
-
   /**
    * Get UserScore depending on listType and scoreType.
    */
@@ -127,29 +125,6 @@ class BurritoStore extends EventEmitter {
 
   };
 
-
-  public filterScoreData(data: DatabasePost[], scoreType: string) {
-
-    const scoreSwitch = (scoreType === 'inc') ? 1 : -1;
-    const valueSwitch = (scoreType === 'dec') ? 1 : 0;
-
-    return data.filter((entry) => {
-      if (config.slack.enableDecrement) {
-        if (!config.slack.enableOverDraw) {
-          return valueSwitch
-            ? (entry.overdrawn !== true && entry.value === scoreSwitch)
-            : entry.overdrawn !== true;
-        } else {
-          return valueSwitch ? entry.value === scoreSwitch : entry;
-        }
-      } else {
-        if (entry.value == scoreSwitch) {
-          if (config.slack.enableOverDraw) return entry;
-          return entry.overdrawn !== true;
-        }
-      }
-    });
-  };
 }
 
 export default new BurritoStore();

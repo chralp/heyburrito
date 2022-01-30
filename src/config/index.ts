@@ -89,9 +89,9 @@ const config = {
       disableEmojiDec: getBool(process.env.DISABLE_EMOJI_DEC, false),
       dailyCap: getNum(process.env.SLACK_DAILY_CAP, 5),
       dailyDecCap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5),
-      overdrawCap: getBool(process.env.ENABLE_OVERDRAW, true) ? getNum(process.env.SLACK_OVERDRAW_CAP, 5) : 0,
-      enableOverDraw: getBool(process.env.ENABLE_OVERDRAW, true),
-      enableDecrement: getBool(process.env.ENABLE_DECREMENT, false),
+      overdrawCap: getBool(process.env.ENABLE_OVERDRAW, false) ? getNum(process.env.SLACK_OVERDRAW_CAP, 5) : 0,
+      enableOverDraw: getBool(process.env.ENABLE_OVERDRAW, false),
+      enableDecrement: getBool(process.env.ENABLE_DECREMENT, true),
     },
     http: {
       http_port: getNum(process.env.HTTP_PORT, 3333),

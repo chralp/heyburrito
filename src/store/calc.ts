@@ -19,7 +19,7 @@ export const calculateScore = (data: DatabasePost[], overDrawnData?: DatabasePos
   const { listType, scoreType, user } = args;
   const { enableOverDraw, enableDecrement } = config.slack;
 
-  const _dataOverDrawn = overDrawnData.filter((entry: DatabasePost) => {
+  const _dataOverDrawn = scoreType === 'dec' ? [] : overDrawnData.filter((entry: DatabasePost) => {
 
     // Just ensure that we filter out correct user data if user is present
     const list = listType === 'to' ? listTypeSwitch(listType) : listType;
