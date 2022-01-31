@@ -3,7 +3,6 @@ import path from 'path';
 import fs from 'fs';
 
 export const root: string = path.normalize(`${__dirname}/../../../`);
-console.log("root", root)
 export const fixPath = (p: string): string => {
   if (!p.startsWith('/')) return `/${p}`;
   if (!p.endsWith('/')) return `${p}/`;

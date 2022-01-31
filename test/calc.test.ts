@@ -4,10 +4,7 @@ import { scoreBoard, user1ScoreData, user2ScoreData } from './data/calculatescor
 
 const getScore = ({ listType, scoreType, user }: any) => {
   const uniqueUsername: string[] = [...new Set(scoreBoard.map((x) => x[listType]))];
-
-
   const overDrawnData = scoreType === 'dec' ? [] : scoreBoard;
-
   const scoreList = uniqueUsername
     .map((user) => ({ _id: user, score: calculateScore(scoreBoard, overDrawnData, { listType, scoreType, user }) }))
     .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);

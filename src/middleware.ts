@@ -114,7 +114,6 @@ const givenBurritosToday = async (user: string) => {
  * @param {string} user - Slack userId
  */
 const getUserScore = async (user: string, listType: string, scoreType: string) => {
-  console.log("HAALÅÅÅ")
   const scoreList = await BurritoStore.getScoreBoard({ listType });
   const userScore = scoreList.filter((x) => x[listType] === user);
 
