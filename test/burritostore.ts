@@ -1,5 +1,5 @@
 import BurritoStore from '../src/store/BurritoStore';
-import { init } from './lib/seedDatabase';
+import { init } from './lib/database';
 
 let mongod: any, mongoDriver: any;
 
@@ -22,8 +22,8 @@ describe('Burritostore-test', () => {
 
     describe(test.describe, () => {
 
-      async function connectDB(seedDB = false) {
-        const dbinit: any = await init({ driver: test.driver, random: false, seedDB });
+      async function connectDB() {
+        const dbinit: any = await init({ driver: test.driver });
         if (dbinit.mongod && dbinit.mongoDriver) {
           mongod = dbinit.mongod
           mongoDriver = dbinit.mongoDriver

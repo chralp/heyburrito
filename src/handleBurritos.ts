@@ -18,24 +18,31 @@ interface Updates {
   overdrawn?: boolean;
 }
 
+const _give = async ({ giver, username, burritoType, overdrawn }: any) => {
+  return await BurritoStore.give({
+    to: username,
+    from: giver,
+    type: burritoType,
+    overdrawn: !!overdrawn
+  });
+};
 
 const giveBurritos = async (giver: string, updates: Updates[]) => {
   return updates.reduce(async (prev: any, burrito) => {
     return prev.then(async () => {
-      if (burrito.burritoType === 'inc') {
-        await BurritoStore.give({ to: burrito.username, from: giver, type: burrito.burritoType, overdrawn: !!burrito.overdrawn });
-      } else if (burrito.burritoType === 'dec') {
-        if (enableDecrement) {
-          const receiverScore: number = await BurritoStore.getUserScore(burrito.username, 'to', 'dec');
-        } else {
-          await BurritoStore.give({ to: burrito.username, from: giver, type: burrito.burritoType, overdrawn: !!burrito.overdrawn });
-        }
-      }
+      if (burrito.burritoType === 'inc') return await _give({ giver, ...burrito })
+      if (burrito.burritoType === 'dec' && !enableDecrement) return await _give({ giver, ...burrito })
+
+      // receiver can not have less then 0 score
+      const receiverScore: number = await BurritoStore.getUserScore(burrito.username, 'to', 'dec');
+
     });
   }, Promise.resolve());
 };
 
 const handleUpdates = async (giver: string, updates: Updates[], scoreType: string) => {
+  const { enableDecrement, enableOverDraw } = config.slack;
+
   log.debug("handleUpdates => scoreType => ", scoreType);
   log.debug("handleUpdates => enableOverDraw => ", enableOverDraw);
   log.debug("handleUpdates => enableDecrement => ", enableDecrement);
@@ -46,19 +53,15 @@ const handleUpdates = async (giver: string, updates: Updates[], scoreType: strin
   log.debug("handleUpdates => args => updates => ", updates);
   log.debug("handleUpdates => args => scoreType: => ", scoreType);
 
-
   const burritoType = (scoreType === 'inc') ? 'burrito' : 'rottenburrito';
   const cap = (scoreType === 'inc') ? dailyCap : dailyDecCap;
 
   // GivenToday
   const GT = await BurritoStore.givenToday(giver, 'from', scoreType);
-
   // GivenToday Overdrawn
   const GTO = await BurritoStore.givenToday(giver, 'from', scoreType, true);
-
   // Total Given today
   const TGT = GT + GTO;
-
   const dailyDiff = cap - GT;
   const dailyDiffTotal = cap + overdrawCap - TGT;
 
@@ -94,6 +97,7 @@ const handleUpdates = async (giver: string, updates: Updates[], scoreType: strin
 };
 
 export const handleBurritos = async (giver: string, updates: Updates[]) => {
+  const { enableDecrement } = config.slack;
 
   /**
    * We want to handle burritos differently depending on ENVs.
