@@ -130,9 +130,12 @@ const config = {
       emojiInc: fixEmoji(process.env.SLACK_EMOJI_INC || ':burrito:'),
       emojiDec: fixEmoji(process.env.SLACK_EMOJI_DEC || ':rottenburrito:'),
       disableEmojiDec: getBool(process.env.DISABLE_EMOJI_DEC, false),
-      dailyCap: getNum(process.env.SLACK_DAILY_CAP, 5000),
-      dailyDecCap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5000),
+      dailyCap: getNum(process.env.SLACK_DAILY_CAP, 5),
+      dailyDecCap: getNum(process.env.SLACK_DAILY_DEC_CAP, 5),
       enableDecrement: getBool(process.env.ENABLE_DECREMENT, true),
+      overdrawCap: getBool(process.env.ENABLE_OVERDRAW, false) ? getNum(process.env.SLACK_OVERDRAW_CAP, 5) : 0,
+      enableOverDraw: getBool(process.env.ENABLE_OVERDRAW, false),
+
     },
     http: {
       http_port: process.env.HTTP_PORT || 3333,
@@ -154,6 +157,7 @@ const config = {
     },
     misc: {
       slackMock: true,
+      log_level: process.env.LOG_LEVEL || 'debug'
     },
   },
 };
