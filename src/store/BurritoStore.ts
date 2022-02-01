@@ -8,13 +8,6 @@ import Driver, {
   DatabasePost,
 } from '../database/drivers/Driver';
 
-
-interface CalucateUserScore {
-  listType?: string;
-  scoreType?: string;
-  user?: string;
-}
-
 interface GetUserStats {
   _id: string;
   received: number;
