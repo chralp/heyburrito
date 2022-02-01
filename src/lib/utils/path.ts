@@ -24,7 +24,6 @@ export const createPath = (inPath: string) => {
     fs.mkdirSync(inPath);
     const exists = pathExists(inPath);
     if (exists) return true;
-    throw new Error('Neit');
   } catch (e) {
     log.debug(`Could not create path ${inPath}`);
     return false;
