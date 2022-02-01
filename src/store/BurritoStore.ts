@@ -41,6 +41,7 @@ class BurritoStore extends EventEmitter {
       overdrawn,
     };
 
+    console.log("SCORE", score)
     await this.database.give(score);
 
     if (type === 'inc') {
@@ -87,7 +88,7 @@ class BurritoStore extends EventEmitter {
     const givenToday = await this.database.findFromToday(user, listType);
     if (scoreType && ['inc', 'dec'].includes(scoreType)) {
       const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
-
+      //console.log(listType, scoreType,givenToday)
       const givenFilter = givenToday.filter((x) => {
         if (x.value === scoreTypeFilter) {
           if(overdrawn) return !!x.overdrawn
@@ -106,7 +107,6 @@ class BurritoStore extends EventEmitter {
   public async getUserScore(user: string, listType: string, scoreType: string): Promise<number> {
 
     const { enableDecrement, enableOverDraw } = config.slack
-    console.log("INSIDE", enableOverDraw, enableDecrement)
     // Get users score from DB, ( Only all inc not calculated with dec or overdrwan)
     const _data = await this.database.getScore(user, listType);
     if (enableOverDraw) {

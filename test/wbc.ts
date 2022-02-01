@@ -1,11 +1,11 @@
-import { WebMock } from './lib/slackMock'
+import { WebMock } from './lib/slack/slack-mock';
 import WBCHandler from '../src/slack/Wbc';
 import { wbcListParsed } from './data/slackUsers';
 let wbc: any
 
 beforeEach(() => {
-    wbc = new WebMock();
-    WBCHandler.register(wbc);
+  wbc = new WebMock();
+  WBCHandler.register(wbc);
 })
 
 describe('Wbc-test', () => {

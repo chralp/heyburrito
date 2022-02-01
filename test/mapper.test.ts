@@ -1,13 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { init } from './lib/seedDatabase';
 import mapper from '../src/lib/mapper';
-
-beforeEach(async () => {
-  await init({ random: false, seedDB: false });
-});
+import { initSlack } from './lib/slack';
 
 describe('/src/lib/mapper', () => {
+
+  beforeAll(async () => await initSlack());
 
   it('Should map USER2 with data from LocalStore', async () => {
     const result = mapper([{ _id: 'USER2', score: 10 }])

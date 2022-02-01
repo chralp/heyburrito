@@ -18,31 +18,32 @@ interface Updates {
   overdrawn?: boolean;
 }
 
-const _give = async ({ giver, username, burritoType, overdrawn }: any) => {
-  return await BurritoStore.give({
-    to: username,
-    from: giver,
-    type: burritoType,
-    overdrawn: !!overdrawn
-  });
-};
-
 const giveBurritos = async (giver: string, updates: Updates[]) => {
+  const { enableDecrement } = config.slack;
   return updates.reduce(async (prev: any, burrito) => {
     return prev.then(async () => {
-      if (burrito.burritoType === 'inc') return await _give({ giver, ...burrito })
-      if (burrito.burritoType === 'dec' && !enableDecrement) return await _give({ giver, ...burrito })
-
-      // receiver can not have less then 0 score
-      const receiverScore: number = await BurritoStore.getUserScore(burrito.username, 'to', 'dec');
-
+      console.log(burrito)
+      if (burrito.burritoType === 'inc') {
+        return await BurritoStore.give({ to: burrito.username, from: giver, type: burrito.burritoType, overdrawn: !!burrito.overdrawn });
+      } else if (burrito.burritoType === 'dec') {
+        console.log(enableDecrement)
+        if (enableDecrement) {
+          const receiverScore: number = await BurritoStore.getUserScore(burrito.username, 'to', 'dec');
+        } else {
+          console.log("JAAAAAAAAAAAAAAAaa")
+          await BurritoStore.give({ to: burrito.username, from: giver, type: burrito.burritoType, overdrawn: !!burrito.overdrawn });
+        }
+      }
     });
   }, Promise.resolve());
 };
 
+
 const handleUpdates = async (giver: string, updates: Updates[], scoreType: string) => {
   const { enableDecrement, enableOverDraw } = config.slack;
-
+  console.log("updates", updates)
+  console.log("dailyDecCap", dailyDecCap)
+  console.log("overdrawCap", overdrawCap)
   log.debug("handleUpdates => scoreType => ", scoreType);
   log.debug("handleUpdates => enableOverDraw => ", enableOverDraw);
   log.debug("handleUpdates => enableDecrement => ", enableDecrement);
@@ -67,30 +68,34 @@ const handleUpdates = async (giver: string, updates: Updates[], scoreType: strin
 
   // Send right total in message, so we dont send -<amount> if overdrawn was disabled the same day.
   const messTotal = enableOverDraw ? dailyDiffTotal : dailyDiff;
-
+  console.log(!(dailyDiffTotal >= updates.length))
+  console.log("dailyDiffTotal", dailyDiffTotal)
   // Check if user can send all updates.
   if(!(dailyDiffTotal >= updates.length)) return notifyUser(giver, `You are trying to give away ${updates.length} ${burritoType}, but you only have ${messTotal} ${burritoType} left today!`);
 
   // Check if update.length exceeds dailyDiff
   if(!(dailyDiff >= updates.length)) {
-
+    console.log("AHA?")
     /**
      * When overdraw we want to do a credit check of giver first.
      * Giver needs to be able to pay the bill.
      * ( Lowest userScore can be 0 ) */
     const giverScore = await BurritoStore.getUserScore(giver, 'to', scoreType);
     if (!(giverScore >= updates.length)) return notifyUser(giver, `Trying to give more ${burritoType}s then u have`);
+    console.log("AHA?2")
+
   }
 
   /**
    * We want to first handle the all the updates that we can as daily given ( from dailyCap ).
    * So we need to slice out the entries that we want to count as daily. */
   const countAsDaily = updates.slice(0, dailyDiff);
+  console.log("countAsDaily", countAsDaily)
   if (countAsDaily.length) await giveBurritos(giver, countAsDaily);
 
   // Get the rest entries and count them as overDrawn
   const overDrawnUpdates = updates.slice(dailyDiff);
-
+  console.log("overDrawnUpdates", overDrawnUpdates)
   // When overdraw we want to add type overdrawn
   const updatesOverDrawn = overDrawnUpdates.map(({ ...all }) => ({ ...all, overdrawn: true }));
   return await giveBurritos(giver, updatesOverDrawn);
@@ -116,7 +121,6 @@ export const handleBurritos = async (giver: string, updates: Updates[]) => {
 
     const incUpdates = updates.filter((x) => x.burritoType === 'inc');
     const decUpdates = updates.filter((x) => x.burritoType === 'dec');
-
     if (incUpdates.length) await handleUpdates(giver, incUpdates, 'inc');
     if (decUpdates.length) await handleUpdates(giver, decUpdates, 'dec');
 
