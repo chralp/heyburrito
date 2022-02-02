@@ -126,10 +126,10 @@ describe('/src/lib/parseMessage', () => {
       }
 
       resultShouldBe = {
-        giver: 'USER1',
-        updates:
-          [{ username: 'USER2', burritoType: 'inc' },
-          { username: 'USER2', burritoType: 'inc' }]
+        from: 'USER1',
+        updates: [
+          { to: 'USER2', from: 'USER1', type: 'inc' },
+          { to: 'USER2', from: 'USER1', type: 'inc' }]
       }
       res = parseMessage(msg, emojis)
       expect(res).toEqual(resultShouldBe)
@@ -144,12 +144,12 @@ describe('/src/lib/parseMessage', () => {
       }
 
       resultShouldBe = {
-        giver: 'USER1',
-        updates:
-          [{ username: 'USER2', burritoType: 'inc' },
-          { username: 'USER3', burritoType: 'inc' },
-          { username: 'USER2', burritoType: 'inc' },
-          { username: 'USER3', burritoType: 'inc' }]
+        from: 'USER1',
+        updates: [
+          { to: 'USER2', from: 'USER1', type: 'inc' },
+          { to: 'USER3', from: 'USER1', type: 'inc' },
+          { to: 'USER2', from: 'USER1', type: 'inc' },
+          { to: 'USER3', from: 'USER1', type: 'inc' }]
       }
       res = parseMessage(msg, emojis)
       expect(res).toEqual(resultShouldBe)
@@ -164,12 +164,12 @@ describe('/src/lib/parseMessage', () => {
       }
 
       resultShouldBe = {
-        giver: 'USER1',
-        updates:
-          [{ username: 'USER2', burritoType: 'inc' },
-          { username: 'USER3', burritoType: 'inc' },
-          { username: 'USER2', burritoType: 'inc' },
-          { username: 'USER3', burritoType: 'inc' }]
+        from: 'USER1',
+        updates: [
+          { to: 'USER2', from: 'USER1', type: 'inc' },
+          { to: 'USER3', from: 'USER1', type: 'inc' },
+          { to: 'USER2', from: 'USER1', type: 'inc' },
+          { to: 'USER3', from: 'USER1', type: 'inc' }]
       }
       res = parseMessage(msg, emojis)
       expect(res).toEqual(resultShouldBe)
@@ -184,10 +184,10 @@ describe('/src/lib/parseMessage', () => {
       }
 
       resultShouldBe = {
-        giver: 'USER1',
-        updates:
-          [{ username: 'USER2', burritoType: 'dec' },
-          { username: 'USER2', burritoType: 'dec' }]
+        from: 'USER1',
+        updates: [
+          { to: 'USER2', from: 'USER1', type: 'dec' },
+          { to: 'USER2', from: 'USER1', type: 'dec' }]
       }
       res = parseMessage(msg, emojis)
       expect(res).toEqual(resultShouldBe)
@@ -202,12 +202,12 @@ describe('/src/lib/parseMessage', () => {
       }
 
       resultShouldBe = {
-        giver: 'USER1',
-        updates:
-          [{ username: 'USER2', burritoType: 'dec' },
-          { username: 'USER3', burritoType: 'dec' },
-          { username: 'USER2', burritoType: 'dec' },
-          { username: 'USER3', burritoType: 'dec' }]
+        from: 'USER1',
+        updates: [
+          { to: 'USER2', from: 'USER1', type: 'dec' },
+          { to: 'USER3', from: 'USER1', type: 'dec' },
+          { to: 'USER2', from: 'USER1', type: 'dec' },
+          { to: 'USER3', from: 'USER1', type: 'dec' }]
       }
       res = parseMessage(msg, emojis)
       expect(res).toEqual(resultShouldBe)
@@ -222,14 +222,14 @@ describe('/src/lib/parseMessage', () => {
       }
 
       resultShouldBe = {
-        giver: 'USER1',
-        updates:
-          [{ username: 'USER2', burritoType: 'inc' },
-          { username: 'USER3', burritoType: 'inc' },
-          { username: 'USER2', burritoType: 'inc' },
-          { username: 'USER3', burritoType: 'inc' },
-          { username: 'USER2', burritoType: 'dec' },
-          { username: 'USER3', burritoType: 'dec' }]
+        from: 'USER1',
+        updates: [
+          { to: 'USER2', from: 'USER1', type: 'inc' },
+          { to: 'USER3', from: 'USER1', type: 'inc' },
+          { to: 'USER2', from: 'USER1', type: 'inc' },
+          { to: 'USER3', from: 'USER1', type: 'inc' },
+          { to: 'USER2', from: 'USER1', type: 'dec' },
+          { to: 'USER3', from: 'USER1', type: 'dec' }]
       }
       res = parseMessage(msg, emojis)
       expect(res).toEqual(resultShouldBe)
