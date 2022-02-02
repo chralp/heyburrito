@@ -15,12 +15,10 @@ class GenericDriver extends Store implements Driver {
   };
 
   async give({ ...score }: GivePost) {
-    //score._id = id();
-    const hej = {
+    await this.storeData({
       _id: id(),
       ...score
-    };
-    await this.storeData(hej);
+    });
     return Promise.resolve(true);
   }
 

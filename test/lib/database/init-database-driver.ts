@@ -41,7 +41,7 @@ export const initDatabase = async ({ driver }) => {
 }
 
 export const seedDatabase = async (database) => {
-  scoreBoard.forEach(async ({ to, from, value }) => {
-    await database.give({ to, from, value, given_at: randomDate() });
+  scoreBoard.forEach(async ({ to, from, value, overdrawn}) => {
+    await database.give({ to, from, value, given_at: randomDate(), overdrawn});
   })
 };

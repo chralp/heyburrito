@@ -34,7 +34,9 @@ describe('handleBurritos-test', () => {
 
       describe('USER1 should give USER2 5inc and 5dec', () => {
         it(`with ENVS: { enableOverDraw: false, enableDecrement: false }`, async () => {
-          config.default.slack = { enableOverDraw: false, enableDecrement: false }
+          config.default.slack = { enableOverDraw: false, enableDecrement: false };
+          const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const updates = [
             { username: 'USER2', burritoType: 'dec' },
             { username: 'USER2', burritoType: 'dec' },
@@ -47,16 +49,23 @@ describe('handleBurritos-test', () => {
             { username: 'USER2', burritoType: 'inc' },
             { username: 'USER2', burritoType: 'inc' }];
           await handleBurritos('USER1', updates)
+          const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usAfterDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');
           const giverDataDec = await BurritoStore.givenToday('USER1', 'from', 'dec');
-          expect(giverDataInc).toEqual(5)
-          expect(giverDataDec).toEqual(5)
+          expect(usBeforeInc).toEqual(9);
+          expect(usBeforeDec).toEqual(4);
+          expect(usAfterInc).toEqual(14);
+          expect(usAfterDec).toEqual(9);
+          expect(giverDataInc).toEqual(5);
+          expect(giverDataDec).toEqual(5);
         });
       });
 
       describe('USER1 should not be able to give USER2 6inc ( CAP 5 )', () => {
         it(`with ENVS: { enableOverDraw: false, enableDecrement: false }`, async () => {
           config.default.slack = { enableOverDraw: false, enableDecrement: false }
+          const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const updates = [
             { username: 'USER2', burritoType: 'inc' },
             { username: 'USER2', burritoType: 'inc' },
@@ -64,34 +73,71 @@ describe('handleBurritos-test', () => {
             { username: 'USER2', burritoType: 'inc' },
             { username: 'USER2', burritoType: 'inc' },
             { username: 'USER2', burritoType: 'inc' }];
-          await handleBurritos('USER1', updates)
+          await handleBurritos('USER1', updates);
+          const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');
-          expect(giverDataInc).toEqual(0)
+          expect(usBeforeInc).toEqual(9);
+          expect(usAfterInc).toEqual(9);
+          expect(giverDataInc).toEqual(0);
         });
       });
-
 
       describe('USER1 should not be able to give USER2 6 dec ( CAP 5 )', () => {
         it(`with ENVS: { enableOverDraw: false, enableDecrement: false }`, async () => {
           config.default.slack = { enableOverDraw: false, enableDecrement: false }
+          const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const updates = [
             { username: 'USER2', burritoType: 'dec' },
             { username: 'USER2', burritoType: 'dec' },
             { username: 'USER2', burritoType: 'dec' },
             { username: 'USER2', burritoType: 'dec' },
             { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },];
+            { username: 'USER2', burritoType: 'dec' }];
           await handleBurritos('USER1', updates)
+          const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usAfterDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
+          const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');
           const giverDataDec = await BurritoStore.givenToday('USER1', 'from', 'dec');
-          expect(giverDataDec).toEqual(0)
+          expect(usBeforeInc).toEqual(9);
+          expect(usBeforeDec).toEqual(4);
+          expect(usAfterInc).toEqual(9);
+          expect(usAfterDec).toEqual(4);
+          expect(giverDataInc).toEqual(0);
+          expect(giverDataDec).toEqual(0);
         });
       });
 
-
+      describe('USER1 should give USER2 2 dec 3inc ( CAP 5 )', () => {
+        it(`with ENVS: { enableOverDraw: false, enableDecrement: true }`, async () => {
+          config.default.slack = { enableOverDraw: false, enableDecrement: true }
+          const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
+          const updates = [
+            { username: 'USER2', burritoType: 'dec' },
+            { username: 'USER2', burritoType: 'dec' },
+            { username: 'USER2', burritoType: 'inc' },
+            { username: 'USER2', burritoType: 'inc' },
+            { username: 'USER2', burritoType: 'inc' }];
+          await handleBurritos('USER1', updates)
+          const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');
+          const giverDataDec = await BurritoStore.givenToday('USER1', 'from', 'dec');
+          const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usAfterDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
+          expect(usBeforeInc).toEqual(5);
+          expect(usBeforeDec).toEqual(4);
+          expect(usAfterInc).toEqual(6);
+          expect(usAfterDec).toEqual(6);
+          expect(giverDataInc).toEqual(3);
+          expect(giverDataDec).toEqual(2);
+        });
+      });
 
       describe('USER1 should not be able to give USER2 3 dec 3inc ( CAP 5 )', () => {
-        it(`with ENVS: { enableOverDraw: false, enableDecrement: false }`, async () => {
-          config.default.slack = { enableOverDraw: false, enableDecrement: true }
+        it(`with ENVS: { enableOverDraw: false, enableDecrement: true }`, async () => {
+          config.default.slack = { enableOverDraw: false, enableDecrement: true };
+          const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const updates = [
             { username: 'USER2', burritoType: 'dec' },
             { username: 'USER2', burritoType: 'dec' },
@@ -102,9 +148,36 @@ describe('handleBurritos-test', () => {
           ];
           await handleBurritos('USER1', updates)
           const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');
-          expect(giverDataInc).toEqual(0)
+          const giverDataDec = await BurritoStore.givenToday('USER1', 'from', 'dec');
+          const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
+          const usAfterDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
+          expect(usBeforeInc).toEqual(5);
+          expect(usBeforeDec).toEqual(4);
+          expect(usAfterInc).toEqual(5);
+          expect(usAfterDec).toEqual(4);
+          expect(giverDataInc).toEqual(0);
+          expect(giverDataDec).toEqual(0);
         });
       });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     });
   });
