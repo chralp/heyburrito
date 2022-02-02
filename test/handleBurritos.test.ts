@@ -38,16 +38,16 @@ describe('handleBurritos-test', () => {
           const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const updates = [
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' }];
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' }];
           await handleBurritos('USER1', updates)
           const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const usAfterDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
@@ -67,12 +67,12 @@ describe('handleBurritos-test', () => {
           config.default.slack = { enableOverDraw: false, enableDecrement: false }
           const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const updates = [
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' }];
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' }];
           await handleBurritos('USER1', updates);
           const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');
@@ -88,12 +88,12 @@ describe('handleBurritos-test', () => {
           const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const updates = [
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' }];
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' }];
           await handleBurritos('USER1', updates)
           const usAfterInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const usAfterDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
@@ -114,11 +114,11 @@ describe('handleBurritos-test', () => {
           const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const updates = [
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' }];
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' }];
           await handleBurritos('USER1', updates)
           const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');
           const giverDataDec = await BurritoStore.givenToday('USER1', 'from', 'dec');
@@ -139,12 +139,12 @@ describe('handleBurritos-test', () => {
           const usBeforeInc = await BurritoStore.getUserScore('USER2', 'to', 'inc');
           const usBeforeDec = await BurritoStore.getUserScore('USER2', 'to', 'dec');
           const updates = [
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'dec' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
-            { username: 'USER2', burritoType: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'dec' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
+            { from: 'USER1', to: 'USER2', type: 'inc' },
           ];
           await handleBurritos('USER1', updates)
           const giverDataInc = await BurritoStore.givenToday('USER1', 'from', 'inc');

@@ -65,7 +65,7 @@ function validMessage(message: any, emojis: any, allBots: any): boolean {
 }
 
 function validBotMention(message: any, botUserID: any) {
-  if ((message.text.match(`<@${botUserID}>`)) && (message.text.match('stats'))) {
+  if ((message.text.match(`<@${botUserID}>`))) {
     return true;
   }
   return false;

@@ -2,6 +2,7 @@ import log from 'loglevel';
 import config from './config';
 import BurritoStore from './store/BurritoStore';
 import { notifyUser } from './bot';
+import { Updates, Update } from './lib/parseMessage';
 
 const {
   enableDecrement,
@@ -11,40 +12,21 @@ const {
   overdrawCap,
 } = config.slack;
 
-interface Updates {
-  username: string;
-  burritoType: string;
-  type?: string;
-  overdrawn?: boolean;
-}
+const give = async (update: Updates) => {
+  return await BurritoStore.give(update);
+};
 
-const _give = async () => { };
-
-const giveBurritos = async (giver: string, updates: Updates[]) => {
+const giveBurritos = async (updates: Updates[]) => {
   const { enableDecrement } = config.slack;
-  return updates.reduce(async (prev: any, burrito) => {
+  return updates.reduce(async (prev: any, { type, ...burrito }: Updates) => {
     return prev.then(async () => {
-      if (burrito.burritoType === 'inc' || burrito.burritoType === 'dec' && !enableDecrement) {
-        return await BurritoStore.give({
-          to: burrito.username,
-          from: giver,
-          type: burrito.burritoType,
-          overdrawn: !!burrito.overdrawn
-        });
-      };
-      const receiverScore: number = await BurritoStore.getUserScore(burrito.username, 'to', 'inc');
-      if (receiverScore > 0) {
-        return await BurritoStore.give({
-          to: burrito.username,
-          from: giver,
-          type: burrito.burritoType,
-          overdrawn: !!burrito.overdrawn
-        });
-      }
+      if (type === 'inc' || type === 'dec' && !enableDecrement) return await give({ ...burrito, type });
+
+      const receiverScore: number = await BurritoStore.getUserScore(burrito.to, 'to', 'inc');
+      if (receiverScore > 0) return await give({ ...burrito, type });
     });
   }, Promise.resolve());
 };
-
 
 const handleUpdates = async (giver: string, updates: Updates[], scoreType: string) => {
   const { enableDecrement, enableOverDraw } = config.slack;
@@ -94,14 +76,14 @@ const handleUpdates = async (giver: string, updates: Updates[], scoreType: strin
    * We want to first handle the all the updates that we can as daily given ( from dailyCap ).
    * So we need to slice out the entries that we want to count as daily. */
   const countAsDaily = updates.slice(0, dailyDiff);
-  if (countAsDaily.length) await giveBurritos(giver, countAsDaily);
+  if (countAsDaily.length) await giveBurritos(countAsDaily);
 
   // Get the rest entries and count them as overDrawn
   const overDrawnUpdates = updates.slice(dailyDiff);
   console.log("overDrawnUpdates", overDrawnUpdates)
   // When overdraw we want to add type overdrawn
   const updatesOverDrawn = overDrawnUpdates.map(({ ...all }) => ({ ...all, overdrawn: true }));
-  return await giveBurritos(giver, updatesOverDrawn);
+  return await giveBurritos(updatesOverDrawn);
 };
 
 export const handleBurritos = async (giver: string, updates: Updates[]) => {
@@ -119,11 +101,11 @@ export const handleBurritos = async (giver: string, updates: Updates[]) => {
     if (updates.length > diff) return notifyUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diff} burritos left today!`);
     if (givenToday >= dailyCap) return false;
 
-    await giveBurritos(giver, updates);
+    await giveBurritos(updates);
   } else {
 
-    const incUpdates = updates.filter((x) => x.burritoType === 'inc');
-    const decUpdates = updates.filter((x) => x.burritoType === 'dec');
+    const incUpdates = updates.filter(({ type }) => type === 'inc');
+    const decUpdates = updates.filter(({ type }) => type === 'dec');
     if (incUpdates.length) await handleUpdates(giver, incUpdates, 'inc');
     if (decUpdates.length) await handleUpdates(giver, decUpdates, 'dec');
 

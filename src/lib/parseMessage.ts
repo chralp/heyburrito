@@ -2,14 +2,16 @@ import { Emojis } from './emojis';
 
 const usernameRegex: RegExp = /(<@[A-Z0-9]{2,}>)/g;
 
-interface Update {
-  username: string;
-  burritoType: string;
+export interface Updates {
+  to: string;
+  from: string;
+  type: string;
+  overdrawn?: boolean;
 }
 
-interface Updates {
-  giver?: string;
-  updates?: Update[]
+export interface Update {
+  from?: string;
+  updates?: Updates[]
 }
 
 /**
@@ -36,7 +38,7 @@ const parseUsernames = (text: string): string[] => {
  *  - [ { username: 'USER2', type: 'inc' },
  *    { username: 'USER2', type: 'dec' } ] }
  */
-const parseMessage = (msg: any, emojis: Emojis[]): Updates => {
+const parseMessage = (msg: any, emojis: Emojis[]): Update => {
   // Array containg data of whom to give / remove points from
   const updates = [];
 
@@ -65,10 +67,10 @@ const parseMessage = (msg: any, emojis: Emojis[]): Updates => {
   if (!hits.length) return {};
 
   // For each emojiHits give each user a update
-  hits.map((x) => users.forEach((u) => updates.push({ username: u, burritoType: x.type })));
+  hits.map((x) => users.forEach((u) => updates.push({ to: u, from: msg.user, type: x.type })));
   return {
     updates,
-    giver: msg.user,
+    from: msg.user,
   };
 }
 
