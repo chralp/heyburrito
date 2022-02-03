@@ -3,7 +3,7 @@ import { handleBurritos } from '../src/handleBurritos';
 import BurritoStore from '../src/store/BurritoStore';
 import * as config from '../src/config';
 import { connectDB, closeDB } from './lib/database/database-functions';
-import { notifyUser } from '../src/bot';
+import { notifyUser } from '../src/bot/interaction';
 import { initSlack } from './lib/slack';
 
 initSlack()

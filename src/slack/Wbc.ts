@@ -34,10 +34,12 @@ class Wbc {
     return { users, bots };
   }
 
-  async sendDM(username: string, text: string) {
+  async sendDM(username: string, text: any) {
+    console.log("text", text)
     const res = await this.wbc.chat.postMessage({
-      text,
-      channel: username,
+      text: " ",
+      blocks: text.blocks,
+      channel: 'CF3RYAETU',
       username: config.slack.bot_name,
       icon_emoji: ':burrito:',
     });

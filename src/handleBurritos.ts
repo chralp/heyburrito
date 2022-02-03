@@ -1,7 +1,7 @@
 import log from 'loglevel';
 import config from './config';
 import BurritoStore from './store/BurritoStore';
-import { notifyUser } from './bot';
+import { notifyUser } from './bot/interaction';
 import { Updates, Update } from './lib/parseMessage';
 
 const {
