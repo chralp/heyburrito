@@ -1,39 +1,46 @@
 import Wbc from '../slack/Wbc';
 import { tmplHelp } from './tmpl/help';
 import { tmplEmoji } from './tmpl/emojis';
-
-export const BOT_INTERACTIONS = [
-  'help',
-  'emojis'
-];
+import { tmplToplist } from './tmpl/toplist';
+import { commands } from './commands';
+import { SendDM } from '../slack/Wbc';
 
 const parseCommands = (text) => {
-  return BOT_INTERACTIONS.map((arg) => {
-    if (text.includes(arg)) return arg;
+  return commands.map(({ cmd }) => {
+    if (text.includes(cmd)) return cmd;
   }).filter(s => s);
 };
 
 /**
  * Send message back to user or channel */
-export const notifyUser = (user: string, message: any) => Wbc.sendDM(user, message);
+export const notifyUser = (args: SendDM) => Wbc.sendDM(args);
 
-export const handleInteraction = async (message) => {
+export const handleInteraction = ({ user, channel, text }) => {
 
-  const res = parseCommands(message.text);
-  if (!res.length) return false;
+  const res = parseCommands(text);
 
-  res.forEach((command) => {
-    switch (command) {
+  if (!res.length) {
+    const { blocks } = tmplHelp();
+    return notifyUser({ user, channel, blocks, text: ' ' })
+  }
+
+  res.forEach(async (cmd) => {
+    switch (cmd) {
       case 'help': {
-        const data = tmplHelp();
-        return notifyUser(message.username, data)
+        const { blocks } = tmplHelp();
+        return notifyUser({ user, channel, blocks, text: ' ' });
       }
       case 'emojis': {
-        const data = tmplEmoji();
-        return notifyUser(message.username, data)
+        const { blocks } = tmplEmoji();
+        return notifyUser({ user, channel, blocks, text: ' ' });
+      }
+      case 'top5': {
+        const { blocks } = await tmplToplist({ listType: 'to', amount: 5 })
+        return notifyUser({ user, channel, blocks, text: ' ' });
       }
       default: {
-        return false;
+        const { blocks } = tmplHelp();
+        return notifyUser({ user, channel, blocks, text: ' ' });
       }
     }
   });

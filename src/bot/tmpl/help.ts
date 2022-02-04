@@ -1,8 +1,16 @@
-import { BOT_INTERACTIONS } from '../interaction';
+import { commands } from '../commands'
 
 export const tmplHelp = () => {
-  const botTxt = BOT_INTERACTIONS.map((command) => {
-    return `*${command}*`;
+  const botTxt = commands.map(({ cmd, info, subCmd }) => {
+    if (!subCmd) return `*${cmd}* - ${info}`;
+
+    let txt = `*${cmd}* - ${info}`;
+    subCmd.map(({ cmd, info }) => {
+      txt += `\n   - *${cmd}* - ${info}`
+    });
+
+    return txt;
+
   }).filter(y => y).join().replace(/,/g, "\n");
 
   return {
@@ -11,14 +19,14 @@ export const tmplHelp = () => {
         type: "section",
         text: {
           type: 'mrkdwn',
-          text: "Available commands"
+          text: "Available commands:"
         }
       },
       {
         type: "section",
         text: {
           type: 'mrkdwn',
-          text: "@heyburrito <command>"
+          text: "@heyburrito <command> <sub command?>"
         }
       },
       {
