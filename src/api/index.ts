@@ -3,9 +3,6 @@ import Route from './Route';
 import { getScoreBoard, getUserStats, givenBurritosToday, getUserScore } from '../middleware';
 import config from '../config';
 
-// Types
-import Http from '../types/Http';
-
 // defaults
 const apiPath: string = config.http.api_path;
 
@@ -19,13 +16,20 @@ const ALLOWED_SCORETYPES: string[] = [
   'dec',
 ];
 
+interface Response {
+  error: boolean;
+  code?: number,
+  message?: string | null,
+  data?: object | null
+};
+
 /**
  * http response function
  * @param { object } content
  * @param { object } res
  * @params { number } statuscode
  */
-const response = (content: Http.Response, res: any, statusCode: number = 200): void => {
+const response = (content: Response, res: any, statusCode: number = 200): void => {
   res.writeHead(statusCode, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify(content), 'utf-8');
 };
@@ -64,8 +68,6 @@ Route.add({
     }
   },
 });
-
-
 
 Route.add({
   method: 'GET',
