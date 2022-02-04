@@ -6,12 +6,9 @@ import { validBotMention, validMessage } from '../lib/validator';
 import { emojis } from '../lib/emojis';
 import Rtm from '../slack/Rtm';
 
-
 /**
  * Start listen to slack messages / events */
 export const start = () => Rtm.on('slackMessage', (event: any) => incomingMessage(event));
-
-
 
 export const incomingMessage = async (message) => {
 
