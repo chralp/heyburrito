@@ -4,7 +4,7 @@ import { RTMClient } from '@slack/rtm-api';
 import { RTMMock, WEBMock } from '../../test/lib/slack/slack-mock';
 import config from '../config';
 
-const { slackMock } = config.misc;
+const { slackMock } = config.slack;
 log.info('Slack mockApi loaded', slackMock);
 
 export default {
