@@ -54,22 +54,18 @@ const handleUpdates = async (giver: string, updates: Updates[], scoreType: strin
 
   // Send right total in message, so we dont send -<amount> if overdrawn was disabled the same day.
   const messTotal = enableOverDraw ? dailyDiffTotal : dailyDiff;
-  console.log(!(dailyDiffTotal >= updates.length))
-  console.log("dailyDiffTotal", dailyDiffTotal)
+
   // Check if user can send all updates.
-  if(!(dailyDiffTotal >= updates.length)) return notifyUser(giver, `You are trying to give away ${updates.length} ${burritoType}, but you only have ${messTotal} ${burritoType} left today!`);
+  if (!(dailyDiffTotal >= updates.length)) return notifyUser({ channel: giver, text: `You are trying to give away ${updates.length} ${burritoType}, but you only have ${messTotal} ${burritoType} left today!` });
 
   // Check if update.length exceeds dailyDiff
-  if(!(dailyDiff >= updates.length)) {
-    console.log("AHA?")
+  if (!(dailyDiff >= updates.length)) {
     /**
      * When overdraw we want to do a credit check of giver first.
      * Giver needs to be able to pay the bill.
      * ( Lowest userScore can be 0 ) */
     const giverScore = await BurritoStore.getUserScore(giver, 'to', scoreType);
-    if (!(giverScore >= updates.length)) return notifyUser(giver, `Trying to give more ${burritoType}s then u have`);
-    console.log("AHA?2")
-
+    if (!(giverScore >= updates.length)) return notifyUser({ channel: giver, text: `Trying to give more ${burritoType}s then u have` });
   }
 
   /**
@@ -80,7 +76,7 @@ const handleUpdates = async (giver: string, updates: Updates[], scoreType: strin
 
   // Get the rest entries and count them as overDrawn
   const overDrawnUpdates = updates.slice(dailyDiff);
-  console.log("overDrawnUpdates", overDrawnUpdates)
+
   // When overdraw we want to add type overdrawn
   const updatesOverDrawn = overDrawnUpdates.map(({ ...all }) => ({ ...all, overdrawn: true }));
   return await giveBurritos(updatesOverDrawn);
@@ -96,11 +92,10 @@ export const handleBurritos = async (giver: string, updates: Updates[]) => {
    * Type inc => dailyCap
    * Type dec => dailyDecCap */
   if (enableDecrement) {
-    const givenToday = await BurritoStore.givenToday(giver, 'from');
+    const givenToday = await BurritoStore.givenToday(giver, 'from', 'inc');
     const diff = dailyCap - givenToday;
-    if (updates.length > diff) return notifyUser(giver, `You are trying to give away ${updates.length} burritos, but you only have ${diff} burritos left today!`);
+    if (updates.length > diff) return notifyUser({ channel: giver, text: `You are trying to give away ${updates.length} burritos, but you only have ${diff} burritos left today!` });
     if (givenToday >= dailyCap) return false;
-
     await giveBurritos(updates);
   } else {
 
