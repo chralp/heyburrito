@@ -25,9 +25,9 @@ const {
  * @param {string} scoretype - inc / dec
  * @param {string} listType - to / from
  */
-const getScoreBoard = async (listType: string, scoreType: string) => {
+const getScoreBoard = async (listType: string, scoreType: string, today?: boolean) => {
 
-  const data = await BurritoStore.getScoreBoard({ listType });
+  const data = await BurritoStore.getScoreBoard({ listType, today });
 
   // Get unique Usernames
   const uniqueUsername: string[] = [...new Set(data.map((x) => x[listType]))];
