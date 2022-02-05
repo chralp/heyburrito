@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 /* eslint-disable import/first */
-dotenv.config();
+const envPath = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+dotenv.config({ path: envPath });
+
 import log from 'loglevel';
 import http from 'http';
 import BurritoStore from './store/BurritoStore';
@@ -23,8 +25,8 @@ const init = async () => {
 init().then(() => {
 
   log.setLevel(config.misc.log_level);
+  log.debug(config)
   log.info('Staring heyburrito');
-  console.log(config)
   // Configure BurritoStore
   BurritoStore.setDatabase(database);
 
