@@ -2,7 +2,8 @@ import log from 'loglevel';
 import { EventEmitter } from 'events';
 import config from '../config';
 import { listTypeSwitch } from '../lib/utils/switch';
-import {calculateScore} from './calc';
+import { calculateScore } from './calc';
+import { Updates } from '../lib/parseMessage';
 import Driver, {
   GetScoreBoard,
   DatabasePost,
@@ -16,13 +17,6 @@ interface GetUserStats {
   givenToday: number;
 }
 
-interface BurritoUpdate {
-  to: string;
-  from: string;
-  type: string;
-  overdrawn?: boolean;
-}
-
 class BurritoStore extends EventEmitter {
 
   database: Driver;
@@ -32,7 +26,7 @@ class BurritoStore extends EventEmitter {
     this.database = database;
   };
 
-  public async give({ to, from, type, overdrawn }: BurritoUpdate): Promise<string> {
+  public async give({ to, from, type, overdrawn }: Updates): Promise<string> {
     const score = {
       to,
       from,
