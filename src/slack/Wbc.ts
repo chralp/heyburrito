@@ -8,6 +8,13 @@ interface WbcParsed {
   memberType: string;
 }
 
+export interface SendDM {
+  user?: string;
+  channel?: string;
+  blocks?: any;
+  text?: string;
+}
+
 class Wbc {
   wbc: any;
 
@@ -34,17 +41,15 @@ class Wbc {
     return { users, bots };
   }
 
-  async sendDM(username: string, text: any) {
-    console.log("text", text)
+  async sendDM(args: SendDM) {
+    const user = args.user ? args.user : args.channel;
     const res = await this.wbc.chat.postMessage({
-      text: " ",
-      blocks: text.blocks,
-      channel: 'CF3RYAETU',
+      ...args,
       username: config.slack.bot_name,
-      icon_emoji: ':burrito:',
+      icon_emoji: config.slack.bot_emoji || ':burre:',
     });
     if (res.ok) {
-      log.info(`Notified user ${username}`);
+      log.info(`Notified user ${user}`);
     }
   }
 }
