@@ -1,7 +1,6 @@
+import { User } from '../mapper';
 
-import UserInterface from '../../types/User.interface';
-
-export const sort = (input: UserInterface[], sortType: string = 'desc'): UserInterface[] => {
+export const sort = (input: User[], sortType: string = 'desc'): User[] => {
   const sorted = input.sort((a, b) => {
     if (a.score) {
       if (sortType === 'desc') return b.score - a.score;
