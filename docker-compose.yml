@@ -19,7 +19,7 @@ services:
       - MONGODB_DATABASE=heyburrito
       - SLACK_API_TOKEN=SeeDocumentation
       - "SLACK_EMOJI_INC=:burrito:"
-      - "SLACK_EMOJI_INC=:rottenburrito:"
+      - "SLACK_EMOJI_DEC=:rottenburrito:"
       - SLACK_DAILY_CAP=5
     links:
       - mongodb
