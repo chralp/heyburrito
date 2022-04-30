@@ -7,6 +7,7 @@
     "dev": "NODE_ENV=development nodemon --ignore '/test/*.ts' --watch '*.ts' --exec 'ts-node' ./src/server.ts",
     "mockDB": "ts-node ./test/lib/mockDatabase.ts",
     "test": "NODE_ENV=testing jest",
+    "test-docker": "docker build -t chralp/heyburrito . && docker run -e NODE_ENV=testing chralp/heyburrito npm run test",
     "lint": "eslint --ext .ts ./src/ || exit 0",
     "docker-build": "docker build -t chralp/heyburrito . && docker tag chralp/heyburrito chralp/heyburrito",
     "docker-push": "docker push chralp/heyburrito"

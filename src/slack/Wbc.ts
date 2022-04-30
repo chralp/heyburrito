@@ -45,12 +45,15 @@ class Wbc {
     const user = args.user ? args.user : args.channel;
     const res = await this.wbc.chat.postMessage({
       ...args,
-      username: config.slack.bot_name,
+      username: config.slack.bot_name || 'heyburrito',
       icon_emoji: config.slack.bot_emoji || ':burre:',
     });
     if (res.ok) {
       log.info(`Notified user ${user}`);
+    } else {
+      log.info(`Could not notify ${user}`);
     }
+    return res;
   }
 }
 

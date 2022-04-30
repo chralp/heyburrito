@@ -13,10 +13,9 @@ const parseCommands = (text) => {
 
 /**
  * Send message back to user or channel */
-export const notifyUser = (args: SendDM) => Wbc.sendDM(args);
+export const notifyUser = async (args: SendDM) => Wbc.sendDM(args);
 
-export const handleInteraction = ({ user, channel, text }) => {
-
+export const handleInteraction = async ({ user, channel, text }) => {
   const res = parseCommands(text);
 
   if (!res.length) {
@@ -24,24 +23,28 @@ export const handleInteraction = ({ user, channel, text }) => {
     return notifyUser({ user, channel, blocks, text: ' ' })
   }
 
-  res.forEach(async (cmd) => {
-    switch (cmd) {
-      case 'help': {
-        const { blocks } = tmplHelp();
-        return notifyUser({ user, channel, blocks, text: ' ' });
+  return res.reduce(async (prev: any, cmd: string) => {
+    return prev.then(async () => {
+      switch (cmd) {
+        case 'help': {
+          const { blocks } = tmplHelp();
+          return notifyUser({ user, channel, blocks, text: ' ' });
+        }
+        case 'emojis': {
+          const { blocks } = tmplEmoji();
+          return notifyUser({ user, channel, blocks, text: ' ' });
+        }
+        case 'top5': {
+          const { blocks } = await tmplToplist({ listType: 'to', amount: 5 })
+          console.log("Blocks", blocks)
+          if(!(blocks[0]?.text?.text.length < 0)) return false;
+          return notifyUser({ user, channel, blocks, text: ' ' });
+        }
+        default: {
+          const { blocks } = tmplHelp();
+          return await notifyUser({ user, channel, blocks, text: ' ' });
+        }
       }
-      case 'emojis': {
-        const { blocks } = tmplEmoji();
-        return notifyUser({ user, channel, blocks, text: ' ' });
-      }
-      case 'top5': {
-        const { blocks } = await tmplToplist({ listType: 'to', amount: 5 })
-        return notifyUser({ user, channel, blocks, text: ' ' });
-      }
-      default: {
-        const { blocks } = tmplHelp();
-        return notifyUser({ user, channel, blocks, text: ' ' });
-      }
-    }
-  });
+    });
+  }, Promise.resolve());
 };

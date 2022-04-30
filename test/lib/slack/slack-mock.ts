@@ -24,5 +24,11 @@ export class WEBMock {
     postMessage: (data) => {
       return Promise.resolve(data)
     }
+  }
+  sendDM = {
+    postMessage: (data) => {
+      return Promise.resolve(data)
+    }
   };
+
 }

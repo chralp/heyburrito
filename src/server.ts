@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 /* eslint-disable import/first */
-const envPath = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
-dotenv.config({ path: envPath });
-
+// const envPath = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env';
+// dotenv.config({ path: envPath });
+dotenv.config()
 import log from 'loglevel';
 import http from 'http';
 import BurritoStore from './store/BurritoStore';

@@ -5,10 +5,10 @@ let mongod: any, mongoDriver: any;
 
 describe('Burritostore-test', () => {
   [
-    // {
-    //   describe: 'file Driver',
-    //   driver: 'file'
-    // },
+    {
+      describe: 'file Driver',
+      driver: 'file'
+    },
     {
       describe: 'Array Driver',
       driver: 'array'

@@ -29,3 +29,6 @@ conf-localhost.json
 
 .filedb
 .env
+
+# ignore all node_modules, no matter where, like when having a monorepo
+**/node_modules

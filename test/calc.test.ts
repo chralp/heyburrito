@@ -666,7 +666,7 @@ describe('calculateScore', () => {
       });
 
       it('with ENVS: { enableOverDraw: true, enableDecrement: true }', async () => {
-        config.default.slack = { enableOverDraw: true, enableDecrement: true }
+        config.default.slack = { enableOverDraw: true, enableDecrement: true, slackMock: true}
         const scoreList = getScore({ listType, scoreType })
         expect(scoreList).toEqual([
           { _id: 'USER2', score: 2 },

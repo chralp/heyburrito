@@ -81,7 +81,6 @@ class BurritoStore extends EventEmitter {
     const givenToday = await this.database.findFromToday(user, listType);
     if (scoreType && ['inc', 'dec'].includes(scoreType)) {
       const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
-      //console.log(listType, scoreType,givenToday)
       const givenFilter = givenToday.filter((x) => {
         if (x.value === scoreTypeFilter) {
           if(overdrawn) return !!x.overdrawn

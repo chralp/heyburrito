@@ -16,7 +16,6 @@ const {
 } = config;
 
 
-
 /**
  * Middleware for API and Websocket
  */
@@ -31,16 +30,10 @@ const getScoreBoard = async (listType: string, scoreType: string, today?: boolea
 
   // Get unique Usernames
   const uniqueUsername: string[] = [...new Set(data.map((x) => x[listType]))];
-  console.log(uniqueUsername)
   const scoreList = uniqueUsername
     .map((user) => ({ _id: user, score: calculateScore(data, data, { listType, scoreType, user}) }))
     .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);
-
-  console.log("scoreList", scoreList)
-  const handledScore = enableLevel ? sort(mapper(levelScoreList(scoreList))) : sort(mapper(scoreList));
-  console.log("enableLevel", enableLevel)
-  console.log("handledScore", handledScore)
-  return handledScore
+  return enableLevel ? sort(mapper(levelScoreList(scoreList))) : sort(mapper(scoreList));
 };
 
 const _getUserScoreBoard = async ({ ...args }) => {

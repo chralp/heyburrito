@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import fs from 'fs';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import BurritoStore from '../../../src/store/BurritoStore';
@@ -13,7 +11,6 @@ import { randomDate } from '../time'
 // await give(toUser, fromUser, pickRandomDate(oneWeek, today));
 
 export const initDatabase = async ({ driver }) => {
-
   if (env === 'testing' && driver === 'file') {
     if (!pathExists(config.db.db_path)) {
       if (!createPath(config.db.db_path)) {
@@ -28,11 +25,14 @@ export const initDatabase = async ({ driver }) => {
   };
 
   if (env === 'testing' && driver === 'mongodb') {
-    // let mongod = new MongoMemoryServer();
-    // const uri = await mongod.getConnectionString();
-    // const database = await mongod.getDbName();
-    // const mongoDriver = databaseDrivers[driver]({ db_uri: uri, db_name: database });
-    // BurritoStore.setDatabase(mongoDriver);
+
+    const mongo = await MongoMemoryServer.create();
+    const uri = mongo.getUri();
+
+    const database = databaseDrivers[driver]({ db_uri: uri });// db_name: database
+    BurritoStore.setDatabase(database);
+    return Promise.resolve({ driver, database, mongod: mongo, mongoDriver: database })
+
   } else {
     const database = databaseDrivers[driver]();
     BurritoStore.setDatabase(database);

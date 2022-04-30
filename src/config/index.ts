@@ -1,6 +1,6 @@
 import { env, mustHave } from '../lib/utils/env';
-import { getThemePath, getThemeName, themeRootPath, defaultTheme} from '../lib/utils/theme';
-import { fixPath, root} from '../lib/utils/path';
+import { getThemePath, getThemeName, themeRootPath, defaultTheme } from '../lib/utils/theme';
+import { fixPath, root } from '../lib/utils/path';
 
 
 const isFalse = (input: string) => (input === 'false' || input === 'no' || input === '0');

@@ -1,5 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
 import { initDatabase, seedDatabase } from './init-database-driver';
 
 async function init({ driver }) {
