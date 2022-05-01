@@ -67,8 +67,8 @@ class BurritoStore extends EventEmitter {
       receivedToday,
       givenToday,
       _id: user,
-      received: calculateScore(received, [],{}),
-      given: calculateScore(given, [],{})
+      received: calculateScore(received, [], {}),
+      given: calculateScore(given, [], {})
     };
   };
 
@@ -83,7 +83,7 @@ class BurritoStore extends EventEmitter {
       const scoreTypeFilter = (scoreType === 'inc') ? 1 : -1;
       const givenFilter = givenToday.filter((x) => {
         if (x.value === scoreTypeFilter) {
-          if(overdrawn) return !!x.overdrawn
+          if (overdrawn) return !!x.overdrawn
           return !x.overdrawn
         };
       });
