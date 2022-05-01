@@ -4,9 +4,9 @@ import Driver, { GivePost } from './Driver';
 import { time } from '../../lib/utils/time';
 
 function id() {
-    // Cred => https://gist.github.com/gordonbrander/2230317
-    const str: string = Math.random().toString(36).substr(2, 9);
-    return `_${str}`;
+  // Cred => https://gist.github.com/gordonbrander/2230317
+  const str: string = Math.random().toString(36).substr(2, 9);
+  return `_${str}`;
 }
 
 class GenericDriver extends Store implements Driver {
