@@ -31,7 +31,7 @@ const getScoreBoard = async (listType: string, scoreType: string, today?: boolea
   // Get unique Usernames
   const uniqueUsername: string[] = [...new Set(data.map((x) => x[listType]))];
   const scoreList = uniqueUsername
-    .map((user) => ({ _id: user, score: calculateScore(data, data, { listType, scoreType, user}) }))
+    .map((user) => ({ _id: user, score: calculateScore(data, data, { listType, scoreType, user }) }))
     .map((entry) => (entry.score !== 0) ? entry : null).filter(y => y);
   return enableLevel ? sort(mapper(levelScoreList(scoreList))) : sort(mapper(scoreList));
 };
