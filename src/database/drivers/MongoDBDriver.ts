@@ -46,16 +46,6 @@ class MongoDBDriver implements Driver {
     return this.db.collection(collection).insertOne(data);
   }
 
-  // give(to: string, from: string, date: any) {
-  //   return this.store('burritos', {
-  //     to,
-  //     from,
-  //     value: 1,
-  //     given_at: date,
-  //   });
-  // }
-
-
   async give({ ...score }: GivePost) {
     return this.store('burritos', {
       ...score
