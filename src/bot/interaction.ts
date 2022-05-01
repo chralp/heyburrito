@@ -37,7 +37,7 @@ export const handleInteraction = async ({ user, channel, text }) => {
         case 'top5': {
           const { blocks } = await tmplToplist({ listType: 'to', amount: 5 })
           console.log("Blocks", blocks)
-          if(!(blocks[0]?.text?.text.length < 0)) return false;
+          if (!(blocks[0]?.text?.text.length < 0)) return false;
           return notifyUser({ user, channel, blocks, text: ' ' });
         }
         default: {
