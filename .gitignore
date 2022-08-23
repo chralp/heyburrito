@@ -23,4 +23,7 @@ tmp
 data/*
 
 .env
+.env.testing
+.env.development
+.env.production
 .tern*
