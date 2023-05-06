@@ -1,0 +1,16 @@
+- name: MONGODB_URL
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "heyburrito.fullname" . }}
+      key: MONGODB_URL
+{{- range $envName, $envValue := .Values.extraEnv }}
+- name: {{ $envName }}
+  value: {{ $envValue | quote }}
+{{- end }}
+{{- range $envName, $secretKeyRef := .Values.extraEnvFromSecret }}
+- name: {{ $envName }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ $secretKeyRef.secretName }}
+      key: {{ $secretKeyRef.secretKey }}
+{{- end }}
