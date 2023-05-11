@@ -3,8 +3,10 @@ import { EventEmitter } from 'events';
 
 interface SlackEvent {
     type: string;
-    text: string;
     user: string;
+    text?: string;
+    reaction?: string;
+    item_user?: string;
     client_msg_id?: string;
     suppress_notification?: boolean;
     team?: string;
@@ -12,6 +14,13 @@ interface SlackEvent {
     event_ts?: string;
     ts?: string;
     subtype?: string;
+    item?: SlackItem;
+}
+
+interface SlackItem {
+    type: string;
+    channel?: string;
+    ts?: string;
 }
 
 class Rtm extends EventEmitter {
@@ -23,7 +32,7 @@ class Rtm extends EventEmitter {
     }
 
     listener(): void {
-        log.info('Listening on slack messages');
+        log.info('Listening on slack messages and reactions');
         this.rtm.on('message', (event: SlackEvent) => {
             if ((!!event.subtype) && (event.subtype === 'channel_join')) {
                 log.info('Joined channel', event.channel);
@@ -32,6 +41,11 @@ class Rtm extends EventEmitter {
                 this.emit('slackMessage', event);
             }
         });
+        this.rtm.on('reaction_added', (event: SlackEvent) => {
+            if (event.type === 'reaction_added') {
+                this.emit('slackReaction', event);
+            }
+        })
     }
 }
 

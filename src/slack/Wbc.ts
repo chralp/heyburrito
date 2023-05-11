@@ -45,6 +45,18 @@ class Wbc {
             log.info(`Notified user ${username}`);
         }
     }
+
+    async fetchReactedMessage(channelId: string, ts: number) {
+        log.info('Fetching reacted message via wbc');
+        const res = await this.wbc.conversations.history({
+            channel: channelId,
+            latest: ts,
+            inclusive: true,
+            limit: 1,
+        });
+
+        return res.messages[0];
+    }
 }
 
 export default new Wbc();

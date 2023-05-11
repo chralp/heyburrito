@@ -62,6 +62,17 @@ function validMessage(message: any, emojis: any, allBots: any): boolean {
     return true;
 }
 
+function validReaction(reaction: any): boolean {
+    // We don't want reactions on content other than messages
+    if (reaction.item.type != 'message') return false;
+
+    // If the reaction doesn't have sufficeint info it cannot be processed
+    if (reaction.item.channel === undefined) return false;
+    if (reaction.item.ts === undefined) return false;
+
+    return true;
+}
+
 function validBotMention(message: any, botUserID: any) {
     if ((message.text.match(`<@${botUserID}>`)) && (message.text.match('stats'))) {
         return true;
@@ -72,6 +83,7 @@ function validBotMention(message: any, botUserID: any) {
 export {
     validBotMention,
     validMessage,
+    validReaction,
     selfMention,
     sentFromBot,
     sentToBot,

@@ -2,7 +2,7 @@ import config from './config';
 import BurritoStore from './store/BurritoStore';
 import LocalStore from './store/LocalStore';
 import { parseMessage } from './lib/parseMessage';
-import { validBotMention, validMessage } from './lib/validator';
+import { validBotMention, validMessage, validReaction } from './lib/validator';
 import Rtm from './slack/Rtm';
 import Wbc from './slack/Wbc';
 
@@ -101,6 +101,19 @@ const start = () => {
             }
         }
     });
+
+    Rtm.on('slackReaction', async (event: any) => {
+        if (validReaction(event)) {
+            const originalContent = await Wbc.fetchReactedMessage(event.item.channel, event.item.ts);
+            const result = parseMessage(originalContent, emojis);
+            if (result) {
+                const { giver, updates } = result;
+                if (updates.length) {
+                    await handleBurritos(giver, updates);
+                }
+            }
+        }
+    })
 };
 
 export {
