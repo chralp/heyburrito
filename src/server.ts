@@ -21,7 +21,7 @@ const init = async () => {
 };
 
 init().then(() => {
-    log.info('Staring heyburrito');
+    log.info('Staring heykukbab');
 
     // Configure BurritoStore
     BurritoStore.setDatabase(database);
