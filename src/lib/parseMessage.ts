@@ -77,7 +77,7 @@ function parseReactedMessage(reaction, reactedMsg, emojis) {
   const users: string[] = parseUsernames(reactedMsg.text);
   // If no one is mentioned on the original slack message, the sender receives kukbab
   if (!users.length) {
-    users.push(reactedMsg.user);
+    users.push(reaction.item_user);
   }
 
   const type = emojis.filter((e: any) => e.emoji.match(reaction.reaction))[0].type;

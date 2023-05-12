@@ -68,6 +68,7 @@ function validReaction(reaction: any, emojis: any): boolean {
 
   // If the reaction doesn't have sufficeint info it cannot be processed
   if (reaction.item.channel === undefined) return false;
+  if (reaction.item_user === undefined) return false;
   if (reaction.item.ts === undefined) return false;
   return emojis.filter((e) => e.emoji.match(reaction.reaction)).length > 0;
 }
