@@ -1,7 +1,10 @@
+/* eslint-disable import/no-duplicates */
 import * as log from 'bog';
-import { WebClient, RTMClient } from '@slack/web-api';
+import { WebClient } from '@slack/web-api';
+import { RTMClient } from '@slack/rtm-api';
 import { RTMMock, WebMock } from '../../test/lib/slackMock';
 import config from '../config';
+/* eslint-enable import/no-duplicates */
 
 const { slackMock } = config.misc;
 

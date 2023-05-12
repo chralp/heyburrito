@@ -22,7 +22,7 @@ function parseUsernames(text: string): string[] {
  *  - giver: sent from , ex => giver: USER1
  *  - updates: array<object> containing, username, and type. ex:
  *  - [ { username: 'USER2', type: 'inc' },
- *    { username: 'USER2', type: 'dec' } ] }
+ *    { username: 'USER2', type: 'dec' } ]
  */
 function parseMessage(msg, emojis) {
   // Array containg data of whom to give / remove points from
@@ -59,4 +59,35 @@ function parseMessage(msg, emojis) {
   };
 }
 
-export { parseMessage, parseUsernames };
+/**
+ * @param { Obejct } reaction slack reaction
+ * @param { Obejct } reactedMsg slackmessage that has been reacted
+ * @param { array<object> } emojis emojis that we want to use. Comes from env
+ * @return { object } { giver: string, updates:array<object> }
+ *  - giver: sent from , ex => giver: USER1
+ *  - updates: array<object> containing, username, and type. ex:
+ *  - [ { username: 'USER2', type: 'inc' },
+ *    { username: 'USER2', type: 'dec' } ]
+ */
+function parseReactedMessage(reaction, reactedMsg, emojis) {
+  // Array containg data of whom to give / remove points from
+  const updates = [];
+
+  // Get usernames from reacted slack message
+  const users: string[] = parseUsernames(reactedMsg.text);
+  // If no one is mentioned on the original slack message, the sender receives kukbab
+  if (!users.length) {
+    users.push(reactedMsg.user);
+  }
+
+  const type = emojis.filter((e: any) => e.emoji.match(reaction.reaction))[0].type;
+
+  // Give each user a update
+  users.forEach((u) => updates.push({ username: u, type: type }));
+
+  return {
+    updates,
+  };
+}
+
+export { parseMessage, parseReactedMessage, parseUsernames };
