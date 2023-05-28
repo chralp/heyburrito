@@ -35,12 +35,22 @@ class Wbc {
   }
 
   async sendDM(username: string, text: string) {
+    const openConversation = await this.wbc.conversations.open({
+      users: username,
+    });
+
+    if (!openConversation.ok) {
+      log.warn(`Failed to open conversation with ${username}`);
+      return;
+    }
+
     const res = await this.wbc.chat.postMessage({
       text,
-      channel: username,
+      channel: openConversation.channel.id,
       username: config.slack.bot_name,
-      icon_emoji: ':burrito:',
+      icon_emoji: ':duck:',
     });
+
     if (res.ok) {
       log.info(`Notified user ${username}`);
     }

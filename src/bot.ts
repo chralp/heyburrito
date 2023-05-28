@@ -41,12 +41,12 @@ const giveBurritos = async (giver: string, updates: Updates[]) => {
 
 const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
 
-const handleBurritos = async (giver: string, updates: Updates[]) => {
+const handleBurritos = async (giver: string, channel: string, updates: Updates[]) => {
   if (!enableDecrement) {
     const burritos = await BurritoStore.givenBurritosToday(giver, 'from');
     const diff = dailyCap - burritos;
     if (updates.length > diff) {
-      notifyUser(giver, `${updates.length} 개의 국밥을 주는데 실패했습니다. 오늘 줄 수 국밥의 개수는 ${diff}개 입니다.`);
+      notifyUser(giver, `${updates.length} 개의 :duck:을 주는데 실패했습니다. 오늘 줄 수 :duck:의 개수는 ${diff}개 입니다.`);
       return false;
     }
     if (burritos >= dailyCap) {
@@ -62,7 +62,7 @@ const handleBurritos = async (giver: string, updates: Updates[]) => {
     const diffDec = dailyDecCap - givenRottenBurritos;
     if (incUpdates.length) {
       if (incUpdates.length > diffInc) {
-        notifyUser(giver, `${updates.length} 개의 국밥을 주는데 실패했습니다. 오늘 줄 수 국밥의 개수는 ${diffInc}개 입니다.`);
+        notifyUser(giver, `${updates.length} 개의 :duck:을 주는데 실패했습니다. 오늘 줄 수 :duck:의 개수는 ${diffInc}개 입니다.`);
       } else {
         await giveBurritos(giver, incUpdates);
       }
@@ -78,6 +78,16 @@ const handleBurritos = async (giver: string, updates: Updates[]) => {
       }
     }
   }
+
+  const givenDucks = await BurritoStore.givenBurritosToday(giver, 'from');
+  const leftOverDucks = dailyCap - givenDucks;
+  const sample = updates[0];
+  notifyUser(
+    giver,
+    `<@${sample.username}>에게 ${updates.length}개의 :duck:을 주었습니다. 오늘 ${leftOverDucks}개의 :duck:을 더 줄 수 있습니다.`,
+  );
+  notifyUser(sample.username, `<@${giver}>님이 <#${channel}>에서 ${updates.length}개의 :duck:을 주었습니다.`);
+
   return true;
 };
 
@@ -91,7 +101,7 @@ const start = () => {
         if (result) {
           const { giver, updates } = result;
           if (updates.length) {
-            await handleBurritos(giver, updates);
+            await handleBurritos(giver, event.channel, updates);
           }
         }
       }
@@ -100,12 +110,13 @@ const start = () => {
 
   Rtm.on('slackReaction', async (event: any) => {
     if (validReaction(event, emojis)) {
-      const originalContent = await Wbc.fetchReactedMessage(event.item.channel, event.item.ts);
+      const channelId = event.item.channel;
+      const originalContent = await Wbc.fetchReactedMessage(channelId, event.item.ts);
       const result = parseReactedMessage(event, originalContent, emojis);
       if (result) {
         const { updates } = result;
         if (updates.length) {
-          await handleBurritos(event.user, updates);
+          await handleBurritos(event.user, channelId, updates);
         }
       }
     }
