@@ -112,12 +112,9 @@ const start = () => {
     if (validReaction(event, emojis)) {
       const channelId = event.item.channel;
       const originalContent = await Wbc.fetchReactedMessage(channelId, event.item.ts);
-      const result = parseReactedMessage(event, originalContent, emojis);
-      if (result) {
-        const { updates } = result;
-        if (updates.length) {
-          await handleBurritos(event.user, channelId, updates);
-        }
+      const { updates } = parseReactedMessage(event, originalContent, emojis);
+      if (updates.length) {
+        await handleBurritos(event.user, channelId, updates);
       }
     }
   });
