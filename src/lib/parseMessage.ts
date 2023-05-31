@@ -80,7 +80,7 @@ function parseReactedMessage(reaction, reactedMsg, emojis) {
     users.push(reaction.item_user);
   }
 
-  const type = emojis.filter((e: any) => reaction.reaction.match(`${e.emoji}`))[0].type;
+  const type = emojis.filter((e: any) => e.emoji == `:${reaction.reaction}:`)[0].type;
 
   // Give each user a update
   users.forEach((u) => updates.push({ username: u, type: type }));

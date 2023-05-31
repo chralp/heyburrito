@@ -70,7 +70,7 @@ function validReaction(reaction: any, emojis: any): boolean {
   if (reaction.item.channel === undefined) return false;
   if (reaction.item_user === undefined) return false;
   if (reaction.item.ts === undefined) return false;
-  return emojis.filter((e) => reaction.reaction.match(`${e.emoji}`)).length > 0;
+  return emojis.filter((e) => e.emoji == `:${reaction.reaction}:`).length > 0;
 }
 
 function validBotMention(message: any, botUserID: any) {
