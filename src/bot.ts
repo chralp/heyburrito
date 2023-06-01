@@ -81,13 +81,14 @@ const handleBurritos = async (giver: string, channel: string, updates: Updates[]
 
   const givenDucks = await BurritoStore.givenBurritosToday(giver, 'from');
   const leftOverDucks = dailyCap - givenDucks;
-  const sample = updates[0];
+  const receivers = updates.map((it) => it.username);
   notifyUser(
     giver,
-    `<@${sample.username}>에게 ${updates.length}개의 :duck:을 주었습니다. 오늘 ${leftOverDucks}개의 :duck:을 더 줄 수 있습니다.`,
+    `${receivers.map((it) => `<@${it}>`).join(" ")}에게 ${updates.length}개의 :duck:을 주었습니다. 오늘 ${leftOverDucks}개의 :duck:을 더 줄 수 있습니다.`,
   );
-  notifyUser(sample.username, `<@${giver}>님이 <#${channel}>에서 ${updates.length}개의 :duck:을 주었습니다.`);
-
+  receivers.forEach((receiver) => {
+    notifyUser(receiver, `<@${giver}>님이 <#${channel}>에서 1개의 :duck:을 주었습니다.`);
+  });
   return true;
 };
 
