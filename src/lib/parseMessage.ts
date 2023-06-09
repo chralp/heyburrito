@@ -75,8 +75,12 @@ function parseReactedMessage(reaction, reactedMsg, emojis) {
 
   // Get usernames from reacted slack message
   const users: string[] = parseUsernames(reactedMsg.text);
-  // If no one is mentioned on the original slack message, the sender receives duck
-  if (!users.length) {
+
+  // Filter self reaction
+  users.filter((u) => u !== reaction.user);
+
+  // If no one is mentioned on the original slack message and the sender is not the reactor, the sender receives ducks
+  if (!users.length && reaction.item_user != reaction.user) {
     users.push(reaction.item_user);
   }
 
