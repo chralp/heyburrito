@@ -39,9 +39,15 @@ const giveBurritos = async (giver: string, updates: Updates[]) => {
   }, Promise.resolve());
 };
 
-const notifyUser = (user: string, message: string) => Wbc.sendDM(user, message);
+const notifyUser = (user: string, message: string, messageBlock?: Object[]) => {
+  if (messageBlock != null) {
+    Wbc.sendDMBlock(user, message, messageBlock);
+  } else {
+    Wbc.sendDM(user, message);
+  }
+};
 
-const handleBurritos = async (giver: string, channel: string, updates: Updates[]) => {
+const handleBurritos = async (giver: string, channel: string, duckedMessage: string, updates: Updates[]) => {
   if (!enableDecrement) {
     const burritos = await BurritoStore.givenBurritosToday(giver, 'from');
     const diff = dailyCap - burritos;
@@ -90,7 +96,22 @@ const handleBurritos = async (giver: string, channel: string, updates: Updates[]
       .join(' ')}에게 ${eachGivenDucks}개의 :duck:을 주었습니다. 오늘 ${leftOverDucks}개의 :duck:을 더 줄 수 있습니다.`,
   );
   receivers.forEach((receiver) => {
-    notifyUser(receiver, `<@${giver}>님이 <#${channel}>에서 1개의 :duck:을 주었습니다.`);
+    notifyUser(receiver, `<@${giver}>님이 <#${channel}>에서 1개의 :duck:을 주었습니다.`, [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `<@${giver}>님이 <#${channel}>에서 ${eachGivenDucks}개의 :duck:을 주었습니다.`,
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `> ${duckedMessage}`,
+        },
+      },
+    ]);
   });
   return true;
 };
@@ -105,7 +126,7 @@ const start = () => {
         if (result) {
           const { giver, updates } = result;
           if (updates.length) {
-            await handleBurritos(giver, event.channel, updates);
+            await handleBurritos(giver, event.channel, event.text, updates);
           }
         }
       }
@@ -118,7 +139,7 @@ const start = () => {
       const originalContent = await Wbc.fetchReactedMessage(channelId, event.item.ts);
       const { updates } = parseReactedMessage(event, originalContent, emojis);
       if (updates.length) {
-        await handleBurritos(event.user, channelId, updates);
+        await handleBurritos(event.user, channelId, originalContent.text, updates);
       }
     }
   });

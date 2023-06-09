@@ -45,7 +45,30 @@ class Wbc {
     }
 
     const res = await this.wbc.chat.postMessage({
-      text,
+      text: text,
+      channel: openConversation.channel.id,
+      username: config.slack.bot_name,
+      icon_emoji: ':duck:',
+    });
+
+    if (res.ok) {
+      log.info(`Notified user ${username}`);
+    }
+  }
+
+  async sendDMBlock(username: string, text: string, blocks: Object[]) {
+    const openConversation = await this.wbc.conversations.open({
+      users: username,
+    });
+
+    if (!openConversation.ok) {
+      log.warn(`Failed to open conversation with ${username}`);
+      return;
+    }
+
+    const res = await this.wbc.chat.postMessage({
+      text: text,
+      blocks: blocks,
       channel: openConversation.channel.id,
       username: config.slack.bot_name,
       icon_emoji: ':duck:',
