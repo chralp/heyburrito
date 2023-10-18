@@ -41,6 +41,7 @@ Check environment variables section.
 ### Requirments
 - slack ( of course )
 - node ( lts/erbium ) 
+- yarn package manager (if you don't install, install it with `npm install -g yarn`)
 
 ### Get started
 
@@ -59,10 +60,10 @@ Check environment variables section.
 ### Node
 1. `git clone git@github.com:chralp/heyburrito.git`
 2. `cd heyburrito`
-3. `npm install`
+3. `yarn install` or `yarn`
 4. `cp .env.example .env`
 5. Set environment variables that you need / want. Check "Environment variables" for more details.
-6. `npm run start`
+6. `yarn start`
 
 
 ### Environment Variables
