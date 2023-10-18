@@ -35,7 +35,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-typescript": "^6.3.1",
     "eslint-plugin-import": "^2.19.1",
-    "mocha": "^5.2.0",
+    "mocha": "10.1.0",
     "mongodb-memory-server": "5.2.7",
     "nodemon": "^2.0.2",
     "proxyquire": "^2.1.3",
