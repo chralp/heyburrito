@@ -1,38 +1,38 @@
 ![Logo](resources/hey_burrito_github.png)
 
-<div align="center">
+<div style="text-align: center;">
   <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/makes-people-smile.svg" alt="Makes people smile"></a>
   <a href="https://forthebadge.com"><img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="Built with love"></a>
 </div>
   
-### Whats Heyburrito
-Heyburrito is a slack reward system that allows slack team members to recognize and reward team members who have performed well. Reward your colleagues / friends by sending them a :burrito:, each burrito is converted to points witch can be showed on a scoreboard.
-Heyburrito is like heytaco, but free and you host it yourself.
+### Whats HeyGoose 🪿
+HeyGoose is a slack reward system that allows slack team members to recognize and reward team members who have performed well. Reward your colleagues / friends by sending them a :goose:, each goose is converted to points witch can be showed on a scoreboard.
+HeyGoose is like heytaco, but free and you host it yourself.
 
 
 ### How does it work
-Each burrito will increment the users "burrito" - points.
-And a rottenburrito will decrement "burrito" - points
+Each goose will increment the users "goose" - points.
+And a rottengoose will decrement "goose" - points
 
-Give away burrito  to a colleague if they done something good.
-...Or maybe a rottenburrito ( :rottenburrito: , emoji needed ) if they done something bad.. :)
+Give away goose  to a colleague if they done something good.
+...Or maybe a rottengoose ( :rottengoose: , emoji needed ) if they done something bad.. :)
 
-Ping one or several of your colleagues and give away a burrito if they deserv it. Otherwise rottenburrito if not ...
+Ping one or several of your colleagues and give away a goose if they deserv it. Otherwise rottengoose if not ...
 
 Example:  
-This will increase chralps "burrito" - points by 3
-`@chralp :burrito::burrito::burrito: - awesome app!` 
+This will increase chralps "goose" - points by 3
+`@chralp :goose::goose::goose: - awesome app!` 
 
-This will decrease chralps "burrito" - points by 2
-`@chralp :rottenburrito::rottenburrito: - bad app...`
+This will decrease chralps "goose" - points by 2
+`@chralp :rottengoose::rottengoose: - bad app...`
 
-This will increase chralps and fagges "burrito" - points by 2 ( each )
-`@chralp @fagge :burrito::burrito: - awesome app!` 
+This will increase chralps and fagges "goose" - points by 2 ( each )
+`@chralp @fagge :goose::goose: - awesome app!` 
 
-You can run heyburrito and disable rottenburrito by passing environment variables.
-By disabling decrement you can send rottenburritos but it will not decrement the users score.
+You can run heygoose and disable rottengoose by passing environment variables.
+By disabling decrement you can send rottengooses but it will not decrement the users score.
 
-In the default theme you will find filters to show diffrent leaderboards, burrito board and rottenburrito board. If env for disable decrement is passed the burrito board will not count rottenburritos. But you can see leaderboard for rottenburritos ( sent and received ).
+In the default theme you will find filters to show diffrent leaderboards, goose board and rottengoose board. If env for disable decrement is passed the goose board will not count rottengooses. But you can see leaderboard for rottengooses ( sent and received ).
 
 You can also disable decrement emoji completely. This way you will not be able to send any decrement score.
 
@@ -41,14 +41,15 @@ Check environment variables section.
 ### Requirments
 - slack ( of course )
 - node ( lts/erbium ) 
+- yarn package manager (if you don't install, install it with `npm install -g yarn`)
 
 ### Get started
 
 1. Go to https://yourworkspace.slack.com/apps and search for Bots.  
 2. Add **Bots ( Connect a bot to the Slack Real Time Messaging API)**.  
-3. Give the bot a name, ex: heyburrito, and obtain apiToken.  
+3. Give the bot a name, ex: heygoose, and obtain apiToken.  
 4. Choose how to run it => See Docker or Node section .
-5. Invite the new bot to your slack channels ( where u want to be able to send burritos ).
+5. Invite the new bot to your slack channels ( where u want to be able to send gooses ).
 
 ### Docker
 1. Open and edit `docker-compose.yml`.
@@ -59,10 +60,10 @@ Check environment variables section.
 ### Node
 1. `git clone git@github.com:chralp/heyburrito.git`
 2. `cd heyburrito`
-3. `npm install`
+3. `yarn install` or `yarn`
 4. `cp .env.example .env`
 5. Set environment variables that you need / want. Check "Environment variables" for more details.
-6. `npm run start`
+6. `yarn start`
 
 
 ### Environment Variables
@@ -102,21 +103,21 @@ Check environment variables section.
 
 
 ### Emojis
-Rottenburrito and burrito emoji can be found under resources ( Burrito.png and Rottenburrito.png ).
+Rottengoose and goose emoji can be found under resources ( Burrito.png and Rottenburrito.png ).
 You can add the emojis in slack via the emoji toolbox => Add emoji.
-Its not possible to overwrite the standard burrito emoji in slack, so if you want to use heyburritos burrito emoji you can set a new name for it.
+Its not possible to overwrite the standard goose emoji in slack, so if you want to use heygoose goose emoji you can set a new name for it.
 
 Note, set the ENV keys SLACK_EMOJI_INC and SLACK_EMOJI_DEC with the emojis that you want to use.
-If u want to use the standard burrito emoji and our burrito emoji you have to pass both emojis in SLACK_EMOJI_INC.
+If u want to use the standard goose emoji and our goose emoji you have to pass both emojis in SLACK_EMOJI_INC.
 ex:
-If you set our burrito with name :burre: .
+If you set our goose with name :burre: .
 ENV SLACK_EMOJI_INC should look like this.
 ```
-SLACK_EMOJI_INC :burrito:, :burre:
+SLACK_EMOJI_INC :goose:, :burre:
 ```
 
 ### Theme
-Defaults to heyburrito-theme. [https://github.com/chralp/heyburrito-theme](https://github.com/chralp/heyburrito-theme)
+Defaults to heygoose-theme. [https://github.com/chralp/heyburrito-theme](https://github.com/chralp/heyburrito-theme)
 If you want link a theme from disk, check environment variables THEME_PATH .
   
 #### Available third party themes
@@ -302,7 +303,7 @@ Scoreboard is accessable via localhost or host on port `3333`.
 
 Showcase
 -----------
-From heyburrito-theme ( [https://github.com/chralp/heyburrito-theme](https://github.com/chralp/heyburrito-theme) ) 
+From heygoose-theme ( [https://github.com/chralp/heyburrito-theme](https://github.com/chralp/heyburrito-theme) ) 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/13852280/74108695-3e832a00-4b7d-11ea-91ec-162a0ad46532.png" width="75%" height="75%">
 </p>    
