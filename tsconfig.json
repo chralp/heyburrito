@@ -1,15 +1,18 @@
 {
+    "ts-node": {
+        "transpileOnly": true
+    },
+    "exclude": ["test", "node_modules"],
     "compilerOptions": {
         "baseUrl": ".",
         "esModuleInterop": true,
         "target": "es2017",
-        "lib": [ "es2017", "dom" ],
+        "lib": ["es2017", "dom"],
         "paths": {
             "*": ["./declarations"]
         },
-        "typeRoots": [
-          "./node_modules/@types"
-        ],
-        "module": "commonjs"
+        "typeRoots": ["./node_modules/@types"],
+        "module": "commonjs",
+        "noEmit": true
     }
 }

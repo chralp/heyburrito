@@ -1,0 +1,53 @@
+name: Continuous Delivery
+
+on:
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    Continuous_Delivery:
+        runs-on: ubuntu-22.04
+
+        steps:
+            - name: Set up sources
+              uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  cache: yarn
+
+            - name: Install dependencies
+              run: yarn --frozen-lockfile
+
+            - name: Set up env
+              run: |
+                  echo "BOT_NAME=${{ vars.BOT_NAME }}" > .env
+                  echo "THEME=${{ vars.THEME }}" >> .env
+                  echo "DATABASE_DRIVER=${{ vars.DATABASE_DRIVER }}" >> .env
+                  echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> .env
+                  echo "MONGODB_DATABASE=${{ secrets.MONGODB_DATABASE }}" >> .env
+                  echo "SLACK_API_TOKEN=${{ secrets.SLACK_API_TOKEN }}" >> .env
+                  echo "SLACK_DAILY_CAP=${{ vars.SLACK_DAILY_CAP }}" >> .env
+                  echo "SLACK_EMOJI_INC=${{ vars.SLACK_EMOJI_INC }}" >> .env
+                  echo "SLACK_EMOJI_DEC=${{ vars.SLACK_EMOJI_DEC }}" >> .env
+
+            - name: Type Check
+              run: yarn typecheck
+
+            - name: Test
+              run: yarn test
+
+            - name: Login to docker-hub
+              uses: docker/login-action@v2
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build docker image
+              run: yarn docker-build
+
+            - name: Push to docker-hub
+              run: yarn docker-push

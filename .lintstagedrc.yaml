@@ -1,0 +1,4 @@
+"*.ts":
+    - eslint
+"*":
+    - prettier --ignore-unknown --check
