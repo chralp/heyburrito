@@ -1,3 +1,5 @@
+import * as log from 'bog';
+
 const usernameRegex = /(<@[A-Z0-9]{2,}>)/g;
 
 /**
@@ -84,6 +86,11 @@ function parseReactedMessage(reaction, reactedMsg, emojis) {
 
   // Filter self reaction
   users.filter((u) => u !== reaction.user);
+
+  log.info("reactedMsg: " + reactedMsg.text)
+  log.info("users: " + users.join(','))
+  log.info("sender: " + sender)
+  log.info("final users: " + users.join(','))
 
   const type = emojis.filter((e: any) => e.emoji == `:${reaction.reaction}:`)[0].type;
 
