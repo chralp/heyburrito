@@ -90,6 +90,8 @@ class Wbc {
       limit: 1,
     });
 
+    log.info(res.messages[0])
+
     return res.messages[0];
   }
 }
