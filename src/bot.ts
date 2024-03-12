@@ -5,6 +5,7 @@ import { parseMessage, parseReactedMessage } from './lib/parseMessage';
 import { validBotMention, validMessage, validReaction } from './lib/validator';
 import Rtm from './slack/Rtm';
 import Wbc from './slack/Wbc';
+import log from 'bog'
 
 const { enableDecrement, dailyCap, dailyDecCap, emojiInc, emojiDec, disableEmojiDec } = config.slack;
 
@@ -48,6 +49,7 @@ const notifyUser = (user: string, message: string, messageBlock?: Object[]) => {
 };
 
 const handleBurritos = async (giver: string, channel: string, duckedMessage: string, updates: Updates[]) => {
+  log.info(updates)
   if (!enableDecrement) {
     const burritos = await BurritoStore.givenBurritosToday(giver, 'from');
     const diff = dailyCap - burritos;
