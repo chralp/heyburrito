@@ -80,12 +80,17 @@ function parseReactedMessage(reaction, reactedMsg, emojis) {
 
   const sender = reactedMsg.user ?? reaction.item_user
   // If no one is mentioned on the original slack message, the sender receives ducks
-  if (!users.length && !sender) {
+  if (!users.length && sender) {
     users.push(sender);
   }
 
   // Filter self reaction
   users.filter((u) => u !== reaction.user);
+
+  log.info("reactedMsg: " + reactedMsg.text)
+  log.info("users: " + users.join(','))
+  log.info("sender: " + sender)
+  log.info("final users: " + users.join(','))
 
   const type = emojis.filter((e: any) => e.emoji == `:${reaction.reaction}:`)[0].type;
 
