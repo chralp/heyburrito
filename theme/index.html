@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>헤이덕 대시보드</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="css/rain.css" />
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="header">
+      <div id="logo">
+      </div>
+
+      <div id="filter">
+        <p>
+          <label class="c-switch" id="switchToFrom">
+            <input
+              class="c-switch__input"
+              id="switchToFromInput"
+              type="checkbox"
+              checked
+            />
+            <span class="c-switch__values">
+              <span class="c-switch__value c-switch__value--true">To</span>
+              <span class="c-switch__value c-switch__value--false">From</span>
+            </span>
+          </label>
+        </p>
+      </div>
+    </div>
+
+    <div id="rain"></div>
+
+    <div class="app" id="app">
+      <div id="users" class="scoreboard"></div>
+    </div>
+    <script src="fun.js"></script>
+  </body>
+</html>
