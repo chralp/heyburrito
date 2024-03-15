@@ -172,7 +172,7 @@ body {
 }
 
 .c-switch__values::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 3px;
@@ -222,12 +222,10 @@ h1 {
   margin-right: 15px;
   background: white;
   border-radius: 5px;
-  box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1),
-    0 3px 6px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: 0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
   overflow: hidden;
   margin-top: 10px;
-  transition: 0.3s transform cubic-bezier(0.68, -0.55, 0.265, 1.55),
-    0.3s opacity;
+  transition: 0.3s transform cubic-bezier(0.68, -0.55, 0.265, 1.55), 0.3s opacity;
   opacity: 0;
   transform: translate3d(0, -20px, 0) rotateX(45deg);
   transform-style: preserve-3d;
@@ -411,17 +409,28 @@ h1 {
   }
 }
 
-@media (min-width: 1420px) {
+@media (min-width: 1440px) {
   .scoreboard {
-    max-width: 1420px;
+    max-width: 1440px;
     max-height: 95vh;
-    margin: auto;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
-    align-content: center;
     padding-bottom: 10px;
-    overflow: hidden;
+    overflow-x: scroll;
+  }
+}
+
+@media (min-width: 2160px) {
+  .scoreboard {
+    max-width: 2160px;
+    max-height: 95vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 10px;
+    overflow-x: scroll;
   }
 }
