@@ -19,6 +19,7 @@ interface Updates {
   type: string;
 }
 const emojis: Array<Emojis> = [];
+const dashBoardUrl = 'http://ec2-43-201-180-152.ap-northeast-2.compute.amazonaws.com:3333/'
 
 const incEmojis = emojiInc.split(',').map((emoji) => emoji.trim());
 incEmojis.forEach((emoji: string) => emojis.push({ type: 'inc', emoji }));
@@ -111,6 +112,13 @@ const handleBurritos = async (giver: string, channel: string, duckedMessage: str
         text: {
           type: 'mrkdwn',
           text: `> ${duckedMessage}`,
+        },
+      },
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `[헤이덕 대시보드](${dashBoardUrl})에서 내가 받은 :duck: 수를 확인해보세요!`,
         },
       },
     ]);
