@@ -118,7 +118,7 @@ const handleBurritos = async (giver: string, channel: string, duckedMessage: str
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `[헤이덕 대시보드](${dashBoardUrl})에서 내가 받은 :duck: 수를 확인해보세요!`,
+          text: `<${dashBoardUrl}|헤이덕 대시보드>에서 내가 받은 :duck: 수를 확인해보세요!`,
         },
       },
     ]);
